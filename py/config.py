@@ -2,48 +2,70 @@
 Config File for Robot
 """
 
-#@dhruv_rajan is editing config.py
-from wpilib import Solenoid, Compressor, DriverStation, CANTalon, DigitalInput
+from wpilib import Solenoid, Compressor, DriverStation, CANTalon
 
 from grt.sensors.attack_joystick import Attack3Joystick
 from grt.sensors.xbox_joystick import XboxJoystick
 #from grt.sensors.gyro import Gyro
 from grt.core import SensorPoller
-from grt.mechanism.drivetrain import DriveTrain
+from grt.mechanism.swervemodule import SwerveModule 
 from grt.mechanism.drivecontroller import ArcadeDriveController
 from grt.mechanism.motorset import Motorset
 from grt.sensors.ticker import Ticker
 from grt.sensors.encoder import Encoder
-from grt.sensors.talon import Talon
+#from grt.sensors.talon import Talon
 from grt.mechanism.mechcontroller import MechController
+from grt.mechanism.swervecontroller import TestSwerveDriveController
 
 
 #DT Talons and Objects
 
-dt_right = CANTalon(1)
-dt_r2 = CANTalon(2)
-dt_r3 = CANTalon(3)
-dt_r4 = CANTalon(4)
+turn_motor = CANTalon(8)
+turn_motor.changeControlMode(CANTalon.ControlMode.Position)
+turn_motor.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+turn_motor.setPID(1.0, 0.0, 0.0)
+#turn_motor.setPID(80, 0, 0, f=0)
 
-dt_left = CANTalon(7)
-dt_l2 = CANTalon(8)
-dt_l3 = CANTalon(9)
-dt_l4 = CANTalon(10)
+# turn_motor.configMaxOutputVoltage(8)
+# turn_motor.setAllowableClosedLoopErr(1)
+# turn_motor.reverseOutput(True)
 
-dt_r2.changeControlMode(CANTalon.ControlMode.Follower)
-dt_r3.changeControlMode(CANTalon.ControlMode.Follower)
-dt_r4.changeControlMode(CANTalon.ControlMode.Follower)
-dt_l2.changeControlMode(CANTalon.ControlMode.Follower)
-dt_l3.changeControlMode(CANTalon.ControlMode.Follower)
-dt_l4.changeControlMode(CANTalon.ControlMode.Follower)
-dt_r2.set(1)
-dt_r3.set(1)
-dt_r4.set(1)
-dt_l2.set(7)
-dt_l3.set(7)
-dt_l4.set(7)
 
-dt = DriveTrain(dt_left, dt_right, left_encoder=None, right_encoder=None)
+power_motor = CANTalon(6)
+
+turn_2 = CANTalon(2)
+turn_2.changeControlMode(CANTalon.ControlMode.Position)
+turn_2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+turn_2.setPID(1.0, 0.0, 0.0)
+turn_3 = CANTalon(9)
+turn_3.changeControlMode(CANTalon.ControlMode.Position)
+turn_3.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+turn_3.setPID(1.0, 0.0, 0.0)
+#turn_4 = CANTalon(5)
+
+power_2 = CANTalon(7)
+power_3 = CANTalon(1)
+#power_4 = CANTalon(8)
+
+
+# turn_2.changeControlMode(CANTalon.ControlMode.Follower)
+# turn_3.changeControlMode(CANTalon.ControlMode.Follower)
+# #turn_4.changeControlMode(CANTalon.ControlMode.Follower)
+
+power_2.changeControlMode(CANTalon.ControlMode.Follower)
+power_3.changeControlMode(CANTalon.ControlMode.Follower)
+#power_4.changeControlMode(CANTalon.ControlMode.Follower)
+
+# turn_2.set(8)
+# turn_3.set(8)
+# #turn_4.set(8)
+
+power_2.set(6)
+power_3.set(6)
+#.set(6)
+
+dt = SwerveModule(power_motor, turn_motor)
+
 
 
 #Skeleton sensor poller
@@ -53,17 +75,20 @@ dt = DriveTrain(dt_left, dt_right, left_encoder=None, right_encoder=None)
 
 
 # Drive Controllers
-driver_stick = Attack3Joystick(0)
+l_joystick = Attack3Joystick(0)
+r_joystick = Attack3Joystick(3)
 xbox_controller = XboxJoystick(1)
-ac = ArcadeDriveController(dt, driver_stick)
-hid_sp = SensorPoller((driver_stick, xbox_controller))  # human interface devices
+#ac = ArcadeDriveController(dt, driver_stick)
+hid_sp = SensorPoller((l_joystick, r_joystick, xbox_controller))  # human interface devices
 
 
 
 # Mech Talons, objects, and controller
 
+sc = TestSwerveDriveController(l_joystick, r_joystick, xbox_controller, dt=dt, turn_motor=turn_motor, power_motor=power_motor, turn_2 = turn_2, turn_3 = turn_3)
+
 # define MechController
-mc = MechController(driver_stick, xbox_controller)
+#mc = MechController()
 
 # define DriverStation
 ds = DriverStation.getInstance()

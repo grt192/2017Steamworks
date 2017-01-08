@@ -8,8 +8,11 @@ class MyRobot(wpilib.SampleRobot):
     def __init__(self):
         super().__init__()
         import config
+        #self.sp = config.sp
         self.hid_sp = config.hid_sp
         self.ds = config.ds
+
+        self.turn_motor = config.turn_motor
 
 
     def disabled(self):
@@ -25,8 +28,11 @@ class MyRobot(wpilib.SampleRobot):
     def operatorControl(self):
         while self.isOperatorControl() and self.isEnabled():
             tinit = time.time()
+            #self.sp.poll()
             self.hid_sp.poll()
             self.safeSleep(tinit, .04)
+            # print("Encoder position:")
+            # print(self.turn_motor.getEncPosition())
             
     def safeSleep(self, tinit, duration):
         tdif = .04 - (time.time() - tinit)
