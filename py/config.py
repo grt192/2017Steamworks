@@ -21,54 +21,61 @@ from grt.mechanism.swervecontroller import TestSwerveDriveController
 
 #DT Talons and Objects
 
-turn_motor = CANTalon(6)
+
+#UNCOMMENT THE FOLLOWING LATER
+turn_motor = CANTalon(8)
 turn_motor.changeControlMode(CANTalon.ControlMode.Position)
 turn_motor.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
 turn_motor.setPID(1.0, 0.0, 0.0)
-#turn_motor.setPID(80, 0, 0, f=0)
 
-# turn_motor.configMaxOutputVoltage(8)
-# turn_motor.setAllowableClosedLoopErr(1)
-# turn_motor.reverseOutput(True)
-
-
-power_motor = CANTalon(6)
-
-turn_2 = CANTalon(2)
+turn_2 = CANTalon(9)
 turn_2.changeControlMode(CANTalon.ControlMode.Position)
 turn_2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
 turn_2.setPID(1.0, 0.0, 0.0)
-turn_3 = CANTalon(9)
+
+turn_3 = CANTalon(2)
 turn_3.changeControlMode(CANTalon.ControlMode.Position)
 turn_3.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
 turn_3.setPID(1.0, 0.0, 0.0)
-#turn_4 = CANTalon(5)
 
-power_2 = CANTalon(1)
-power_3 = CANTalon(7)
-power_4 = CANTalon(8)
+turn_4 = CANTalon(5)
+turn_4.changeControlMode(CANTalon.ControlMode.Position)
+turn_4.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+turn_4.setPID(1.0, 0.0, 0.0)
 
 
-# turn_2.changeControlMode(CANTalon.ControlMode.Follower)
-# turn_3.changeControlMode(CANTalon.ControlMode.Follower)
-# #turn_4.changeControlMode(CANTalon.ControlMode.Fol                          lower)
+#TAKEN FOR TURNING: 8 9 2 5
+#AVAILABLE: 
 
-power_3.changeControlMode(CANTalon.ControlMode.Follower)
-power_4.changeControlMode(CANTalon.ControlMode.Follower)
+#front right 6
+#front left 1
+#back right 7
+#back left 4
+
+dt_right = CANTalon(6) #6 front right
+dt_left = CANTalon(1) #1 front left8
+
+dt_l2 = CANTalon(4) #8 back left 7 broken i think
+dt_r2 = CANTalon(7) #9 back right
+
+
+
+dt_l2.changeControlMode(CANTalon.ControlMode.Follower)
+dt_r2.changeControlMode(CANTalon.ControlMode.Follower)
 #power_4.changeControlMode(CANTalon.ControlMode.Follower)
 
 # turn_2.set(8)
 # turn_3.set(8)
 # #turn_4.set(8)
 
-power_3.set(6)
-power_4.set(7)
+dt_l2.set(1)
+dt_r2.set(6)
 #.set(6)
 
-dt = SwerveModule(power_motor, turn_motor)
+#dt = SwerveModule(power_motor, turn_motor)
 
 #needs to be changed for left and right
-tank_dt = DriveTrain(power_motor, power_2, left_shifter=None, left_encoder=None, right_encoder=None)
+tank_dt = DriveTrain(dt_left, dt_right, left_shifter=None, left_encoder=None, right_encoder=None)
 #Skeleton sensor poller
 #gyro = Gyro(1)
 # define sensor poller
@@ -89,7 +96,7 @@ hid_sp = SensorPoller((l_joystick, r_joystick, xbox_controller))  # human interf
 #sc = TestSwerveDriveController(l_joystick, r_joystick, xbox_controller, dt=dt, turn_motor=turn_motor, power_motor=power_motor, turn_2 = turn_2, turn_3 = turn_3)
 
 # define MechController
-#mc = MechController()
+mc = MechController(l_joystick, xbox_controller, turn_motor, turn_2, turn_3, turn_4)
 
 # define DriverStation
 ds = DriverStation.getInstance()

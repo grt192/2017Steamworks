@@ -12,7 +12,7 @@ class MyRobot(wpilib.SampleRobot):
         self.hid_sp = config.hid_sp
         self.ds = config.ds
 
-        self.turn_motor = config.turn_motor
+        #self.turn_motor = config.turn_motor
 
 
     def disabled(self):
