@@ -45,9 +45,7 @@ class SwerveModule:
 
             self.turn_motor.set(encoder_position)
 
-    def set_angle_1(self,angle):
 
-        encoder_position = 
 
 
 
@@ -61,6 +59,10 @@ class SwerveModule:
         if limit_switch.get()=0:
 
             self.turn_motor.set_angle(0)
+
+        if limit_switch.get()=1:
+
+            print("zerod")
 
 
 
