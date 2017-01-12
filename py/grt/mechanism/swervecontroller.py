@@ -63,12 +63,13 @@ class SwerveDriveController:
 
 class TestSwerveDriveController:
 
-    def __init__(self, l_joystick, r_joystick, xbox_controller, dt=None, turn_motor=None, power_motor=None, turn_2 = None, turn_3 = None):
+    def __init__(self, l_joystick, r_joystick, xbox_controller, dt=None, turn_motor=None, power_motor=None, turn_2 = None, turn_3 = None, limit_switch=None):
         self.dt = dt
         self.turn_motor = turn_motor
         self.turn_2 = turn_2
         self.turn_3 = turn_3
         self.power_motor = power_motor
+        self.limit_switch = limit_switch
         self.l_joystick = l_joystick
         self. r_joystick = r_joystick
         self.xbox_controller = xbox_controller
@@ -188,3 +189,9 @@ class TestSwerveDriveController:
             if datum:
                 print("ENCODER POSITION:")
                 print(self.turn_motor.getEncPosition())
+
+        elif state_id == "w_button":
+            if datum:
+                self.turn_motor.set_zero()
+
+

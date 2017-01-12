@@ -8,11 +8,14 @@ class SwerveModule:
     #power = 1
 
 
-    def __init__(self, power_motor, turn_motor, power_encoder=None, turn_encoder=None):
+    def __init__(self, power_motor, turn_motor, power_encoder=None, turn_encoder=None, limit_switch):
         self.power_motor = power_motor
         self.turn_motor = turn_motor
         self.power_encoder = power_encoder
         self.turn_encoder = turn_encoder
+        self.limit_switch = limit_switch
+        
+
     
 
 
@@ -42,12 +45,31 @@ class SwerveModule:
 
             self.turn_motor.set(encoder_position)
 
+    def set_angle_1(self,angle):
+
+        encoder_position = 
 
 
-    def set_power(self, power):
+
+    def set_power(self, power, angle):
         pass
 
         #self.power_motor.set(power)
+
+    def set_zero(self,power):
+
+        if limit_switch.get()=0:
+
+            self.turn_motor.set_angle(0)
+
+
+
+
+
+
+
+
+
 
 
 
