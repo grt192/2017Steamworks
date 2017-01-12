@@ -17,6 +17,7 @@ from grt.sensors.encoder import Encoder
 #from grt.sensors.talon import Talon
 from grt.mechanism.mechcontroller import MechController
 from grt.mechanism.swervecontroller import TestSwerveDriveController
+from grt.mechanism.ackermancontroller import AckermanController
 
 
 #DT Talons and Objects
@@ -94,6 +95,8 @@ hid_sp = SensorPoller((l_joystick, r_joystick, xbox_controller))  # human interf
 # Mech Talons, objects, and controller
 
 #sc = TestSwerveDriveController(l_joystick, r_joystick, xbox_controller, dt=dt, turn_motor=turn_motor, power_motor=power_motor, turn_2 = turn_2, turn_3 = turn_3)
+
+ac = AckermanController(l_joystick, xbox_controller, turn_motor, turn_2, turn_3, turn_4, dt_right, dt_r2, dt_left, dt_l2)
 
 # define MechController
 mc = MechController(l_joystick, xbox_controller, turn_motor, turn_2, turn_3, turn_4)
