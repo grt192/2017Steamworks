@@ -190,8 +190,12 @@ class TestSwerveDriveController:
                 print("ENCODER POSITION:")
                 print(self.turn_motor.getEncPosition())
 
-        elif state_id == "w_button":
+        elif state_id == "l_trigger":
             if datum:
-                self.turn_motor.set_zero()
+                while (limit_switch.get()=0):
 
+                    turn_motor.changeControlMode(CANTalon.ControlMode.Voltage)
+                    self.turn_motor.setVoltage(.5)
+
+                
 
