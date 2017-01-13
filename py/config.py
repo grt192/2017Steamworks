@@ -31,6 +31,8 @@ turn_motor.setPID(1.0, 0.0, 0.0)
 # turn_motor.setAllowableClosedLoopErr(1)
 # turn_motor.reverseOutput(True)
 
+limit_switch = DigitalInput(5)
+
 
 power_motor = CANTalon(6)
 
