@@ -8,7 +8,7 @@ class SwerveModule:
     #power = 1
 
 
-    def __init__(self, power_motor, turn_motor, power_encoder=None, turn_encoder=None, limit_switch):
+    def __init__(self, power_motor, turn_motor, power_encoder=None, turn_encoder=None, limit_switch=None):
         self.power_motor = power_motor
         self.turn_motor = turn_motor
         self.power_encoder = power_encoder
@@ -17,7 +17,6 @@ class SwerveModule:
         
 
     
-
 
     def set_angle(self, angle):
 		#angle*1024/2pi = self.turn_motor.getRaw()
@@ -56,11 +55,11 @@ class SwerveModule:
 
     def set_zero(self,power):
 
-        if limit_switch.get()=0:
+        if limit_switch.get() == 0:
 
             self.turn_motor.set_angle(0)
 
-        if limit_switch.get()=1:
+        if limit_switch.get() == 1:
 
             print("zerod")
 

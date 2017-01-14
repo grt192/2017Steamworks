@@ -192,7 +192,7 @@ class TestSwerveDriveController:
 
         elif state_id == "l_trigger":
             if datum:
-                while (limit_switch.get()=0):
+                while limit_switch.get() == 0:
 
                     turn_motor.changeControlMode(CANTalon.ControlMode.Voltage)
                     self.turn_motor.setVoltage(.5)

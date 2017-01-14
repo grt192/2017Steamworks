@@ -2,7 +2,7 @@
 Config File for Robot
 """
 
-from wpilib import Solenoid, Compressor, DriverStation, CANTalon
+from wpilib import Solenoid, Compressor, DriverStation, CANTalon, DigitalInput
 
 from grt.sensors.attack_joystick import Attack3Joystick
 from grt.sensors.xbox_joystick import XboxJoystick
