@@ -24,40 +24,40 @@ from grt.mechanism.ackermancontroller import AckermanController
 
 
 #UNCOMMENT THE FOLLOWING LATER
-turn_motor = CANTalon(8)
-turn_motor.changeControlMode(CANTalon.ControlMode.Position)
-turn_motor.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
-turn_motor.setPID(1.0, 0.0, 0.0)
+turn_l2 = CANTalon(8) #8
+turn_l2.changeControlMode(CANTalon.ControlMode.Position)
+turn_l2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+turn_l2.setPID(1.0, 0.0, 0.0)
 
-turn_2 = CANTalon(9)
-turn_2.changeControlMode(CANTalon.ControlMode.Position)
-turn_2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
-turn_2.setPID(1.0, 0.0, 0.0)
+turn_r2 = CANTalon(9) #9
+turn_r2.changeControlMode(CANTalon.ControlMode.Position)
+turn_r2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+turn_r2.setPID(1.0, 0.0, 0.0)
 
-turn_3 = CANTalon(2)
-turn_3.changeControlMode(CANTalon.ControlMode.Position)
-turn_3.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
-turn_3.setPID(1.0, 0.0, 0.0)
+turn_left = CANTalon(2) #2
+turn_left.changeControlMode(CANTalon.ControlMode.Position)
+turn_left.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+turn_left.setPID(1.0, 0.0, 0.0)
 
-turn_4 = CANTalon(5)
-turn_4.changeControlMode(CANTalon.ControlMode.Position)
-turn_4.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
-turn_4.setPID(1.0, 0.0, 0.0)
+turn_right = CANTalon(5) #5
+turn_right.changeControlMode(CANTalon.ControlMode.Position)
+turn_right.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+turn_right.setPID(1.0, 0.0, 0.0)
 
 
 #TAKEN FOR TURNING: 8 9 2 5
 #AVAILABLE: 
 
-#front right 6
-#front left 1
-#back right 7
-#back left 4
+#front right 6 turning: 5
+#front left 1 turning: 2
+#back right 7 turning: 9
+#back left 4 turning: 8
 
-dt_right = CANTalon(6) #6 front right
-dt_left = CANTalon(1) #1 front left8
+dt_right = CANTalon(6) 
+dt_left = CANTalon(1) 
 
-dt_l2 = CANTalon(4) #8 back left 7 broken i think
-dt_r2 = CANTalon(7) #9 back right
+dt_l2 = CANTalon(4) 
+dt_r2 = CANTalon(7) 
 
 
 
@@ -87,7 +87,7 @@ tank_dt = DriveTrain(dt_left, dt_right, left_shifter=None, left_encoder=None, ri
 l_joystick = Attack3Joystick(0)
 r_joystick = Attack3Joystick(3)
 xbox_controller = XboxJoystick(1)
-ac = ArcadeDriveController(tank_dt, l_joystick)
+#ac = ArcadeDriveController(tank_dt, l_joystick)
 hid_sp = SensorPoller((l_joystick, r_joystick, xbox_controller))  # human interface devices
 
 
@@ -96,10 +96,10 @@ hid_sp = SensorPoller((l_joystick, r_joystick, xbox_controller))  # human interf
 
 #sc = TestSwerveDriveController(l_joystick, r_joystick, xbox_controller, dt=dt, turn_motor=turn_motor, power_motor=power_motor, turn_2 = turn_2, turn_3 = turn_3)
 
-ac = AckermanController(l_joystick, xbox_controller, turn_motor, turn_2, turn_3, turn_4, dt_right, dt_r2, dt_left, dt_l2)
+ac = AckermanController(l_joystick, xbox_controller, turn_right, turn_r2, turn_left, turn_l2, dt_right, dt_r2, dt_left, dt_l2)
 
 # define MechController
-mc = MechController(l_joystick, xbox_controller, turn_motor, turn_2, turn_3, turn_4)
+#mc = MechController(l_joystick, xbox_controller, turn_motor, turn_2, turn_3, turn_4)
 
 # define DriverStation
 ds = DriverStation.getInstance()
