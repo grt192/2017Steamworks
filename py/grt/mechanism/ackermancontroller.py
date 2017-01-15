@@ -30,6 +30,10 @@ class AckermanController:
         #MAX ANGLE FOR INSIDE WHEEL
         self.theta_2 = math.pi - self.theta_1
 
+        self.strafing = False
+
+        self.TICKS_PER_REV = 4096*50/24 #I THINK SO!
+
     def _joylistener(self, sensor, state_id, datum):
 
         if state_id in ('x_axis', 'y_axis'):
@@ -37,7 +41,7 @@ class AckermanController:
             x = self.joystick.x_axis
             y = self.joystick.y_axis
 
-            if abs(x) > .05 or abs(y) > .05:
+            if (abs(x) > .05 or abs(y) > .05) and  not self.strafing:
 
                 joy_angle = math.atan2(x, -y)
                 print("JOY ANGLE")
@@ -47,7 +51,7 @@ class AckermanController:
 
                 power = math.sqrt(x**2 + y**2)
 
-                TICKS_PER_REV = 4096*50/24 #I THINK SO!
+                
 
                 #CASES FOR QUADRANTS 1 AND 4
 
@@ -126,8 +130,8 @@ class AckermanController:
 
 
                 #Conversion from radians to encoder ticks
-                outer_pos = outer_angle*TICKS_PER_REV/(2*math.pi)
-                inner_pos = inner_angle*TICKS_PER_REV/(2*math.pi)
+                outer_pos = outer_angle*self.TICKS_PER_REV/(2*math.pi)
+                inner_pos = inner_angle*self.TICKS_PER_REV/(2*math.pi)
 
                
 
@@ -265,4 +269,59 @@ class AckermanController:
             self.turn_r2.changeControlMode(CANTalon.ControlMode.PercentVbus)
             self.turn_l1.changeControlMode(CANTalon.ControlMode.PercentVbus)
             self.turn_l2.changeControlMode(CANTalon.ControlMode.PercentVbus)
+
+            self.turn_r1.set(0)
+            self.turn_r2.set(0)
+            self.turn_l1.set(0)
+            self.turn_l2.set(0)
+
+
+        elif state_id in ('r_y_axis', 'r_x_axis'):
+
+            print("HERE!")
+
+            x = self.xbox_controller.r_x_axis
+            y = self.xbox_controller.r_y_axis
+
+            print("x")
+            print(x)
+
+            print("y")
+            print(y)
+
+            if abs(x) > .1 or abs(y) > .1:
+
+                self.strafing = True
+
+                angle = math.atan2(x,-y)
+                # print("ANGLE:")
+                # print(angle)
+
+                power = math.sqrt(x ** 2 + y ** 2)
+
+                position = angle * self.TICKS_PER_REV / (2*math.pi)
+                # print("POSITION")
+                # print(position)
+
+                self.turn_r1.set(position)
+                self.turn_r2.set(position)
+                self.turn_l1.set(position)
+                self.turn_l2.set(position)
+
+                self.power_r1.set(power*.3)
+                self.power_r2.set(power*.3)
+                self.power_l1.set(power*.3)
+                self.power_l2.set(power*.3)
+
+            else:
+
+                self.power_r1.set(0)
+                self.power_r2.set(0)
+                self.power_l1.set(0)
+                self.power_l2.set(0)
+
+                self.strafing = False
+
+
+
 

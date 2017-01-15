@@ -77,6 +77,8 @@ class TestSwerveDriveController:
         self.r_joystick.add_listener(self._joylistener)
         self.xbox_controller.add_listener(self._xbox_controller_listener)
 
+        self.strafing = False
+
        
 
 
@@ -97,7 +99,7 @@ class TestSwerveDriveController:
                 # print(x)
                 # print(y)
 
-                if abs(x) > .05 and abs(y) > .05:
+                if (abs(x) > .05 and abs(y) > .05):
 
                     angle = math.atan2(x,-y)
 
@@ -188,3 +190,10 @@ class TestSwerveDriveController:
             if datum:
                 print("ENCODER POSITION:")
                 print(self.turn_motor.getEncPosition())
+
+        
+
+                
+
+
+
