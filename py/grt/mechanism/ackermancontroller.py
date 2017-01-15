@@ -303,9 +303,9 @@ class AckermanController:
                 # print("POSITION")
                 # print(position)
 
-                cur_angle = self.turn_motor.getEncPosition()*(2*math.pi)/ticks_per_rev
+                cur_angle = self.turn_r1.getEncPosition()*(2*math.pi)/self.TICKS_PER_REV
 
-                if (abs(cur_angle) && abs(position) > math.pi/2) && (cur_angle * position < 0): 
+                if (abs(cur_angle) and abs(position) > math.pi/2) and (cur_angle * position < 0): 
 
                     if cur_angle > 0:
 
