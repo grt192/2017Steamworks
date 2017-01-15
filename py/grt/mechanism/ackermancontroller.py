@@ -23,7 +23,11 @@ class AckermanController:
 
         self.HEIGHT = 24
         self.WIDTH = 16
+
+        #MAX ANGLE FOR OUTSIDE WHEEL
         self.theta_1 = math.atan2(self.HEIGHT, self.WIDTH)
+
+        #MAX ANGLE FOR INSIDE WHEEL
         self.theta_2 = math.pi - self.theta_1
 
     def _joylistener(self, sensor, state_id, datum):
@@ -39,47 +43,90 @@ class AckermanController:
                 print("JOY ANGLE")
                 print(joy_angle)
 
-                power = math.sqrt(x**2 + y**2)
+                #DETERMINE POWER: size of vector based on joystick x and y
 
-                # print("POWER")
-                # print(power)
+                power = math.sqrt(x**2 + y**2)
 
                 TICKS_PER_REV = 4096*50/24 #I THINK SO!
 
-                outer_angle = self.theta_1 * joy_angle/(math.pi/2)
-                inner_angle = self.theta_2 * joy_angle/(math.pi/2)
+                #CASES FOR QUADRANTS 1 AND 4
 
-                # print("OUTER ANGLE")
-                # print(outer_angle)
+                #NOTE ABOUT PHILOSOPHY: 
+                #rather than have the wheel spin 360, it stays within an 180 degree range, 
+                #but goes backwards for going backwards.
 
-                # print("INNER ANGLE")
-                # print(inner_angle)
+                if joy_angle >= 0:
+
+                    #QUADRANT 1
+
+                    if joy_angle <= math.pi/2:
+
+                        #CONVERTS FROM JOYSTICK ANGLE IN A 90 DEGREE RANGE TO THE RANGE OF THE TWO MAXES
+
+                        outer_angle = self.theta_1 * joy_angle / (math.pi/2)
+                        inner_angle = self.theta_2 * joy_angle / (math.pi/2)
+
+                    #QUADRANT 4
+
+                    else:
+                        
+                        #The goal here is to have the wheel go to an angle within -90 to +90 but go backwards. 
+                        #We mod 90 in order to make the same conversion that we did in Q1.
+                        #Then you subtract 90 to make it go to the opposite quadrant.
+
+                        #EXAMPLE CASE:
+                        # Our joystick reads 175. Mod 90 that's 85. Then subtract 90 and you get -5. 
+                        # -5 and 175 are along the same line, so by going backwards from here we go the same direction
+                        # as 175. 
+
+                        outer_angle = self.theta_1 * (-(math.pi/2) + (joy_angle % (math.pi/2)))/(math.pi/2)
+                        inner_angle = self.theta_2 * (-(math.pi/2) + (joy_angle % (math.pi/2)))/(math.pi/2)
+
+
+                else:
+
+                    #QUADRANT 2
+
+                    if joy_angle >= -math.pi/2:
+
+                        #Same exact thing as Q1
+
+                        outer_angle = self.theta_1 * joy_angle / (math.pi/2)
+                        inner_angle = self.theta_2 * joy_angle / (math.pi/2)
+
+                    else:
+                        
+                        #Almost the same as Q4. You mod -90 since the angle will be negative. 
+                        #You add 90 instead of subtracting for the same reason.
+
+                        outer_angle = self.theta_1 * ((math.pi/2) + (joy_angle % (-math.pi/2)))/(math.pi/2)
+                        inner_angle = self.theta_2 * ((math.pi/2) + (joy_angle % (-math.pi/2)))/(math.pi/2)
+
+            
 
                 outer_speed = power
 
+                #avoids divison by 0
                 if inner_angle == 0:
                     inner_speed = power
+
+                #Decreases the inner speed by the appropriate amount.
                 else:
                     inner_speed = power * math.sin(outer_angle)/math.sin(inner_angle)
 
-                # print("OUTER SPEED")
-                # print(outer_speed)
 
-                # print("INNER SPEED")
-                # print(inner_speed)
-
+                #Conversion from radians to encoder ticks
                 outer_pos = outer_angle*TICKS_PER_REV/(2*math.pi)
                 inner_pos = inner_angle*TICKS_PER_REV/(2*math.pi)
 
-                # print("OUTER POSITION")
-                # print(outer_pos)
-
-                # print("INNER POSITION")
-                # print(inner_pos)
+               
 
                 if abs(joy_angle) < math.pi/2: #is in quadrant 1 or 2
 
                     if joy_angle <= 0: #is in quadrant 2
+
+                        #In quadrant 2 you turn left, so right is outer and left is inner. 
+                        #Back wheels are reversed for position for super tight turning.
 
                         self.turn_r1.set(outer_pos)
                         self.turn_r2.set(-outer_pos)
@@ -90,9 +137,11 @@ class AckermanController:
                         self.power_r2.set(outer_speed)
                         self.power_l1.set(inner_speed)
                         self.power_l2.set(inner_speed)
-                        #print("done1")
+                        
 
                     else: # is in quadrant 1
+
+                        #Same as Q2 but turn right.
 
                         self.turn_l1.set(outer_pos)
                         self.turn_l2.set(-outer_pos)
@@ -108,12 +157,42 @@ class AckermanController:
                 #same as above but goes backwards
                 else: # is in quadrant 3 or 4
 
-                    inner_pos = TICKS_PER_REV/2 - inner_pos
-                    outer_pos = TICKS_PER_REV/2 - outer_pos
 
                     if joy_angle >= 0: # is in quadrant 4
+                        print("QUADRANT 4 OUTER POS")
+                        print(outer_pos)
+                        print("QUADRANT 4 INNER POS")
+                        print(inner_pos)
 
-                        
+                        print("QUADRANT 4 OUTER SPEED")
+                        print(outer_speed)
+                        print("QUADRANT 4 INNER SPEED")
+                        print(inner_speed)
+
+                    
+                        self.turn_r1.set(outer_pos)
+                        self.turn_r2.set(-outer_pos)
+                        self.turn_l1.set(inner_pos)
+                        self.turn_l2.set(-inner_pos)
+
+                        self.power_r1.set(-outer_speed)
+                        self.power_r2.set(-outer_speed)
+                        self.power_l1.set(-inner_speed)
+                        self.power_l2.set(-inner_speed)
+                        #print("done3")
+
+                    else: # is in quadrant 3 
+
+                        print("QUADRANT 3 OUTER POS")
+                        print(outer_pos)
+                        print("QUADRANT 3 INNER POS")
+                        print(inner_pos)
+
+                        print("QUADRANT 3 OUTER SPEED")
+                        print(outer_speed)
+                        print("QUADRANT 3 INNER SPEED")
+                        print(inner_speed)
+
 
                         self.turn_r1.set(inner_pos)
                         self.turn_r2.set(-inner_pos)
@@ -124,21 +203,6 @@ class AckermanController:
                         self.power_r2.set(-inner_speed)
                         self.power_l1.set(-outer_speed)
                         self.power_l2.set(-outer_speed)
-                        #print("done3")
-
-                    else: # is in quadrant 3 
-
-
-
-                        self.turn_r1.set(outer_pos)
-                        self.turn_r2.set(-outer_pos)
-                        self.turn_l1.set(inner_pos)
-                        self.turn_l2.set(-inner_pos)
-
-                        self.power_r1.set(-outer_speed)
-                        self.power_r2.set(-outer_speed)
-                        self.power_l1.set(-inner_speed)
-                        self.power_l2.set(-inner_speed)
                         #print("done4")
 
             else:
@@ -189,4 +253,10 @@ class AckermanController:
             self.turn_r2.changeControlMode(CANTalon.ControlMode.PercentVbus)
             self.turn_l1.changeControlMode(CANTalon.ControlMode.PercentVbus)
             self.turn_l2.changeControlMode(CANTalon.ControlMode.PercentVbus)
+
+        elif state_id == 'x_button':
+            self.power_r1.set(-.5)
+
+        elif state_id == 'y_button':
+            self.power_r1.set(.5)
 
