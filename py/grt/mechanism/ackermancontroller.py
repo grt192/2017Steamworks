@@ -66,6 +66,10 @@ class AckermanController:
                         outer_angle = self.theta_1 * joy_angle / (math.pi/2)
                         inner_angle = self.theta_2 * joy_angle / (math.pi/2)
 
+                    elif joy_angle == math.pi:
+                        outer_angle = 0
+                        inner_angle = 0
+
                     #QUADRANT 4
 
                     else:
@@ -93,6 +97,12 @@ class AckermanController:
 
                         outer_angle = self.theta_1 * joy_angle / (math.pi/2)
                         inner_angle = self.theta_2 * joy_angle / (math.pi/2)
+
+                    elif joy_angle == -math.pi:
+                        outer_angle = 0
+                        inner_angle = 0
+
+                    #QUADRANT 3
 
                     else:
                         
@@ -218,6 +228,8 @@ class AckermanController:
 
     def _xbox_controller_listener(self, sensor, state_id, datum):
 
+        #TO ZERO: 
+
         if state_id == 'a_button':
 
             self.turn_r1.setEncPosition(0)
@@ -253,10 +265,4 @@ class AckermanController:
             self.turn_r2.changeControlMode(CANTalon.ControlMode.PercentVbus)
             self.turn_l1.changeControlMode(CANTalon.ControlMode.PercentVbus)
             self.turn_l2.changeControlMode(CANTalon.ControlMode.PercentVbus)
-
-        elif state_id == 'x_button':
-            self.power_r1.set(-.5)
-
-        elif state_id == 'y_button':
-            self.power_r1.set(.5)
 
