@@ -309,11 +309,11 @@ class AckermanController:
 
                     if cur_angle > 0:
 
-                        position += 2*math.pi 
-
+                        self.turn_r1.setEncPosition(cur_angle - 2*math.pi)
+                
                     else: 
 
-                        position -= 2*math.pi 
+                        self.turn_r1.setEncPosition(cur_angle + 2*math.pi)
 
                 self.turn_r1.set(position)
                 self.turn_r2.set(position)
