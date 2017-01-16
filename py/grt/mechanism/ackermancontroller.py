@@ -305,16 +305,28 @@ class AckermanController:
 
                 cur_angle = self.turn_r1.getEncPosition()*(2*math.pi)/self.TICKS_PER_REV
 
-                if (abs(cur_angle) and abs(position) > math.pi/2) and (cur_angle * position < 0): 
+                print("cur_angle")
+                print(cur_angle)
+                print("position")
+                print(position)
+
+                if (abs(cur_angle) > math.pi/2) and (abs(position) > (self.TICKS_PER_REV/4)) and (cur_angle * position < 0): 
 
                     if cur_angle > 0:
-
-                        self.turn_r1.setEncPosition(cur_angle - 2*math.pi)
+                        print(cur_angle - 2*math.pi)
+                        self.turn_r1.setEncPosition(cur_angle * self.TICKS_PER_REV / (2*math.pi) - self.TICKS_PER_REV)
+                        self.turn_r2.setEncPosition(cur_angle * self.TICKS_PER_REV / (2*math.pi) - self.TICKS_PER_REV)
+                        self.turn_l1.setEncPosition(cur_angle * self.TICKS_PER_REV / (2*math.pi) - self.TICKS_PER_REV)
+                        self.turn_l2.setEncPosition(cur_angle * self.TICKS_PER_REV / (2*math.pi) - self.TICKS_PER_REV)
                 
                     else: 
+                        print(cur_angle + 2*math.pi)
+                        self.turn_r1.setEncPosition(cur_angle * self.TICKS_PER_REV / (2*math.pi) + self.TICKS_PER_REV)
+                        self.turn_r2.setEncPosition(cur_angle * self.TICKS_PER_REV / (2*math.pi) + self.TICKS_PER_REV)
+                        self.turn_l1.setEncPosition(cur_angle * self.TICKS_PER_REV / (2*math.pi) + self.TICKS_PER_REV)
+                        self.turn_l2.setEncPosition(cur_angle * self.TICKS_PER_REV / (2*math.pi) + self.TICKS_PER_REV)
 
-                        self.turn_r1.setEncPosition(cur_angle + 2*math.pi)
-
+                
                 self.turn_r1.set(position)
                 self.turn_r2.set(position)
                 self.turn_l1.set(position)
