@@ -275,20 +275,20 @@ class AckermanController:
             self.turn_l1.set(0)
             self.turn_l2.set(0)
 
+        elif state_id == 'x_button':
+            self.strafing = True
+
+        elif state_id == 'y_button':
+            self.strafing = False
+
 
         elif state_id in ('r_y_axis', 'r_x_axis'):
 
-            print("HERE!")
-
+            
             x = self.xbox_controller.r_x_axis
             y = self.xbox_controller.r_y_axis
 
-            print("x")
-            print(x)
-
-            print("y")
-            print(y)
-
+            
             if abs(x) > .1 or abs(y) > .1:
 
                 self.strafing = True
