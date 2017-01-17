@@ -14,6 +14,11 @@ class MyRobot(wpilib.SampleRobot):
 
         #self.turn_motor = config.turn_motor
 
+        self.t1 = config.turn_right
+        self.t2 = config.turn_left
+        self.t3 = config.turn_r2
+        self.t4 = config.turn_l2
+
 
     def disabled(self):
         while self.isDisabled():
@@ -33,6 +38,12 @@ class MyRobot(wpilib.SampleRobot):
             self.safeSleep(tinit, .04)
             # print("Encoder position:")
             # print(self.turn_motor.getEncPosition())
+            print(self.t1.getEncPosition())
+            print(self.t2.getEncPosition())
+            print(self.t3.getEncPosition())
+            print(self.t4.getEncPosition())
+
+
             
     def safeSleep(self, tinit, duration):
         tdif = .04 - (time.time() - tinit)
