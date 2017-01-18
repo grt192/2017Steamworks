@@ -13,7 +13,7 @@ class MyRobot(wpilib.SampleRobot):
         self.ds = config.ds
         self.limit_switch = config.limit_switch
 
-        self.turn_motor = config.turn_motor
+        self.turn_2 = config.turn_2
 
 
     def disabled(self):
@@ -32,9 +32,11 @@ class MyRobot(wpilib.SampleRobot):
             #self.sp.poll()
             self.hid_sp.poll()
             self.safeSleep(tinit, .04)
-            # print("Encoder position:")
-            # print(self.turn_motor.getEncPosition())
-            print (self.limit_switch.get())
+            print(self.limit_switch.get())
+            print(self.turn_2.getEncPosition())
+            if self.limit_switch.get():
+                    self.turn_2.setEncPosition(0)
+                    #print("triggered")
             
     def safeSleep(self, tinit, duration):
         tdif = .04 - (time.time() - tinit)

@@ -34,7 +34,7 @@ turn_motor.setPID(1.0, 0.0, 0.0)
 limit_switch = DigitalInput(5)
 
 
-power_motor = CANTalon(6)
+power_motor = CANTalon(10)
 
 turn_2 = CANTalon(2)
 turn_2.changeControlMode(CANTalon.ControlMode.Position)
@@ -81,7 +81,7 @@ tank_dt = DriveTrain(power_motor, power_2, left_shifter=None, left_encoder=None,
 l_joystick = Attack3Joystick(0)
 r_joystick = Attack3Joystick(3)
 xbox_controller = XboxJoystick(1)
-ac = ArcadeDriveController(tank_dt, l_joystick)
+#ac = ArcadeDriveController(tank_dt, l_joystick)
 hid_sp = SensorPoller((l_joystick, r_joystick, xbox_controller))  # human interface devices
 
 
@@ -91,7 +91,7 @@ hid_sp = SensorPoller((l_joystick, r_joystick, xbox_controller))  # human interf
 #sc = TestSwerveDriveController(l_joystick, r_joystick, xbox_controller, dt=dt, turn_motor=turn_motor, power_motor=power_motor, turn_2 = turn_2, turn_3 = turn_3)
 
 # define MechController
-#mc = MechController()
+mc = MechController(turn_2, l_joystick, xbox_controller, limit_switch=limit_switch)
 
 # define DriverStation
 ds = DriverStation.getInstance()
