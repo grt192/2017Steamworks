@@ -61,18 +61,6 @@ dt_r2 = CANTalon(7)
 
 
 
-# dt_l2.changeControlMode(CANTalon.ControlMode.Follower)
-# dt_r2.changeControlMode(CANTalon.ControlMode.Follower)
-#power_4.changeControlMode(CANTalon.ControlMode.Follower)
-
-# turn_2.set(8)
-# turn_3.set(8)
-# #turn_4.set(8)
-
-# dt_l2.set(1)
-# dt_r2.set(6)
-#.set(6)
-
 #dt = SwerveModule(power_motor, turn_motor)
 
 #needs to be changed for left and right
