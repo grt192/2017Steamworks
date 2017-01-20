@@ -18,6 +18,7 @@ from grt.sensors.encoder import Encoder
 from grt.mechanism.mechcontroller import MechController
 from grt.mechanism.swervecontroller import TestSwerveDriveController
 from grt.mechanism.ackermancontroller import AckermanController
+from grt.mechanism.beta_mechs import Shooter, Intake, Gear, Climber, Hopper
 
 
 #DT Talons and Objects
@@ -58,6 +59,54 @@ dt_left = CANTalon(1)
 
 dt_l2 = CANTalon(4) 
 dt_r2 = CANTalon(7) 
+
+
+shooter1_m1 = CANTalon(10)
+shooter1_m2 = CANTalon(11)
+shooter2_m1 = CANTalon(12)
+shooter2_m2 = CANTalon(13)
+
+shooter1_m1.changeControlMode(CANTalon.ControlMode.Speed)
+shooter1_m1.setPID(.33, 0, 0, f=.17)
+
+shooter1_m2.changeControlMode(CANTalon.ControlMode.Speed)
+shooter1_m2.setPID(.33, 0, 0, f=.17)
+
+shooter2_m1.changeControlMode(CANTalon.ControlMode.Speed)
+shooter2_m1.setPID(.33, 0, 0, f=.17)
+
+shooter2_m2.changeControlMode(CANTalon.ControlMode.Speed)
+shooter2_m2.setPID(.33, 0, 0, f=.17)
+
+load_m = CANTalon(14)
+
+shooter = Shooter(shooter1_m1, shooter1_m2, shooter2_m1, shooter2_m2, load_m)
+
+
+intake_motor = CANTalon(15)
+
+intake = Intake(intake_motor)
+
+
+climber_motor = CANTalon(16)
+
+c2 = CANTalon(17)
+
+c2.changeControlMode(CANTalon.changeControlMode.Follower)
+c2.set(climber_motor.getDeviceID())
+
+climber = Climber(climber_motor)
+
+
+gear_pneumatic_1 = Solenoid(0)
+gear_pneumatic_2 = Solenoid(1)
+
+gear_mech = Gear(gear_pneumatic_1, gear_pneumatic_2)
+
+
+hopper_pneumatic = Solenoid(2)
+
+hopper = Hopper(hopper_pneumatic)
 
 
 
