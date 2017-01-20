@@ -80,8 +80,9 @@ shooter2_m2.setPID(.33, 0, 0, f=.17)
 
 load_m = CANTalon(14)
 
-shooter = Shooter(shooter1_m1, shooter1_m2, shooter2_m1, shooter2_m2, load_m)
+angle_change = Solenoid(3)
 
+shooter = Shooter(shooter1_m1, shooter1_m2, shooter2_m1, shooter2_m2, load_m, angle_change)
 
 intake_motor = CANTalon(15)
 

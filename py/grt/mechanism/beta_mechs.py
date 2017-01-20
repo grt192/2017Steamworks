@@ -1,6 +1,6 @@
 class Shooter:
 
-	def __init__(self, shooter_m1, shooter_m2, shooter2_m1, shooter2_m2, load_m):
+	def __init__(self, shooter_m1, shooter_m2, shooter2_m1, shooter2_m2, load_m, pneumatic):
 
 		self.shooter1_m1 = shooter1_m1
 		self.shooter1_m2 = shooter1_m2
@@ -8,6 +8,8 @@ class Shooter:
 		self.shooter2_m2 = shooter2_m2
 
 		self.load_m = load_m
+
+		self.pneumatic = pneumatic
 
 	def ramp_up_speed(self, vel_1, vel_2):
 		self.shooter1_m1.set(vel_1)
@@ -18,6 +20,12 @@ class Shooter:
 	def shoot(self):
 		self.load_m.set(1)
 
+	def angle_change_up(self):
+		self.pneumatic.set(1)
+
+	def angle_change_down(self):
+		self.pneumatic.set(0)
+
 class Intake:
 
 	def __init__(self, motor):
@@ -26,7 +34,6 @@ class Intake:
 
 	def intake(self):
 		self.motor.set(1)
-		
 
 class Climber:
 
