@@ -20,6 +20,9 @@ class Shooter:
 	def shoot(self):
 		self.load_m.set(1)
 
+	def stop(self):
+		self.load_m.set(0)
+
 	def angle_change_up(self):
 		self.pneumatic.set(1)
 
@@ -35,6 +38,9 @@ class Intake:
 	def intake(self):
 		self.motor.set(1)
 
+	def stop(self):
+		self.motor.set(0)
+
 class Climber:
 
 	def __init__(self, motor):
@@ -43,6 +49,9 @@ class Climber:
 
 	def climb(self):
 		self.motor.set(1)
+
+	def stop(self):
+		self.motor.set(0)
 
 class Gear:
 
