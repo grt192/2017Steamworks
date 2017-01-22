@@ -16,6 +16,7 @@ class AckermanController:
         self.power_l2 = power_l2
 
         self.limit_switch = limit_switch
+        limit_switch.add_listener(self._limit_listener)
 
         self.joystick = joystick
         self.xbox_controller = xbox_controller
@@ -124,34 +125,6 @@ class AckermanController:
             x = self.xbox_controller.r_x_axis
             y = self.xbox_controller.r_y_axis
 
-            print("from strafing")
-
-            print(self.turn_r1.getEncPosition())
-            print(self.turn_r2.getEncPosition())
-            print(self.turn_l1.getEncPosition())
-            print(self.turn_l2.getEncPosition())
-
-            pressed = False
-            print(pressed)
-
-            if self.limit_switch.get():
-
-                if not pressed:
-
-                    pressed = True
-                    #print("JUST SET TO TRUE")
-                    #print(pressed)
-
-                    #print("HEEEEEEEEEEEEEEEEEEEERRRRRREEEEEEEEEEE")
-                    self.turn_r1.setEncPosition(0)
-                    self.turn_r2.setEncPosition(0)
-                    self.turn_l1.setEncPosition(0)
-                    self.turn_l2.setEncPosition(0)
-
-            else:
-                #print("unpressed")
-                pressed = False
-
             
             if abs(x) > .2 or abs(y) > .2:
 
@@ -219,14 +192,14 @@ class AckermanController:
                 self.power_l2.set(0)
 
                 self.strafing = False
-                #print("SWITCHED TO ACKERMAN")
+                print("SWITCHED TO ACKERMAN")
 
         elif state_id in ('l_y_axis', 'l_x_axis'):
 
             x = self.xbox_controller.l_x_axis
             y = self.xbox_controller.l_y_axis
 
-            if (abs(x) > .2 or abs(y) > .2) and  not self.strafing:
+            if (abs(x) > .2 or abs(y) > .2) and not self.strafing:
 
                 joy_angle = math.atan2(x, -y)
                 print("JOY ANGLE")
@@ -420,3 +393,15 @@ class AckermanController:
                 self.power_r2.set(0)
                 self.power_l1.set(0)
                 self.power_l2.set(0)
+
+    def _limit_listener(self, source, state_id, datum):
+
+        if state_id == 'pressed' and datum and self.strafing:
+
+
+            print("listener zeroing")
+
+            self.turn_r1.setEncPosition(0)
+            self.turn_r2.setEncPosition(0)
+            self.turn_l1.setEncPosition(0)
+            self.turn_l2.setEncPosition(0)

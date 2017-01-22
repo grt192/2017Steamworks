@@ -113,7 +113,7 @@ hopper = Hopper(hopper_pneumatic)
 
 limit_switch = Switch(5, reverse=True)
 
-zero_test = ZeroTest(turn_right, limit_switch)
+#zero_test = ZeroTest(turn_right, limit_switch)
 
 #dt = SwerveModule(power_motor, turn_motor)
 
@@ -138,10 +138,10 @@ hid_sp = SensorPoller((l_joystick, r_joystick, xbox_controller, limit_switch))  
 
 #sc = TestSwerveDriveController(l_joystick, r_joystick, xbox_controller, dt=dt, turn_motor=turn_motor, power_motor=power_motor, turn_2 = turn_2, turn_3 = turn_3)
 
-#ac = AckermanController(l_joystick, xbox_controller, turn_right, turn_r2, turn_left, turn_l2, dt_right, dt_r2, dt_left, dt_l2, limit_switch, zero_test)
+ac = AckermanController(l_joystick, xbox_controller, turn_right, turn_r2, turn_left, turn_l2, dt_right, dt_r2, dt_left, dt_l2, limit_switch)
 
 # define MechController
-mc = MechController(l_joystick, xbox_controller, shooter, intake, climber, gear_mech, hopper, zero_test)
+#mc = MechController(l_joystick, xbox_controller, shooter, intake, climber, gear_mech, hopper, zero_test)
 
 # define DriverStation
 ds = DriverStation.getInstance()
