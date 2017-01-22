@@ -3,6 +3,7 @@
 import wpilib
 import time
 
+#from config import sp
 
 class MyRobot(wpilib.SampleRobot):
     def __init__(self):
@@ -11,6 +12,7 @@ class MyRobot(wpilib.SampleRobot):
         #self.sp = config.sp
         self.hid_sp = config.hid_sp
         self.ds = config.ds
+        
 
         #self.turn_motor = config.turn_motor
 
@@ -24,6 +26,7 @@ class MyRobot(wpilib.SampleRobot):
         while self.isDisabled():
             tinit = time.time()
             self.hid_sp.poll()
+            #sp.poll()
             self.safeSleep(tinit, .04)
     
     def autonomous(self):
@@ -35,6 +38,7 @@ class MyRobot(wpilib.SampleRobot):
             tinit = time.time()
             #self.sp.poll()
             self.hid_sp.poll()
+            #sp.poll()
             self.safeSleep(tinit, .04)
             # print("Encoder position:")
             # print(self.turn_motor.getEncPosition())

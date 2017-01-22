@@ -115,6 +115,7 @@ class AckermanController:
                 self.strafing = False
                 print("SWITCHED TO ACKERMAN")
 
+
         #RIGHT JOYSTICK FOR STRAFING
 
         elif state_id in ('r_y_axis', 'r_x_axis'):
@@ -130,13 +131,26 @@ class AckermanController:
             print(self.turn_l1.getEncPosition())
             print(self.turn_l2.getEncPosition())
 
-            # if self.limit_switch.get():
-                
-            #     print("HEEEEEEEEEEEEEEEEEEEERRRRRREEEEEEEEEEE")
-            #     self.turn_r1.setEncPosition(0)
-            #     self.turn_r2.setEncPosition(0)
-            #     self.turn_l1.setEncPosition(0)
-            #     self.turn_l2.setEncPosition(0)
+            pressed = False
+            print(pressed)
+
+            if self.limit_switch.get():
+
+                if not pressed:
+
+                    pressed = True
+                    #print("JUST SET TO TRUE")
+                    #print(pressed)
+
+                    #print("HEEEEEEEEEEEEEEEEEEEERRRRRREEEEEEEEEEE")
+                    self.turn_r1.setEncPosition(0)
+                    self.turn_r2.setEncPosition(0)
+                    self.turn_l1.setEncPosition(0)
+                    self.turn_l2.setEncPosition(0)
+
+            else:
+                #print("unpressed")
+                pressed = False
 
             
             if abs(x) > .2 or abs(y) > .2:
