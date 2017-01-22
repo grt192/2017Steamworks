@@ -3,7 +3,7 @@ from wpilib import CANTalon
 
 class AckermanController:
 
-    def __init__(self, joystick, xbox_controller, turn_r1, turn_r2, turn_l1, turn_l2, power_r1, power_r2, power_l1, power_l2):
+    def __init__(self, joystick, xbox_controller, turn_r1, turn_r2, turn_l1, turn_l2, power_r1, power_r2, power_l1, power_l2, limit_switch):
 
         self.turn_r1 = turn_r1
         self.turn_r2 = turn_r2
@@ -14,6 +14,8 @@ class AckermanController:
         self.power_r2 = power_r2
         self.power_l1 = power_l1
         self.power_l2 = power_l2
+
+        self.limit_switch = limit_switch
 
         self.joystick = joystick
         self.xbox_controller = xbox_controller
@@ -121,11 +123,26 @@ class AckermanController:
             x = self.xbox_controller.r_x_axis
             y = self.xbox_controller.r_y_axis
 
+            print("from strafing")
+
+            print(self.turn_r1.getEncPosition())
+            print(self.turn_r2.getEncPosition())
+            print(self.turn_l1.getEncPosition())
+            print(self.turn_l2.getEncPosition())
+
+            # if self.limit_switch.get():
+                
+            #     print("HEEEEEEEEEEEEEEEEEEEERRRRRREEEEEEEEEEE")
+            #     self.turn_r1.setEncPosition(0)
+            #     self.turn_r2.setEncPosition(0)
+            #     self.turn_l1.setEncPosition(0)
+            #     self.turn_l2.setEncPosition(0)
+
             
             if abs(x) > .2 or abs(y) > .2:
 
                 self.strafing = True
-                print("SWITCHED TO STRAFING")
+                #print("SWITCHED TO STRAFING")
 
                 angle = math.atan2(x,-y)
                 
@@ -188,7 +205,7 @@ class AckermanController:
                 self.power_l2.set(0)
 
                 self.strafing = False
-                print("SWITCHED TO ACKERMAN")
+                #print("SWITCHED TO ACKERMAN")
 
         elif state_id in ('l_y_axis', 'l_x_axis'):
 

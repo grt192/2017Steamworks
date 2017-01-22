@@ -2,7 +2,7 @@
 Config File for Robot
 """
 
-from wpilib import Solenoid, Compressor, DriverStation, CANTalon
+from wpilib import Solenoid, Compressor, DriverStation, CANTalon, DigitalInput
 
 from grt.sensors.attack_joystick import Attack3Joystick
 from grt.sensors.xbox_joystick import XboxJoystick
@@ -93,7 +93,7 @@ climber_motor = CANTalon(16)
 
 c2 = CANTalon(17)
 
-c2.changeControlMode(CANTalon.changeControlMode.Follower)
+c2.changeControlMode(CANTalon.ControlMode.Follower)
 c2.set(climber_motor.getDeviceID())
 
 climber = Climber(climber_motor)
@@ -109,6 +109,7 @@ hopper_pneumatic = Solenoid(2)
 
 hopper = Hopper(hopper_pneumatic)
 
+limit_switch = DigitalInput(5)
 
 
 #dt = SwerveModule(power_motor, turn_motor)
@@ -134,10 +135,10 @@ hid_sp = SensorPoller((l_joystick, r_joystick, xbox_controller))  # human interf
 
 #sc = TestSwerveDriveController(l_joystick, r_joystick, xbox_controller, dt=dt, turn_motor=turn_motor, power_motor=power_motor, turn_2 = turn_2, turn_3 = turn_3)
 
-ac = AckermanController(l_joystick, xbox_controller, turn_right, turn_r2, turn_left, turn_l2, dt_right, dt_r2, dt_left, dt_l2)
+ac = AckermanController(l_joystick, xbox_controller, turn_right, turn_r2, turn_left, turn_l2, dt_right, dt_r2, dt_left, dt_l2, limit_switch)
 
 # define MechController
-#mc = MechController(l_joystick, xbox_controller, turn_motor, turn_2, turn_3, turn_4)
+#mc = MechController(l_joystick, xbox_controller, shooter, intake, climber, gear_mech, hopper)
 
 # define DriverStation
 ds = DriverStation.getInstance()
