@@ -38,10 +38,10 @@ class MyRobot(wpilib.SampleRobot):
             self.safeSleep(tinit, .04)
             # print("Encoder position:")
             # print(self.turn_motor.getEncPosition())
-            print(self.t1.getEncPosition())
-            print(self.t2.getEncPosition())
-            print(self.t3.getEncPosition())
-            print(self.t4.getEncPosition())
+            # print(self.t1.getEncPosition())
+            # print(self.t2.getEncPosition())
+            # print(self.t3.getEncPosition())
+            # print(self.t4.getEncPosition())
 
 
             

@@ -21,8 +21,8 @@ class AckermanController:
         self.joystick.add_listener(self._joylistener)
         self.xbox_controller.add_listener(self._xbox_controller_listener)
 
-        self.HEIGHT = 24
-        self.WIDTH = 16
+        self.HEIGHT = 16
+        self.WIDTH = 24
 
         #MAX ANGLE FOR OUTSIDE WHEEL
         self.theta_1 = math.atan2(self.HEIGHT, self.WIDTH)
@@ -138,13 +138,13 @@ class AckermanController:
                 #USES MOTOR TURN_R1 TO DETERMIN THE CURRENT POSITION.
                 #Not sure if it would be better to do this individually for each motor.
 
-                cur_angle = self.turn_r1.getEncPosition()*(2*math.pi)/self.TICKS_PER_REV
+                cur_angle = self.turn_r2.getEncPosition()*(2*math.pi)/self.TICKS_PER_REV
 
                 #IF THE WHEEL IS CURRENTLY IN Q3 OR Q4 AND NEEDS TO GO TO THE OTHER ONE
 
                 if (abs(cur_angle) > math.pi/2) and (abs(position) > (self.TICKS_PER_REV/4)) and (cur_angle * position < 0): 
 
-
+                    print("resetting enc pos")
                     #IF IN Q4 SET CURRENT POSITION TO CURRENT POSITION - 2*PI
 
                     if cur_angle > 0:
@@ -170,10 +170,10 @@ class AckermanController:
                 self.turn_l1.set(position)
                 self.turn_l2.set(position)
 
-                self.power_r1.set(power*.25)
-                self.power_r2.set(power*.25)
-                self.power_l1.set(power*.25)
-                self.power_l2.set(power*.25)
+                self.power_r1.set(power*.5)
+                self.power_r2.set(power*.5)
+                self.power_l1.set(power*.5)
+                self.power_l2.set(power*.5)
 
             else:
 

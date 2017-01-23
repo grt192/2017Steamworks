@@ -24,22 +24,22 @@ from grt.mechanism.ackermancontroller import AckermanController
 
 
 #UNCOMMENT THE FOLLOWING LATER
-turn_l2 = CANTalon(8) #8
+turn_l2 = CANTalon(2) #8
 turn_l2.changeControlMode(CANTalon.ControlMode.Position)
 turn_l2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
 turn_l2.setPID(1.0, 0.0, 0.0)
 
-turn_r2 = CANTalon(9) #9
+turn_r2 = CANTalon(8) #9
 turn_r2.changeControlMode(CANTalon.ControlMode.Position)
 turn_r2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
 turn_r2.setPID(1.0, 0.0, 0.0)
 
-turn_left = CANTalon(2) #2
+turn_left = CANTalon(5) #2
 turn_left.changeControlMode(CANTalon.ControlMode.Position)
 turn_left.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
 turn_left.setPID(1.0, 0.0, 0.0)
 
-turn_right = CANTalon(5) #5
+turn_right = CANTalon(9) #5
 turn_right.changeControlMode(CANTalon.ControlMode.Position)
 turn_right.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
 turn_right.setPID(1.0, 0.0, 0.0)
