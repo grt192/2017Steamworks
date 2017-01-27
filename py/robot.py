@@ -28,6 +28,10 @@ class MyRobot(wpilib.SampleRobot):
             self.hid_sp.poll()
             #sp.poll()
             self.safeSleep(tinit, .04)
+
+            print("Encoder position:")
+            print(self.t4.getEncPosition())
+            print(self.t4.getControlMode())
     
     def autonomous(self):
         # define auto here
@@ -40,12 +44,13 @@ class MyRobot(wpilib.SampleRobot):
             self.hid_sp.poll()
             #sp.poll()
             self.safeSleep(tinit, .04)
-            # print("Encoder position:")
+            print("Encoder position:")
             # print(self.turn_motor.getEncPosition())
             # print(self.t1.getEncPosition())
             # print(self.t2.getEncPosition())
             # print(self.t3.getEncPosition())
-            # print(self.t4.getEncPosition())
+            print(self.t4.getEncPosition())
+            print(self.t4.getControlMode())
 
 
             

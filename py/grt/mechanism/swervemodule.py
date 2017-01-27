@@ -51,136 +51,136 @@ class SwerveModule:
 
             #CONVERTS FROM JOYSTICK ANGLE IN A 90 DEGREE RANGE TO THE RANGE OF THE TWO MAXES
 
-            outer_angle = self.theta_1 * joy_angle / (math.pi/2)
-            inner_angle = self.theta_2 * joy_angle / (math.pi/2)
+                outer_angle = self.theta_1 * joy_angle / (math.pi/2)
+                inner_angle = self.theta_2 * joy_angle / (math.pi/2)
 
-        elif joy_angle == math.pi:
-            outer_angle = 0
-            inner_angle = 0
+            elif joy_angle == math.pi:
+                outer_angle = 0
+                inner_angle = 0
 
         #QUADRANT 4
 
-        else:
-            
-            #The goal here is to have the wheel go to an angle within -90 to +90 but go backwards. 
-            #We mod 90 in order to make the same conversion that we did in Q1.
-            #Then you subtract 90 to make it go to the opposite quadrant.
+            else:
+                
+                #The goal here is to have the wheel go to an angle within -90 to +90 but go backwards. 
+                #We mod 90 in order to make the same conversion that we did in Q1.
+                #Then you subtract 90 to make it go to the opposite quadrant.
 
-            #EXAMPLE CASE:
-            # Our joystick reads 175. Mod 90 that's 85. Then subtract 90 and you get -5. 
-            # -5 and 175 are along the same line, so by going backwards from here we go the same direction
-            # as 175. 
+                #EXAMPLE CASE:
+                # Our joystick reads 175. Mod 90 that's 85. Then subtract 90 and you get -5. 
+                # -5 and 175 are along the same line, so by going backwards from here we go the same direction
+                # as 175. 
 
-            outer_angle = self.theta_1 * (-(math.pi/2) + (joy_angle % (math.pi/2)))/(math.pi/2)
-            inner_angle = self.theta_2 * (-(math.pi/2) + (joy_angle % (math.pi/2)))/(math.pi/2)
+                outer_angle = self.theta_1 * (-(math.pi/2) + (joy_angle % (math.pi/2)))/(math.pi/2)
+                inner_angle = self.theta_2 * (-(math.pi/2) + (joy_angle % (math.pi/2)))/(math.pi/2)
 
-
-    else:
-
-        #QUADRANT 2
-
-        if joy_angle >= -math.pi/2:
-
-            #Same exact thing as Q1
-
-            outer_angle = self.theta_1 * joy_angle / (math.pi/2)
-            inner_angle = self.theta_2 * joy_angle / (math.pi/2)
-
-        elif joy_angle == -math.pi:
-            outer_angle = 0
-            inner_angle = 0
-
-        #QUADRANT 3
 
         else:
+
+            #QUADRANT 2
+
+            if joy_angle >= -math.pi/2:
+
+                #Same exact thing as Q1
+
+                outer_angle = self.theta_1 * joy_angle / (math.pi/2)
+                inner_angle = self.theta_2 * joy_angle / (math.pi/2)
+
+            elif joy_angle == -math.pi:
+                outer_angle = 0
+                inner_angle = 0
+
+            #QUADRANT 3
+
+            else:
+                
+                #Almost the same as Q4. You mod -90 since the angle will be negative. 
+                #You add 90 instead of subtracting for the same reason.
+
+                outer_angle = self.theta_1 * ((math.pi/2) + (joy_angle % (-math.pi/2)))/(math.pi/2)
+                inner_angle = self.theta_2 * ((math.pi/2) + (joy_angle % (-math.pi/2)))/(math.pi/2)
+
+
+
+        outer_speed = power
+
+        #avoids divison by 0
+        if inner_angle == 0:
+            inner_speed = power
+
+        #Decreases the inner speed by the appropriate amount.
+        else:
+            inner_speed = power * math.sin(outer_angle)/math.sin(inner_angle)
+
+
+        #Conversion from radians to encoder ticks
+        outer_pos = outer_angle*self.TICKS_PER_REV/(2*math.pi)
+        inner_pos = inner_angle*self.TICKS_PER_REV/(2*math.pi)
+
+       
+
+        if abs(joy_angle) < math.pi/2: #is in quadrant 1 or 2
+
+            if joy_angle <= 0: #is in quadrant 2
+
+                #In quadrant 2 you turn left, so right is outer and left is inner. 
+                #Back wheels are reversed for position for super tight turning.
+
+                self.turn_r1.set(outer_pos)
+                self.turn_r2.set(-outer_pos)
+                self.turn_l1.set(inner_pos)
+                self.turn_l2.set(-inner_pos)
+
+                self.power_r1.set(outer_speed)
+                self.power_r2.set(outer_speed)
+                self.power_l1.set(inner_speed)
+                self.power_l2.set(inner_speed)
+                
+
+            else: # is in quadrant 1
+
+                #Same as Q2 but turn right.
+
+                self.turn_l1.set(outer_pos)
+                self.turn_l2.set(-outer_pos)
+                self.turn_r1.set(inner_pos)
+                self.turn_r2.set(-inner_pos)
+
+                self.power_l1.set(outer_speed)
+                self.power_l2.set(outer_speed)
+                self.power_r1.set(inner_speed)
+                self.power_r2.set(inner_speed)
+                #print("done2")
+
+        #same as above but goes backwards
+        else: # is in quadrant 3 or 4
+
+
+            if joy_angle >= 0: # is in quadrant 4
             
-            #Almost the same as Q4. You mod -90 since the angle will be negative. 
-            #You add 90 instead of subtracting for the same reason.
+                self.turn_r1.set(outer_pos)
+                self.turn_r2.set(-outer_pos)
+                self.turn_l1.set(inner_pos)
+                self.turn_l2.set(-inner_pos)
 
-            outer_angle = self.theta_1 * ((math.pi/2) + (joy_angle % (-math.pi/2)))/(math.pi/2)
-            inner_angle = self.theta_2 * ((math.pi/2) + (joy_angle % (-math.pi/2)))/(math.pi/2)
+                self.power_r1.set(-outer_speed)
+                self.power_r2.set(-outer_speed)
+                self.power_l1.set(-inner_speed)
+                self.power_l2.set(-inner_speed)
+                #print("done3")
 
-
-
-    outer_speed = power
-
-    #avoids divison by 0
-    if inner_angle == 0:
-        inner_speed = power
-
-    #Decreases the inner speed by the appropriate amount.
-    else:
-        inner_speed = power * math.sin(outer_angle)/math.sin(inner_angle)
+            else: # is in quadrant 3 
 
 
-    #Conversion from radians to encoder ticks
-    outer_pos = outer_angle*self.TICKS_PER_REV/(2*math.pi)
-    inner_pos = inner_angle*self.TICKS_PER_REV/(2*math.pi)
+                self.turn_r1.set(inner_pos)
+                self.turn_r2.set(-inner_pos)
+                self.turn_l1.set(outer_pos)
+                self.turn_l2.set(-outer_pos)
 
-   
-
-    if abs(joy_angle) < math.pi/2: #is in quadrant 1 or 2
-
-        if joy_angle <= 0: #is in quadrant 2
-
-            #In quadrant 2 you turn left, so right is outer and left is inner. 
-            #Back wheels are reversed for position for super tight turning.
-
-            self.turn_r1.set(outer_pos)
-            self.turn_r2.set(-outer_pos)
-            self.turn_l1.set(inner_pos)
-            self.turn_l2.set(-inner_pos)
-
-            self.power_r1.set(outer_speed)
-            self.power_r2.set(outer_speed)
-            self.power_l1.set(inner_speed)
-            self.power_l2.set(inner_speed)
-            
-
-        else: # is in quadrant 1
-
-            #Same as Q2 but turn right.
-
-            self.turn_l1.set(outer_pos)
-            self.turn_l2.set(-outer_pos)
-            self.turn_r1.set(inner_pos)
-            self.turn_r2.set(-inner_pos)
-
-            self.power_l1.set(outer_speed)
-            self.power_l2.set(outer_speed)
-            self.power_r1.set(inner_speed)
-            self.power_r2.set(inner_speed)
-            #print("done2")
-
-    #same as above but goes backwards
-    else: # is in quadrant 3 or 4
-
-
-        if joy_angle >= 0: # is in quadrant 4
-        
-            self.turn_r1.set(outer_pos)
-            self.turn_r2.set(-outer_pos)
-            self.turn_l1.set(inner_pos)
-            self.turn_l2.set(-inner_pos)
-
-            self.power_r1.set(-outer_speed)
-            self.power_r2.set(-outer_speed)
-            self.power_l1.set(-inner_speed)
-            self.power_l2.set(-inner_speed)
-            #print("done3")
-
-        else: # is in quadrant 3 
-
-
-            self.turn_r1.set(inner_pos)
-            self.turn_r2.set(-inner_pos)
-            self.turn_l1.set(outer_pos)
-            self.turn_l2.set(-outer_pos)
-
-            self.power_r1.set(-inner_speed)
-            self.power_r2.set(-inner_speed)
-            self.power_l1.set(-outer_speed)
-            self.power_l2.set(-outer_speed)
+                self.power_r1.set(-inner_speed)
+                self.power_r2.set(-inner_speed)
+                self.power_l1.set(-outer_speed)
+                self.power_l2.set(-outer_speed)
 
 
     def strafe(self, joy_angle, power):
@@ -232,6 +232,50 @@ class SwerveModule:
     def set_strafing(self, boolean):
         self.strafing = boolean
 
+    def switch_to_percentvbus(self):
+
+        self.turn_r1.changeControlMode(CANTalon.ControlMode.PercentVbus)
+        self.turn_r2.changeControlMode(CANTalon.ControlMode.PercentVbus)
+        self.turn_l1.changeControlMode(CANTalon.ControlMode.PercentVbus)
+        self.turn_l2.changeControlMode(CANTalon.ControlMode.PercentVbus)
+
+        self.turn_r1.set(0)
+        self.turn_r2.set(0)
+        self.turn_l1.set(0)
+        self.turn_l2.set(0)
+
+    def set_enc_position(self, pos):
+
+        self.turn_r1.setEncPosition(pos)
+        self.turn_r2.setEncPosition(pos)
+        self.turn_l1.setEncPosition(pos)
+        self.turn_l2.setEncPosition(pos)
+
+        #SWITCHES ALL TURN MOTORS BACK TO THE CORRECT CONTROL MODE
+
+        self.turn_l2.changeControlMode(CANTalon.ControlMode.Position)
+        self.turn_l2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+        self.turn_l2.setPID(1.0, 0.0, 0.0)
+
+        self.turn_r2.changeControlMode(CANTalon.ControlMode.Position)
+        self.turn_r2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+        self.turn_r2.setPID(1.0, 0.0, 0.0)
+
+        self.turn_r1.changeControlMode(CANTalon.ControlMode.Position)
+        self.turn_r1.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+        self.turn_r1.setPID(1.0, 0.0, 0.0)
+
+        self.turn_l1.changeControlMode(CANTalon.ControlMode.Position)
+        self.turn_l1.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+        self.turn_l1.setPID(1.0, 0.0, 0.0)
+        
+        #SETS THEM TO 0 JUST FOR FUN
+
+        self.turn_r1.set(pos)
+        self.turn_r2.set(pos)
+        self.turn_l1.set(pos)
+        self.turn_l2.set(pos)
+
 
     def _limit_listener(self, source, state_id, datum):
 
@@ -250,12 +294,3 @@ class SwerveModule:
 
             if source == self.limit_l2:
                 self.turn_l2.setEncPosition(0)
-
-
-
-
-
-
-
-
-

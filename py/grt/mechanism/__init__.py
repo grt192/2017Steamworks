@@ -36,4 +36,17 @@ class ZeroTest:
 
             self.motor.changeControlMode(CANTalon.ControlMode.PercentVbus)
             self.motor.set(0)
+
+class TalonTester:
+
+    def __init__(self, pneumatic):
+
+        self.pneumatic = pneumatic
+
+    def go(self, bool):
+        print("going")
+
+        self.pneumatic.set(bool)
+
+
             

@@ -16,7 +16,7 @@ class AckermanController:
         self.power_l2 = power_l2
 
         self.limit_switch = limit_switch
-        limit_switch.add_listener(self._limit_listener)
+        #limit_switch.add_listener(self._limit_listener)
 
         self.joystick = joystick
         self.xbox_controller = xbox_controller
@@ -394,14 +394,14 @@ class AckermanController:
                 self.power_l1.set(0)
                 self.power_l2.set(0)
 
-    def _limit_listener(self, source, state_id, datum):
+    # def _limit_listener(self, source, state_id, datum):
 
-        if state_id == 'pressed' and datum and self.strafing:
+    #     if state_id == 'pressed' and datum and self.strafing:
 
 
-            print("listener zeroing")
+    #         print("listener zeroing")
 
-            self.turn_r1.setEncPosition(0)
-            self.turn_r2.setEncPosition(0)
-            self.turn_l1.setEncPosition(0)
-            self.turn_l2.setEncPosition(0)
+    #         self.turn_r1.setEncPosition(0)
+    #         self.turn_r2.setEncPosition(0)
+    #         self.turn_l1.setEncPosition(0)
+    #         self.turn_l2.setEncPosition(0)
