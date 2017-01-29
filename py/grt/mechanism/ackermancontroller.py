@@ -402,7 +402,7 @@ class AckermanController:
 
     def _limit_listener(self, source, state_id, datum):
 
-        if state_id == 'pressed' and datum:
+        if state_id == 'pressed' and datum and self.strafing:
 
             #Positive: clockwise
             #Negative; counterclockwise
@@ -418,12 +418,12 @@ class AckermanController:
                 if self.turn_r1.getOutputVoltage() > 0:
 
                     print("R1 ENCODER POSITION POSITIVE:")
-                    print(self.turn_r1.setEncPosition(6597))
+                    print(self.turn_r1.setEncPosition(6597 - 4096*50/24))
 
                 elif self.turn_r1.getOutputVoltage() < 0:
 
                     print("R1 ENCODER POSITION NEGATIVE:")
-                    print(self.turn_r1.setEncPosition(7561))
+                    print(self.turn_r1.setEncPosition(7561 - 4096*50/24))
 
 
             if source == self.limit_r2:
@@ -456,12 +456,12 @@ class AckermanController:
                 if self.turn_l1.getOutputVoltage() > 0:
 
                     print("L1 ENCODER POSITION POSITIVE:")
-                    print(self.turn_l1.setEncPosition(4320))
+                    print(self.turn_l1.setEncPosition(4320 - 4096*50/24))
 
                 elif self.turn_l1.getOutputVoltage() < 0:
 
                     print("L1 ENCODER POSITION NEGATIVE:")
-                    print(self.turn_l1.setEncPosition(5435))
+                    print(self.turn_l1.setEncPosition(5435 - 4096*50/24))
 
             if source == self.limit_l2:
 
