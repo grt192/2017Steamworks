@@ -31,11 +31,11 @@ from grt.sensors.switch import Switch
 
 # 1:
 # 2: front right dt power
-# 3:
-# 4: back left dt power
+# 3: back left dt power 
+# 4: back left dt turn
 # 5: back right dt turn
-# 6:
-# 7: back left dt turn
+# 6: 
+# 7: back left dt power NOT WORKING ATM!
 # 8: bottom front shooter motor
 # 9: front left dt turn
 # 10: front right dt turn
@@ -46,13 +46,22 @@ from grt.sensors.switch import Switch
 # 15: top front shooter motor
 # 16:
 
-test_solenoid = Solenoid(0)
+#SOLENOID ASSIGNMENT:
+
+# o:
+# 1:
+# 2: 
+# 3: gear 
+# 4: gear indexer
+
+
+test_solenoid = Solenoid(2)
 
 talon_test = TalonTester(test_solenoid)
 
 
 #UNCOMMENT THE FOLLOWING LATER
-turn_l2 = CANTalon(7)
+turn_l2 = CANTalon(4)
 turn_l2.changeControlMode(CANTalon.ControlMode.Position)
 turn_l2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
 turn_l2.setPID(1.0, 0.0, 0.0)
@@ -84,7 +93,7 @@ turn_right.setPID(1.0, 0.0, 0.0)
 dt_right = CANTalon(2)
 dt_left = CANTalon(14)
 
-dt_l2 = CANTalon(4)
+dt_l2 = CANTalon(3)
 dt_r2 = CANTalon(11)
 
 
@@ -107,7 +116,7 @@ shooter2_m2 = CANTalon(20)
 
 load_m = CANTalon(12)
 
-angle_change = Solenoid(4)
+angle_change = Solenoid(0)
 
 shooter = Shooter(shooter1_m1, shooter1_m2, shooter2_m1, shooter2_m2, load_m, angle_change)
 
@@ -126,18 +135,21 @@ c2.set(climber_motor.getDeviceID())
 climber = Climber(climber_motor)
 
 
-gear_pneumatic_1 = Solenoid(1)
-gear_pneumatic_2 = Solenoid(2)
+gear_pneumatic_1 = Solenoid(3)
+gear_pneumatic_2 = Solenoid(4)
 
 gear_mech = Gear(gear_pneumatic_1, gear_pneumatic_2)
 
 
-hopper_pneumatic = Solenoid(3)
+hopper_pneumatic = Solenoid(1)
 
 
 hopper = Hopper(hopper_pneumatic)
 
-limit_switch = Switch(5, reverse=True)
+limit_r1 = Switch(1, reverse=True)
+limit_r2 = Switch(0, reverse=True)
+limit_l1 = Switch(3, reverse=True)
+limit_l2 = Switch(2, reverse=True)
 
 #zero_test = ZeroTest(turn_right, limit_switch)
 
@@ -153,22 +165,23 @@ tank_dt = DriveTrain(dt_left, dt_right, left_shifter=None, left_encoder=None, ri
 
 # Drive Controllers
 l_joystick = Attack3Joystick(0)
+
 #r_joystick = Attack3Joystick(3)
 xbox_controller = XboxJoystick(1)
 xbox_controller_2 = XboxJoystick(2)
 #ac = ArcadeDriveController(tank_dt, l_joystick)
-hid_sp = SensorPoller((l_joystick, xbox_controller, xbox_controller_2, limit_switch))  # human interface devices
-#sp = SensorPoller((limit_switch),)
+hid_sp = SensorPoller((l_joystick, xbox_controller, xbox_controller_2))  # human interface devices
+sp = SensorPoller((limit_r1, limit_r2, limit_l1, limit_l2))
 
 
 # Mech Talons, objects, and controller
 
 #sc = TestSwerveDriveController(l_joystick, r_joystick, xbox_controller, dt=dt, turn_motor=turn_motor, power_motor=power_motor, turn_2 = turn_2, turn_3 = turn_3)
 
-ac = AckermanController(l_joystick, xbox_controller, turn_right, turn_r2, turn_left, turn_l2, dt_right, dt_r2, dt_left, dt_l2, limit_switch)
+ac = AckermanController(l_joystick, xbox_controller, turn_right, turn_r2, turn_left, turn_l2, dt_right, dt_r2, dt_left, dt_l2, limit_r1, limit_r2, limit_l1, limit_l2)
 
 # define MechController
-#mc = MechController(l_joystick, xbox_controller_2, shooter, intake, climber, gear_mech, hopper, talon_test=talon_test)
+mc = MechController(l_joystick, xbox_controller_2, shooter, intake, climber, gear_mech, hopper, talon_test=talon_test)
 
 # define DriverStation
 ds = DriverStation.getInstance()

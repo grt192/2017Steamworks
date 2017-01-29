@@ -24,13 +24,13 @@ class MechController:
 
     def _xbox_controller_listener(self, sensor, state_id, datum):
 
-        if state_id == 'a_button':
-            if datum:
-                print("testing")
-                self.talon_test.go(True)
+        # if state_id == 'a_button':
+        #     if datum:
+        #         print("testing")
+        #         self.talon_test.go(True)
 
-            else:
-                self.talon_test.go(False)
+        #     else:
+        #         self.talon_test.go(False)
 
 
         # if state_id == 'r_shoulder':
@@ -41,57 +41,57 @@ class MechController:
         #         print("unjam hopper in")
         #         self.hopper.unjam_in()
 
-        # elif state_id == 'b_button':
-        #     if datum:
-        #         print("placing gear")
-        #         self.gear.place()
-        #     else:
-        #         print("gear back")
-        #         self.gear.retract()
+        if state_id == 'b_button':
+            if datum:
+                print("placing gear")
+                self.gear.place()
+            else:
+                print("gear back")
+                self.gear.retract()
 
-        # elif state_id == 'x_button':
-        #     if datum:
-        #         print("intaking")
-        #         self.intake.intake()
+        elif state_id == 'x_button':
+            if datum:
+                print("intaking")
+                self.intake.intake()
 
-        # elif state_id == 'y_button':
-        #     if datum:
-        #         print("stopping intake")
-        #         self.intake.stop()
+        elif state_id == 'y_button':
+            if datum:
+                print("stopping intake")
+                self.intake.stop()
                 
-        # elif state_id == 'a_button': #needs review
-        #     if datum:
-        #         print("unjam gear up")
-        #         self.gear.unjam_up()
-        #     else:
-        #         print("unjam gear down")
-        #         self.gear.unjam_down()
+        elif state_id == 'a_button': #needs review
+            if datum:
+                print("unjam gear up")
+                self.gear.unjam_up()
+            else:
+                print("unjam gear down")
+                self.gear.unjam_down()
                 
-        # elif state_id == 'r_y_axis': #needs review
-        #     if abs(datum) > .2:
-        #         print("climbing")
-        #         self.climber.climb()
-        #     else:
-        #         print("not climbing")
-        #         self.climber.stop()
+        elif state_id == 'r_y_axis': #needs review
+            if abs(datum) > .2:
+                print("climbing")
+                self.climber.climb()
+            else:
+                print("not climbing")
+                self.climber.stop()
 
-        # elif state_id == 'l_trigger':
-        #     if datum:
-        #         print("ramp up shooter")
-        #         self.shooter.ramp_up_speed(.7,.7)
+        elif state_id == 'l_trigger':
+            if datum:
+                print("ramp up shooter")
+                self.shooter.ramp_up_speed(.48,.48)
 
-        # elif state_id == 'l_shoulder':
-        #     if datum:
-        #         print("stop shooter")
-        #         self.shooter.ramp_up_speed(0,0)
+        elif state_id == 'l_shoulder':
+            if datum:
+                print("stop shooter")
+                self.shooter.ramp_up_speed(0,0)
 
-        # elif state_id == 'r_trigger':
-        #     if datum:
-        #         print("shooting")
-        #         self.shooter.shoot()
-        #     else:
-        #         #print("not shooting")
-        #         self.shooter.stop()
+        elif state_id == 'r_trigger':
+            if datum:
+                print("shooting")
+                self.shooter.shoot()
+            else:
+                #print("not shooting")
+                self.shooter.stop()
 
         # elif state_id == 'start_button':
         #     if datum:

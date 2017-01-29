@@ -3,7 +3,7 @@ from wpilib import CANTalon
 
 class AckermanController:
 
-    def __init__(self, joystick, xbox_controller, turn_r1, turn_r2, turn_l1, turn_l2, power_r1, power_r2, power_l1, power_l2, limit_switch):
+    def __init__(self, joystick, xbox_controller, turn_r1, turn_r2, turn_l1, turn_l2, power_r1, power_r2, power_l1, power_l2, limit_r1, limit_r2, limit_l1, limit_l2):
 
         self.turn_r1 = turn_r1
         self.turn_r2 = turn_r2
@@ -15,8 +15,15 @@ class AckermanController:
         self.power_l1 = power_l1
         self.power_l2 = power_l2
 
-        self.limit_switch = limit_switch
-        #limit_switch.add_listener(self._limit_listener)
+        self.limit_r1 = limit_r1
+        self.limit_r2 = limit_r2
+        self.limit_l1 = limit_l1
+        self.limit_l2 = limit_l2
+
+        limit_r1.add_listener(self._limit_listener)
+        limit_r2.add_listener(self._limit_listener)
+        limit_l1.add_listener(self._limit_listener)
+        limit_l2.add_listener(self._limit_listener)
 
         self.joystick = joystick
         self.xbox_controller = xbox_controller
@@ -24,8 +31,8 @@ class AckermanController:
         self.joystick.add_listener(self._joylistener)
         self.xbox_controller.add_listener(self._xbox_controller_listener)
 
-        self.HEIGHT = 24
-        self.WIDTH = 16
+        self.HEIGHT = 21
+        self.WIDTH = 25
 
         #MAX ANGLE FOR OUTSIDE WHEEL
         self.theta_1 = math.atan2(self.HEIGHT, self.WIDTH)
@@ -116,7 +123,6 @@ class AckermanController:
                 self.strafing = False
                 print("SWITCHED TO ACKERMAN")
 
-
         #RIGHT JOYSTICK FOR STRAFING
 
         elif state_id in ('r_y_axis', 'r_x_axis'):
@@ -129,7 +135,7 @@ class AckermanController:
             if abs(x) > .2 or abs(y) > .2:
 
                 self.strafing = True
-                #print("SWITCHED TO STRAFING")
+                # print("SWITCHED TO STRAFING")
 
                 angle = math.atan2(x,-y)
                 
@@ -142,13 +148,13 @@ class AckermanController:
                 #USES MOTOR TURN_R1 TO DETERMIN THE CURRENT POSITION.
                 #Not sure if it would be better to do this individually for each motor.
 
-                cur_angle = self.turn_r1.getEncPosition()*(2*math.pi)/self.TICKS_PER_REV
+                cur_angle = self.turn_r2.getEncPosition()*(2*math.pi)/self.TICKS_PER_REV
 
                 #IF THE WHEEL IS CURRENTLY IN Q3 OR Q4 AND NEEDS TO GO TO THE OTHER ONE
 
                 if (abs(cur_angle) > math.pi/2) and (abs(position) > (self.TICKS_PER_REV/4)) and (cur_angle * position < 0): 
 
-
+                    print("resetting enc pos")
                     #IF IN Q4 SET CURRENT POSITION TO CURRENT POSITION - 2*PI
 
                     if cur_angle > 0:
@@ -174,10 +180,10 @@ class AckermanController:
                 self.turn_l1.set(position)
                 self.turn_l2.set(position)
 
-                self.power_r1.set(power*.25)
-                self.power_r2.set(power*.25)
-                self.power_l1.set(power*.25)
-                self.power_l2.set(power*.25)
+                self.power_r1.set(power*.5)
+                self.power_r2.set(power*.5)
+                self.power_l1.set(power*.5)
+                self.power_l2.set(power*.5)
 
             else:
 
@@ -199,7 +205,7 @@ class AckermanController:
             x = self.xbox_controller.l_x_axis
             y = self.xbox_controller.l_y_axis
 
-            if (abs(x) > .2 or abs(y) > .2) and not self.strafing:
+            if (abs(x) > .2 or abs(y) > .2) and  not self.strafing:
 
                 joy_angle = math.atan2(x, -y)
                 print("JOY ANGLE")
@@ -394,14 +400,85 @@ class AckermanController:
                 self.power_l1.set(0)
                 self.power_l2.set(0)
 
-    # def _limit_listener(self, source, state_id, datum):
+    def _limit_listener(self, source, state_id, datum):
 
-    #     if state_id == 'pressed' and datum and self.strafing:
+        if state_id == 'pressed' and datum:
+
+            #Positive: clockwise
+            #Negative; counterclockwise
+
+            if source == self.limit_r1:
+
+                print("r1 encoder position triggered")
+                print(self.turn_r1.getEncPosition())
+
+                #results: clockwise: 6616, 6621, 6583, 6569
+                #         counterclockwise 7567, 7564, 7561, 7553
+
+                if self.turn_r1.getOutputVoltage() > 0:
+
+                    print("R1 ENCODER POSITION POSITIVE:")
+                    print(self.turn_r1.setEncPosition(6597))
+
+                elif self.turn_r1.getOutputVoltage() < 0:
+
+                    print("R1 ENCODER POSITION NEGATIVE:")
+                    print(self.turn_r1.setEncPosition(7561))
 
 
-    #         print("listener zeroing")
+            if source == self.limit_r2:
 
-    #         self.turn_r1.setEncPosition(0)
-    #         self.turn_r2.setEncPosition(0)
-    #         self.turn_l1.setEncPosition(0)
-    #         self.turn_l2.setEncPosition(0)
+                print("r2 encoder position triggered")
+                print(self.turn_r2.getEncPosition())
+
+                #results: clockwise: -69, -63, -50, -50
+                #        counterclockwise: 1239, 1261, 1238, 1208, 1249
+
+                if self.turn_r2.getOutputVoltage() > 0:
+
+                    print("R2 ENCODER POSITION POSITIVE:")
+                    print(self.turn_r2.setEncPosition(58))
+
+                elif self.turn_r2.getOutputVoltage() < 0:
+
+                    print("R2 ENCODER POSITION NEGATIVE:")
+                    print(self.turn_r2.setEncPosition(1239))
+
+            if source == self.limit_l1:
+
+                print("l1 encoder position triggered")
+                print(self.turn_l1.getEncPosition())
+
+
+                #results: clockwise: 4304, 4329, 4323, 4324
+                #        counterclockwise: 5430, 5417, 5448, 5446
+
+                if self.turn_l1.getOutputVoltage() > 0:
+
+                    print("L1 ENCODER POSITION POSITIVE:")
+                    print(self.turn_l1.setEncPosition(4320))
+
+                elif self.turn_l1.getOutputVoltage() < 0:
+
+                    print("L1 ENCODER POSITION NEGATIVE:")
+                    print(self.turn_l1.setEncPosition(5435))
+
+            if source == self.limit_l2:
+
+                print("l2 encoder position triggered")
+                print(self.turn_l2.getEncPosition())
+
+                #results: clockwise: 2219, 2196, 2218, 2179
+                #        counterclockwise: 3358, 3375, 3358, 3340, 3356
+
+                if self.turn_l2.getOutputVoltage() > 0:
+
+                    print("L2 ENCODER POSITION POSITIVE:")
+                    print(self.turn_l2.setEncPosition(2203))
+
+                elif self.turn_l2.getOutputVoltage() < 0:
+
+                    print("L2 ENCODER POSITION NEGATIVE:")
+                    print(self.turn_l2.getEncPosition(3357))
+
+                    #2048*50/24 = 4266

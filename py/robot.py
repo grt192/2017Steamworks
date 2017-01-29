@@ -11,6 +11,7 @@ class MyRobot(wpilib.SampleRobot):
         import config
         #self.sp = config.sp
         self.hid_sp = config.hid_sp
+        self.sp = config.sp
         self.ds = config.ds
         
 
@@ -26,12 +27,12 @@ class MyRobot(wpilib.SampleRobot):
         while self.isDisabled():
             tinit = time.time()
             self.hid_sp.poll()
-            #sp.poll()
+            self.sp.poll()
             self.safeSleep(tinit, .04)
 
-            print("Encoder position:")
-            print(self.t4.getEncPosition())
-            print(self.t4.getControlMode())
+            # print("Encoder position:")
+            # print(self.t4.getEncPosition())
+            # print(self.t4.getControlMode())
     
     def autonomous(self):
         # define auto here
@@ -40,17 +41,19 @@ class MyRobot(wpilib.SampleRobot):
     def operatorControl(self):
         while self.isOperatorControl() and self.isEnabled():
             tinit = time.time()
-            #self.sp.poll()
+            
             self.hid_sp.poll()
-            #sp.poll()
+            self.sp.poll()
             self.safeSleep(tinit, .04)
-            print("Encoder position:")
+            print("voltage")
+            print(self.t1.getOutputVoltage())
+            #print("Encoder position:")
             # print(self.turn_motor.getEncPosition())
             # print(self.t1.getEncPosition())
             # print(self.t2.getEncPosition())
             # print(self.t3.getEncPosition())
-            print(self.t4.getEncPosition())
-            print(self.t4.getControlMode())
+            # print(self.t4.getEncPosition())
+            # print(self.t4.getControlMode())
 
 
             

@@ -18,7 +18,7 @@ class Shooter:
 		self.shooter2_m2.set(vel_2)
 
 	def shoot(self):
-		self.load_m.set(1)
+		self.load_m.set(.8)
 
 	def stop(self):
 		self.load_m.set(0)
@@ -36,7 +36,8 @@ class Intake:
 		self.motor = motor
 
 	def intake(self):
-		self.motor.set(1)
+		print("intaking from intake")
+		self.motor.set(-.9)
 
 	def stop(self):
 		self.motor.set(0)
