@@ -78,7 +78,7 @@ class MechController:
         elif state_id == 'l_trigger':
             if datum:
                 print("ramp up shooter")
-                self.shooter.ramp_up_speed(.48,.48)
+                self.shooter.ramp_up_speed(.495,.495) #48
 
         elif state_id == 'l_shoulder':
             if datum:

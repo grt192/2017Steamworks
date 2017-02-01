@@ -18,13 +18,13 @@ class Shooter:
 		self.shooter2_m2.set(vel_2)
 
 	def shoot(self):
-		self.load_m.set(.8)
+		self.load_m.set(1)
 
 	def stop(self):
 		self.load_m.set(0)
 
 	def angle_change_up(self):
-		self.pneumatic.set(1)
+		self.pneumatic.set(.8)
 
 	def angle_change_down(self):
 		self.pneumatic.set(0)
