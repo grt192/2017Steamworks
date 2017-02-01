@@ -20,10 +20,10 @@ class AckermanController:
         self.limit_l1 = limit_l1
         self.limit_l2 = limit_l2
 
-        # limit_r1.add_listener(self._limit_listener)
-        # limit_r2.add_listener(self._limit_listener)
-        # limit_l1.add_listener(self._limit_listener)
-        # limit_l2.add_listener(self._limit_listener)
+        limit_r1.add_listener(self._limit_listener)
+        limit_r2.add_listener(self._limit_listener)
+        limit_l1.add_listener(self._limit_listener)
+        limit_l2.add_listener(self._limit_listener)
 
         self.joystick = joystick
         self.xbox_controller = xbox_controller
@@ -43,6 +43,8 @@ class AckermanController:
         self.strafing = False
 
         self.strafe_position = 0
+
+        self.zeroing = [False, False, False, False]
 
         self.TICKS_PER_REV = 4096*50/24 #I THINK SO!
 
@@ -599,120 +601,201 @@ class AckermanController:
                 self.power_l1.set(0)
                 self.power_l2.set(0)
 
-    # def _limit_listener(self, source, state_id, datum):
+        if state_id == "x_button":
 
-    #     if state_id == 'pressed' and datum:
+            if datum:
 
-    #         #Positive: clockwise
-    #         #Negative; counterclockwise
-
-    #         if source == self.limit_r1:
-
-    #             print("r1 encoder position triggered")
-    #             print(self.turn_r1.getEncPosition())
-
-    #             #cc: -1021, -1043, -1032, -1080, -935, -1006, -1034, -1057, -868, -990, -969, -910, -1006, -1070
-    #                 # AVG: -1001.5 
-    #             #c: -2122, -1970, -2087, -2012, -2130, -2085, -1999, -2022, -1987, -2050, -2085
-    #                 # AVG: -2049.909090909091 
-
-    #             #results: clockwise: 6616, 6621, 6583, 6569
-    #             #         counterclockwise 7567, 7564, 7561, 7553
-
-    #             if self.turn_r1.getOutputVoltage() > 0:
-
-    #                 print("R1 ENCODER POSITION POSITIVE:")
-    #                 print(self.turn_r1.getEncPosition())
-    #                 #self.turn_r1.setEncPosition(6597 - 4096*50/24)
-
-    #             elif self.turn_r1.getOutputVoltage() < 0:
-
-    #                 print("R1 ENCODER POSITION NEGATIVE:")
-    #                 print(self.turn_r1.getEncPosition())
-    #                 #self.turn_r1.setEncPosition(7561 - 4096*50/24)
+                self.zeroing[0] = True
+                self.zeroing[1] = True
+                self.zeroing[2] = True
+                self.zeroing[3] = True
 
 
-    #         if source == self.limit_r2:
+                self.turn_r1.changeControlMode(CANTalon.ControlMode.PercentVbus)
+                self.turn_r2.changeControlMode(CANTalon.ControlMode.PercentVbus)
+                self.turn_l1.changeControlMode(CANTalon.ControlMode.PercentVbus)
+                self.turn_l2.changeControlMode(CANTalon.ControlMode.PercentVbus)
 
-    #             print("r2 encoder position triggered")
-    #             print(self.turn_r2.getEncPosition())
+                turning_power = .2
 
-    #             #cc: 1246, 1265, 1256, 1298, 1266, 1324, 1333, 1313, 1346, 1307
-    #                 #AVG: 1295.4
-    #                 #WITH OLD: 1276.6
-    #             #c: 21, 23, 2, -32, -31, -22, 35, -45, -54, -63, -136, -141, -163, -112, -128, -7, -168
-    #                 #AVG: -60.05882352941177
-    #                 #WITH OLD: -59.666666666666664
+                self.turn_r1.set(turning_power)
+                self.turn_r2.set(turning_power)
+                self.turn_l1.set(turning_power)
+                self.turn_l2.set(turning_power)
 
-    #             #results: clockwise: -69, -63, -50, -50
-    #             #        counterclockwise: 1239, 1261, 1238, 1208, 1249
 
-    #             if self.strafe_position > self.turn_r2.getEncPosition():       #self.turn_r2.getOutputVoltage() > 0:
+# l1 encoder position triggered
+# 3388
+# r1 encoder position triggered
+# 5590
+# l2 encoder position triggered
+# 6363
+# r2 encoder position triggered
+# 7772
 
-    #                 print("R2 ENCODER POSITION POSITIVE:")
-    #                 print(self.turn_r2.getEncPosition())
-    #                 #self.turn_r2.setEncPosition(58)
 
-    #             elif self.strafe_position < self.turn_r2.getEncPosition():        #self.turn_r2.getOutputVoltage() < 0:
 
-    #                 print("R2 ENCODER POSITION NEGATIVE:")
-    #                 print(self.turn_r2.getEncPosition())
-    #                 #self.turn_r2.setEncPosition(1239)
 
-    #             else:
 
-    #                 print("triggered w/o turning")
 
-    #         if source == self.limit_l1:
+    def _limit_listener(self, source, state_id, datum):
 
-    #             print("l1 encoder position triggered")
-    #             print(self.turn_l1.getEncPosition())
+        if state_id == 'pressed' and datum and (self.zeroing[0] or self.zeroing[1] or self.zeroing[2] or self.zeroing[3]):
 
-    #             # cc: -3111, -3061, -3059, -3059, -3064, -3080, -3074, -3088, -3061 -3100
-    #                 #AVG: -3075.7
-    #             #  c: -4222, -4183, -4199, -4193, -4192, -4187, -4171, 4183, -4192, -4244
-    #                 #AVG: -4196.6
+            #Positive: clockwise
+            #Negative; counterclockwise
 
-    #             #results: clockwise: 4304, 4329, 4323, 4324
-    #             #        counterclockwise: 5430, 5417, 5448, 5446
+            if source == self.limit_r1:
 
-    #             if self.turn_l1.getOutputVoltage() > 0:
+                print("r1 encoder position triggered")
+                print(self.turn_r1.getEncPosition())
+                #print(self.turn_r1.getEncPosition())
 
-    #                 print("L1 ENCODER POSITION POSITIVE:")
-    #                 print(self.turn_l1.getEncPosition())
-    #                 #self.turn_l1.setEncPosition(4320 - 4096*50/24)
+                self.turn_r1.setEncPosition(-1800) #-2050
 
-    #             elif self.turn_l1.getOutputVoltage() < 0:
+                self.turn_r1.changeControlMode(CANTalon.ControlMode.Position)
+                self.turn_r1.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+                self.turn_r1.setPID(1.0, 0.0, 0.0)
 
-    #                 print("L1 ENCODER POSITION NEGATIVE:")
-    #                 print(self.turn_l1.getEncPosition())
-    #                 #self.turn_l1.setEncPosition(5435 - 4096*50/24)
+                self.turn_r1.set(0)
 
-    #         if source == self.limit_l2:
+                self.zeroing[0] = False
 
-    #             print("l2 encoder position triggered")
-    #             print(self.turn_l2.getEncPosition())
 
-    #             #cc: 3370, 3390, 3400, 3362, 3356, 3371, 3370, 3353, 3379, 3379
-    #                 #AVG: 3373.0
-    #                 #AVG WITH OLD: 3367.8
-    #             #c: 2240, 2255, 2239, 2208, 2228, 2243, 2232, 2236, 2227, 2250
-    #                 #AVG: 2235.8
-    #                 #AVG WITH OLD: 2226.4285714285716
+                #cc: -1021, -1043, -1032, -1080, -935, -1006, -1034, -1057, -868, -990, -969, -910, -1006, -1070
+                    # AVG: -1001.5 
+                #c: -2122, -1970, -2087, -2012, -2130, -2085, -1999, -2022, -1987, -2050, -2085
+                    # AVG: -2049.909090909091 
 
-    #             #results: clockwise: 2219, 2196, 2218, 2179
-    #             #        counterclockwise: 3358, 3375, 3358, 3340, 3356
+                #results: clockwise: 6616, 6621, 6583, 6569
+                #         counterclockwise 7567, 7564, 7561, 7553
 
-    #             if self.turn_l2.getOutputVoltage() > 0:
+                # if self.turn_r1.getOutputVoltage() > 0:
 
-    #                 print("L2 ENCODER POSITION POSITIVE:")
-    #                 print(self.turn_l2.getEncPosition())
-    #                 #self.turn_l2.setEncPosition(2203)
+                #     print("R1 ENCODER POSITION POSITIVE:")
+                #     print(self.turn_r1.getEncPosition())
+                #     #self.turn_r1.setEncPosition(6597 - 4096*50/24)
 
-    #             elif self.turn_l2.getOutputVoltage() < 0:
+                # elif self.turn_r1.getOutputVoltage() < 0:
 
-    #                 print("L2 ENCODER POSITION NEGATIVE:")
-    #                 print(self.turn_l2.getEncPosition())
-    #                 #self.turn_l2.setEncPosition(3357)
+                #     print("R1 ENCODER POSITION NEGATIVE:")
+                #     print(self.turn_r1.getEncPosition())
+                #     #self.turn_r1.setEncPosition(7561 - 4096*50/24)
+
+
+            if source == self.limit_r2:
+
+                print("r2 encoder position triggered")
+                print(self.turn_r2.getEncPosition())
+
+                self.turn_r2.setEncPosition(300) #-60
+
+                self.turn_r2.changeControlMode(CANTalon.ControlMode.Position)
+                self.turn_r2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+                self.turn_r2.setPID(1.0, 0.0, 0.0)
+
+                self.turn_r2.set(0)
+
+                self.zeroing[1] = False
+
+                #cc: 1246, 1265, 1256, 1298, 1266, 1324, 1333, 1313, 1346, 1307
+                    #AVG: 1295.4
+                    #WITH OLD: 1276.6
+                #c: 21, 23, 2, -32, -31, -22, 35, -45, -54, -63, -136, -141, -163, -112, -128, -7, -168
+                    #AVG: -60.05882352941177
+                    #WITH OLD: -59.666666666666664
+
+                #results: clockwise: -69, -63, -50, -50
+                #        counterclockwise: 1239, 1261, 1238, 1208, 1249
+
+
+
+                # if self.strafe_position > self.turn_r2.getEncPosition():       #self.turn_r2.getOutputVoltage() > 0:
+
+                #     print("R2 ENCODER POSITION POSITIVE:")
+                #     print(self.turn_r2.getEncPosition())
+                #     #self.turn_r2.setEncPosition(58)
+
+                # elif self.strafe_position < self.turn_r2.getEncPosition():        #self.turn_r2.getOutputVoltage() < 0:
+
+                #     print("R2 ENCODER POSITION NEGATIVE:")
+                #     print(self.turn_r2.getEncPosition())
+                #     #self.turn_r2.setEncPosition(1239)
+
+                # else:
+
+                #     print("triggered w/o turning")
+
+            if source == self.limit_l1:
+
+                print("l1 encoder position triggered")
+                print(self.turn_l1.getEncPosition())
+
+                self.turn_l1.setEncPosition(-4050) #-4197
+
+                self.turn_l1.changeControlMode(CANTalon.ControlMode.Position)
+                self.turn_l1.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+                self.turn_l1.setPID(1.0, 0.0, 0.0)
+
+                self.turn_l1.set(0)
+
+                self.zeroing[2] = False
+
+                # cc: -3111, -3061, -3059, -3059, -3064, -3080, -3074, -3088, -3061 -3100
+                    #AVG: -3075.7
+                #  c: -4222, -4183, -4199, -4193, -4192, -4187, -4171, 4183, -4192, -4244
+                    #AVG: -4196.6
+
+                #results: clockwise: 4304, 4329, 4323, 4324
+                #        counterclockwise: 5430, 5417, 5448, 5446
+
+                # if self.turn_l1.getOutputVoltage() > 0:
+
+                #     print("L1 ENCODER POSITION POSITIVE:")
+                #     print(self.turn_l1.getEncPosition())
+                #     #self.turn_l1.setEncPosition(4320 - 4096*50/24)
+
+                # elif self.turn_l1.getOutputVoltage() < 0:
+
+                #     print("L1 ENCODER POSITION NEGATIVE:")
+                #     print(self.turn_l1.getEncPosition())
+                #     #self.turn_l1.setEncPosition(5435 - 4096*50/24)
+
+            if source == self.limit_l2:
+
+                print("l2 encoder position triggered")
+                print(self.turn_l2.getEncPosition())
+
+                self.turn_l2.setEncPosition(2500) #-2226
+
+                self.turn_l2.changeControlMode(CANTalon.ControlMode.Position)
+                self.turn_l2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+                self.turn_l2.setPID(1.0, 0.0, 0.0)
+
+                self.turn_l2.set(0)
+
+                self.zeroing[3] = False
+
+                #cc: 3370, 3390, 3400, 3362, 3356, 3371, 3370, 3353, 3379, 3379
+                    #AVG: 3373.0
+                    #AVG WITH OLD: 3367.8
+                #c: 2240, 2255, 2239, 2208, 2228, 2243, 2232, 2236, 2227, 2250
+                    #AVG: 2235.8
+                    #AVG WITH OLD: 2226.4285714285716
+
+                #results: clockwise: 2219, 2196, 2218, 2179
+                #        counterclockwise: 3358, 3375, 3358, 3340, 3356
+
+                # if self.turn_l2.getOutputVoltage() > 0:
+
+                #     print("L2 ENCODER POSITION POSITIVE:")
+                #     print(self.turn_l2.getEncPosition())
+                #     #self.turn_l2.setEncPosition(2203)
+
+                # elif self.turn_l2.getOutputVoltage() < 0:
+
+                #     print("L2 ENCODER POSITION NEGATIVE:")
+                #     print(self.turn_l2.getEncPosition())
+                #     #self.turn_l2.setEncPosition(3357)
 
     #         #         #2048*50/24 = 4266
