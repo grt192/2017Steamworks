@@ -1,4 +1,8 @@
-
+# import platform
+# if "Linux" in platform.platform():
+#     with open("/home/lvuser/py/grt/mechanism/camscript_new.py") as f:
+#         code = compile(f.read(), "/home/lvuser/py/grt/mechanism/camscript_new.py", 'exec')
+#         exec(code)
 
 import wpilib
 import time
@@ -21,6 +25,16 @@ class MyRobot(wpilib.SampleRobot):
         self.t2 = config.turn_left
         self.t3 = config.turn_r2
         self.t4 = config.turn_l2
+
+        # NEXT LINES CAUSE LAG ON ROBOT; ALSO WILL PROBABLY NOT WORK FOR 2017
+
+        # self.camera = wpilib.USBCamera()
+        # self.camera.setExposureManual(0.01) #.005
+        # self.camera.setBrightness(80)
+        # self.camera.setFPS(15)
+        # self.camera_server = wpilib.CameraServer()
+        # self.camera_server.startAutomaticCapture(self.camera)
+        # self.camera_server.setQuality(10)
 
 
     def disabled(self):

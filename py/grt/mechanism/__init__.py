@@ -1,4 +1,4 @@
-from wpilib import CANTalon
+from ctre import CANTalon
 
 class ZeroTest:
 

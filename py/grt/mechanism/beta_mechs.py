@@ -1,6 +1,6 @@
 class Shooter:
 
-	def __init__(self, shooter1_m1, shooter1_m2, shooter2_m1, shooter2_m2, load_m, pneumatic):
+	def __init__(self, shooter1_m1, shooter1_m2, load_m, pneumatic, shooter2_m1=None, shooter2_m2=None):
 
 		self.shooter1_m1 = shooter1_m1
 		self.shooter1_m2 = shooter1_m2

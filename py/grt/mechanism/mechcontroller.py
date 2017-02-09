@@ -1,10 +1,10 @@
 import math
 import time
-from wpilib import CANTalon
+from ctre import CANTalon
 
 class MechController:
 
-    def __init__(self, driver_joystick, xbox_controller, shooter, intake, climber, gear, hopper, zero_test=None, talon_test=None): # mechanisms belong in arguments
+    def __init__(self, driver_joystick, xbox_controller, shooter, intake, gear, hopper, climber=None, zero_test=None, talon_test=None): # mechanisms belong in arguments
         # define mechanisms here
 
         self.shooter = shooter
@@ -16,6 +16,8 @@ class MechController:
         self.zero_test = zero_test
 
         self.talon_test = talon_test
+
+        self.power = .5
 
         self.driver_joystick = driver_joystick
         self.xbox_controller = xbox_controller
@@ -43,11 +45,13 @@ class MechController:
 
         if state_id == 'b_button':
             if datum:
-                print("placing gear")
-                self.gear.place()
-            else:
-                print("gear back")
-                self.gear.retract()
+                self.power -= .01
+                print("POWER: ",self.power)
+            #     print("placing gear")
+            #     self.gear.place()
+            # else:
+            #     print("gear back")
+            #     self.gear.retract()
 
         elif state_id == 'x_button':
             if datum:
@@ -61,11 +65,14 @@ class MechController:
                 
         elif state_id == 'a_button': #needs review
             if datum:
-                print("unjam gear up")
-                self.gear.unjam_up()
-            else:
-                print("unjam gear down")
-                self.gear.unjam_down()
+
+                self.power += .01
+                print("POWER: ",self.power)
+                # print("unjam gear up")
+                # self.gear.unjam_up()
+            # else:
+            #     print("unjam gear down")
+            #     self.gear.unjam_down()
                 
         elif state_id == 'r_y_axis': #needs review
             if abs(datum) > .2:
@@ -78,7 +85,7 @@ class MechController:
         elif state_id == 'l_trigger':
             if datum:
                 print("ramp up shooter")
-                self.shooter.ramp_up_speed(.495,.495) #48
+                self.shooter.ramp_up_speed(self.power,self.power) #48
 
         elif state_id == 'l_shoulder':
             if datum:
@@ -93,15 +100,15 @@ class MechController:
                 #print("not shooting")
                 self.shooter.stop()
 
-        # elif state_id == 'start_button':
-        #     if datum:
-        #         print("achange up")
-        #         self.shooter.angle_change_up()
+        elif state_id == 'start_button':
+            if datum:
+                print("achange up")
+                self.shooter.angle_change_up()
 
-        # elif state_id == 'back_button':
-        #     if datum:
-        #         print("achanged downs")
-        #         self.shooter.angle_change_down()
+        elif state_id == 'back_button':
+            if datum:
+                print("achanged downs")
+                self.shooter.angle_change_down()
 
             
 

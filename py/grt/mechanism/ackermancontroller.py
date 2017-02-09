@@ -1,5 +1,5 @@
 import math
-from wpilib import CANTalon
+from ctre import CANTalon
 
 class AckermanController:
 
@@ -8,7 +8,7 @@ class AckermanController:
         self.turn_r1 = turn_r1
         self.turn_r2 = turn_r2
         self.turn_l1 = turn_l1
-        self.turn_l2 = turn_l2
+        self.turn_l2 = turn_l2 
 
         self.power_r1 = power_r1
         self.power_r2 = power_r2
@@ -282,7 +282,6 @@ class AckermanController:
                         position = turn_motors[i].getEncPosition() + adjustment_factor
 
                         turn_motors[i].set(position)
-
 
 
 
@@ -645,7 +644,7 @@ class AckermanController:
             #Positive: clockwise
             #Negative; counterclockwise
 
-            if source == self.limit_r1:
+            if source == self.limit_r1 and self.zeroing[0]:
 
                 print("r1 encoder position triggered")
                 print(self.turn_r1.getEncPosition())
@@ -683,7 +682,7 @@ class AckermanController:
                 #     #self.turn_r1.setEncPosition(7561 - 4096*50/24)
 
 
-            if source == self.limit_r2:
+            if source == self.limit_r2 and self.zeroing[1]:
 
                 print("r2 encoder position triggered")
                 print(self.turn_r2.getEncPosition())
@@ -726,7 +725,7 @@ class AckermanController:
 
                 #     print("triggered w/o turning")
 
-            if source == self.limit_l1:
+            if source == self.limit_l1 and self.zeroing[2]:
 
                 print("l1 encoder position triggered")
                 print(self.turn_l1.getEncPosition())
@@ -761,7 +760,7 @@ class AckermanController:
                 #     print(self.turn_l1.getEncPosition())
                 #     #self.turn_l1.setEncPosition(5435 - 4096*50/24)
 
-            if source == self.limit_l2:
+            if source == self.limit_l2 and self.zeroing[3]:
 
                 print("l2 encoder position triggered")
                 print(self.turn_l2.getEncPosition())

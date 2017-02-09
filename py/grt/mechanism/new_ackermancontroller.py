@@ -1,5 +1,5 @@
 import math
-from wpilib import CANTalon
+from ctre import CANTalon
 
 class NewAckermanController:
 
@@ -52,6 +52,11 @@ class NewAckermanController:
                 self.swerve_module.set_strafing(False)
                 print("SWITCHED TO ACKERMAN")
 
+        elif state_id == 'r_shoulder':
+
+            if datum:
+                self.swerve_module.zero()
+
 
         #RIGHT JOYSTICK FOR STRAFING
 
@@ -72,11 +77,11 @@ class NewAckermanController:
 
                 power = math.sqrt(x ** 2 + y ** 2)
 
-                self.swerve_module.strafe(angle, power)
+                self.swerve_module.strafe(angle, power, .4)
 
             else:
 
-                self.swerve_module.strafe(0, 0)
+                self.swerve_module.set_power(0)
 
                 self.swerve_module.set_strafing(False)
                 print("SWITCHED TO ACKERMAN")
@@ -86,7 +91,7 @@ class NewAckermanController:
             x = self.xbox_controller.l_x_axis
             y = self.xbox_controller.l_y_axis
 
-            if (abs(x) > .2 or abs(y) > .2) and not self.strafing:
+            if (abs(x) > .2 or abs(y) > .2) and not self.swerve_module.get_strafing():
 
                 joy_angle = math.atan2(x, -y)
                 print("JOY ANGLE")
@@ -101,17 +106,17 @@ class NewAckermanController:
 
             else:
 
-                self.swerve_module.ackerman_turn(0,0)
+                self.swerve_module.set_power(0)
                 
 
-    def _limit_listener(self, source, state_id, datum):
+    # def _limit_listener(self, source, state_id, datum):
 
-        if state_id == 'pressed' and datum and self.strafing:
+    #     if state_id == 'pressed' and datum and self.strafing:
 
 
-            print("listener zeroing")
+    #         print("listener zeroing")
 
-            self.turn_r1.setEncPosition(0)
-            self.turn_r2.setEncPosition(0)
-            self.turn_l1.setEncPosition(0)
-            self.turn_l2.setEncPosition(0)
+    #         self.turn_r1.setEncPosition(0)
+    #         self.turn_r2.setEncPosition(0)
+    #         self.turn_l1.setEncPosition(0)
+    #         self.turn_l2.setEncPosition(0)

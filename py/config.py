@@ -2,7 +2,8 @@
 Config File for Robot
 """
 
-from wpilib import Solenoid, Compressor, DriverStation, CANTalon, DigitalInput
+from wpilib import Solenoid, Compressor, DriverStation, DigitalInput
+from ctre import CANTalon
 
 from grt.sensors.attack_joystick import Attack3Joystick
 from grt.sensors.xbox_joystick import XboxJoystick
@@ -21,6 +22,8 @@ from grt.mechanism.ackermancontroller import AckermanController
 from grt.mechanism.beta_mechs import Shooter, Intake, Gear, Climber, Hopper
 from grt.mechanism import ZeroTest, TalonTester
 from grt.sensors.switch import Switch
+from grt.mechanism.new_ackermancontroller import NewAckermanController
+
 
 
 #DT Talons and Objects
@@ -55,7 +58,7 @@ from grt.sensors.switch import Switch
 # 4: gear indexer
 
 
-test_solenoid = Solenoid(2)
+test_solenoid = Solenoid(0)
 
 talon_test = TalonTester(test_solenoid)
 
@@ -99,8 +102,8 @@ dt_r2 = CANTalon(11)
 
 shooter1_m1 = CANTalon(15)
 shooter1_m2 = CANTalon(8)
-shooter2_m1 = CANTalon(20)
-shooter2_m2 = CANTalon(20)
+# shooter2_m1 = CANTalon(20)
+# shooter2_m2 = CANTalon(20)
 
 # shooter1_m1.changeControlMode(CANTalon.ControlMode.Speed)
 # shooter1_m1.setPID(.33, 0, 0, f=.17)
@@ -116,23 +119,23 @@ shooter2_m2 = CANTalon(20)
 
 load_m = CANTalon(12)
 
-angle_change = Solenoid(0)
+angle_change = Solenoid(2)
 
-shooter = Shooter(shooter1_m1, shooter1_m2, shooter2_m1, shooter2_m2, load_m, angle_change)
+shooter = Shooter(shooter1_m1, shooter1_m2, load_m, angle_change)
 
 intake_motor = CANTalon(13)
 
 intake = Intake(intake_motor)
 
 
-climber_motor = CANTalon(20)
+#climber_motor = CANTalon(20)
 
-c2 = CANTalon(20)
+#c2 = CANTalon(20)
 
-c2.changeControlMode(CANTalon.ControlMode.Follower)
-c2.set(climber_motor.getDeviceID())
+# c2.changeControlMode(CANTalon.ControlMode.Follower)
+# c2.set(climber_motor.getDeviceID())
 
-climber = Climber(climber_motor)
+# climber = Climber(climber_motor)
 
 
 gear_pneumatic_1 = Solenoid(3)
@@ -153,7 +156,7 @@ limit_l2 = Switch(2, reverse=True)
 
 #zero_test = ZeroTest(turn_right, limit_switch)
 
-#dt = SwerveModule(power_motor, turn_motor)
+
 
 #needs to be changed for left and right
 tank_dt = DriveTrain(dt_left, dt_right, left_shifter=None, left_encoder=None, right_encoder=None)
@@ -161,6 +164,9 @@ tank_dt = DriveTrain(dt_left, dt_right, left_shifter=None, left_encoder=None, ri
 #gyro = Gyro(1)
 # define sensor poller
 # sp = SensorPoller()
+
+swerve = SwerveModule(turn_right, turn_r2, turn_left, turn_l2, dt_right, dt_r2, dt_left, dt_l2, limit_r1 = limit_r1, limit_r2 = limit_r2, limit_l1 = limit_l1, limit_l2 = limit_l2)
+
 
 
 # Drive Controllers
@@ -178,10 +184,12 @@ sp = SensorPoller((limit_r1, limit_r2, limit_l1, limit_l2))
 
 #sc = TestSwerveDriveController(l_joystick, r_joystick, xbox_controller, dt=dt, turn_motor=turn_motor, power_motor=power_motor, turn_2 = turn_2, turn_3 = turn_3)
 
-ac = AckermanController(l_joystick, xbox_controller, turn_right, turn_r2, turn_left, turn_l2, dt_right, dt_r2, dt_left, dt_l2, limit_r1, limit_r2, limit_l1, limit_l2)
+#ac = AckermanController(l_joystick, xbox_controller, turn_right, turn_r2, turn_left, turn_l2, dt_right, dt_r2, dt_left, dt_l2, limit_r1, limit_r2, limit_l1, limit_l2)
+
+new_ac = NewAckermanController(l_joystick, xbox_controller, swerve)
 
 # define MechController
-mc = MechController(l_joystick, xbox_controller_2, shooter, intake, climber, gear_mech, hopper, talon_test=talon_test)
+mc = MechController(l_joystick, xbox_controller_2, shooter, intake, gear_mech, hopper, talon_test=talon_test)
 
 # define DriverStation
 ds = DriverStation.getInstance()
