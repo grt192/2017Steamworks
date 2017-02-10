@@ -5,7 +5,6 @@ class SwerveModule:
 	
   	#8-motor drivetrain with 4 swerve modules
 
-
     def __init__(self, turn_r1, turn_r2, turn_l1, turn_l2, power_r1, power_r2, power_l1, power_l2, limit_r1=None, limit_r2=None, limit_l1=None, limit_l2=None):
         
         self.turn_r1 = turn_r1
@@ -45,10 +44,15 @@ class SwerveModule:
 
     def ackerman_turn(self, joy_angle, power):
 
+        #real is a list of angles. These are the real angles of each of the 4 wheels.
+
         real = [0,0,0,0]
 
         turn_motors = (self.turn_r1, self.turn_r2, self.turn_l1, self.turn_l2)
-        
+
+
+        #The following set of code determines the outer and inner angles that
+        #the wheels should turn to. Specific cases for each quadrant.
 
         if joy_angle >= 0:
 
@@ -127,6 +131,8 @@ class SwerveModule:
         
 
        
+        #The next piece of code acutally sets the motors to the appropriate values.
+        #Again, it is split by quadrant.
 
         if abs(joy_angle) < math.pi/2: #is in quadrant 1 or 2
 
@@ -135,41 +141,48 @@ class SwerveModule:
                 #In quadrant 2 you turn left, so right is outer and left is inner. 
                 #Back wheels are reversed for position for super tight turning.
 
-                
-
                 for i in range(4):
+
+                    #Convert encoder position to a real-world angle by doing dimensional analysis
+                    #and modular arithmetic (mod 2pi).
 
                     real[i] = (turn_motors[i].getEncPosition() * ((2*math.pi)/self.TICKS_PER_REV)) % (2*math.pi) 
 
+
+                    #Converts angles greater than pi to their equivalent negative angle.
                     if real[i] > math.pi:
 
                         real[i] -= 2*math.pi
 
+                #This is a list of adjustments that you will later add to the current position.
                 adjustment_factors = [0,0,0,0]
 
+
+                #Adjustment factor is distance between the outer or inner angle (where you want to go) and
+                #the real (where you are right now).
                 adjustment_factors[0] = outer_angle - real[0]
                 adjustment_factors[1] = -outer_angle - real[1]
                 adjustment_factors[2] = inner_angle - real[2]
                 adjustment_factors[3] = -inner_angle - real[3]
 
+
+                #This list is what you will set all the turn motors to.
                 positions = [0,0,0,0]
 
                 for i in range(4):
 
+                    #Add the adjustment factor (after doing dimmensional analysis) to the current position.
                     positions[i] = turn_motors[i].getEncPosition() + adjustment_factors[i] * self.TICKS_PER_REV/(2*math.pi)
 
                     turn_motors[i].set(positions[i])
-
-                # self.turn_r1.set(outer_pos)
-                # self.turn_r2.set(-outer_pos)
-                # self.turn_l1.set(inner_pos)
-                # self.turn_l2.set(-inner_pos)
 
                 self.power_r1.set(outer_speed)
                 self.power_r2.set(outer_speed)
                 self.power_l1.set(inner_speed)
                 self.power_l2.set(inner_speed)
-                
+
+            #The code that follows is for the rest of the 3 quadrants. Have not added comments for
+            #the modular arithmetic/adjustemnt factor logic because it is the same.
 
             else: # is in quadrant 1
 
@@ -200,25 +213,17 @@ class SwerveModule:
 
                     turn_motors[i].set(positions[i])
 
-                # self.turn_l1.set(outer_pos)
-                # self.turn_l2.set(-outer_pos)
-                # self.turn_r1.set(inner_pos)
-                # self.turn_r2.set(-inner_pos)
-
                 self.power_l1.set(outer_speed)
                 self.power_l2.set(outer_speed)
                 self.power_r1.set(inner_speed)
                 self.power_r2.set(inner_speed)
-                #print("done2")
+                
 
         #same as above but goes backwards
         else: # is in quadrant 3 or 4
 
 
             if joy_angle >= 0: # is in quadrant 4
-
-
-                
 
                 for i in range(4):
 
@@ -243,27 +248,12 @@ class SwerveModule:
 
                     turn_motors[i].set(positions[i])
 
-                # print("QUADRANT 4 OUTER POS")
-                # print(outer_pos)
-                # print("QUADRANT 4 INNER POS")
-                # print(inner_pos)
-
-                # print("QUADRANT 4 OUTER SPEED")
-                # print(outer_speed)
-                # print("QUADRANT 4 INNER SPEED")
-                # print(inner_speed)
-
-            
-                # self.turn_r1.set(outer_pos)
-                # self.turn_r2.set(-outer_pos)
-                # self.turn_l1.set(inner_pos)
-                # self.turn_l2.set(-inner_pos)
 
                 self.power_r1.set(-outer_speed)
                 self.power_r2.set(-outer_speed)
                 self.power_l1.set(-inner_speed)
                 self.power_l2.set(-inner_speed)
-                #print("done3")
+                
 
             else: # is in quadrant 3 
 
@@ -292,22 +282,7 @@ class SwerveModule:
 
                     turn_motors[i].set(positions[i])
 
-                print("QUADRANT 3 OUTER POS")
-                print(outer_pos)
-                print("QUADRANT 3 INNER POS")
-                print(inner_pos)
-
-                print("QUADRANT 3 OUTER SPEED")
-                print(outer_speed)
-                print("QUADRANT 3 INNER SPEED")
-                print(inner_speed)
-
-
-                # self.turn_r1.set(inner_pos)
-                # self.turn_r2.set(-inner_pos)
-                # self.turn_l1.set(outer_pos)
-                # self.turn_l2.set(-outer_pos)
-
+                
                 self.power_r1.set(-inner_speed)
                 self.power_r2.set(-inner_speed)
                 self.power_l1.set(-outer_speed)
@@ -320,15 +295,27 @@ class SwerveModule:
         turn_motors = (self.turn_r1, self.turn_r2, self.turn_l1, self.turn_l2)
         power_motors = (self.power_r1, self.power_r2, self.power_l1, self.power_l2)
 
+        #Loops through each of the 4 motors.
         for i in range(4):
 
 
+            #Convert encoder position to a real-world angle by doing dimensional analysis
+            #and modular arithmetic (mod 2pi).
+
             real = (turn_motors[i].getEncPosition() * ((2*math.pi)/self.TICKS_PER_REV)) % (2*math.pi) 
 
+
+            #Set each power motor to the scaled down speed.
             power_motors[i].set(power*scale_down)
 
+            #You are currently past the angle you want to go to. 
+
             if real > joy_angle:
-                
+
+
+                #If the difference is greater than pi, you will end up going to the joy angle plus 2pi.
+                #2pi - real is distance to 0, and then you add the joy angle to get to where you want to go.
+                #Dimensional analysis at the end.
                 if (real-joy_angle) > math.pi:
 
                     adjustment_factor = ((2*math.pi - real) + joy_angle) * self.TICKS_PER_REV/(2*math.pi)
@@ -336,6 +323,9 @@ class SwerveModule:
                     position = turn_motors[i].getEncPosition() + adjustment_factor
                     
                     turn_motors[i].set(position)
+
+                #Goes from real to joy angle. The difference is made negative so that you can say + adjustment
+                #factor instead of - to keep it consistent.
                 else:
                     
                     adjustment_factor = (- (real - joy_angle)) * self.TICKS_PER_REV/(2*math.pi)
@@ -343,8 +333,15 @@ class SwerveModule:
                     position = turn_motors[i].getEncPosition() + adjustment_factor
                     
                     turn_motors[i].set(position)
+
+            #Your angle (real) is smaller than the angle you want to go to.
+
             else:
-                
+
+                #If the difference is greater than pi, you end up going to the joy angle minus 2pi.
+                #This is very similar to the case above where the difference is greater than 2pi,
+                #but it is backwards.
+
                 if (joy_angle-real) > math.pi:
                     
                     adjustment_factor = (- real - (2*math.pi - joy_angle)) * self.TICKS_PER_REV/(2*math.pi)
@@ -352,6 +349,10 @@ class SwerveModule:
                     position = turn_motors[i].getEncPosition() + adjustment_factor
                     
                     turn_motors[i].set(position)
+
+                #This is the simplest case. Adjustment factor is difference between joy angle and real,
+                #and you add the adjustment factor to your current position.
+
                 else:
                     
                     adjustment_factor = (joy_angle - real) * self.TICKS_PER_REV/(2*math.pi)
@@ -413,6 +414,8 @@ class SwerveModule:
 
     def zero(self):
 
+        #This list of booleans makes sure that the limit switch only completes the zeroing sequence
+        #when you want it to.
         self.zeroing[0] = True
         self.zeroing[1] = True
         self.zeroing[2] = True
@@ -441,6 +444,8 @@ class SwerveModule:
 
     def _limit_listener(self, source, state_id, datum):
 
+
+        #Limit switch is pressed and one of them is still being zeroed.
         if state_id == 'pressed' and datum and (self.zeroing[0] or self.zeroing[1] or self.zeroing[2] or self.zeroing[3]):
 
             #Positive: clockwise
@@ -452,14 +457,18 @@ class SwerveModule:
                 print(self.turn_r1.getEncPosition())
                 #print(self.turn_r1.getEncPosition())
 
-                self.turn_r1.setEncPosition(-1800) #-2050
+                #This is the position at which the limit switch is triggered. Calculated empirically.
+                self.turn_r1.setEncPosition(-1800) #-2050 <--old val
 
+
+                #Change back to position mode and go to zero.
                 self.turn_r1.changeControlMode(CANTalon.ControlMode.Position)
                 self.turn_r1.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
                 self.turn_r1.setPID(1.0, 0.0, 0.0)
 
                 self.turn_r1.set(0)
 
+                #Register that this wheel has been zeroed.
                 self.zeroing[0] = False
 
 
