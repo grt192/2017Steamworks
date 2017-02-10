@@ -36,6 +36,14 @@ class MyRobot(wpilib.SampleRobot):
         # self.camera_server.startAutomaticCapture(self.camera)
         # self.camera_server.setQuality(10)
 
+        self.straight_swerve_macro = config.straight_swerve_macro
+
+        self.autoChooser = SendableChooser()
+        self.autoChooser.addObject("No Autonomous", None)
+        self.autoChooser.addObject("Straight Baseline Cross", self.straight_swerve_macro)
+        SmartDashboard.putData("Autonomous Mode", self.autoChooser)
+        self.auto = self.autoChooser.getSelected()
+
 
     def disabled(self):
         while self.isDisabled():
@@ -49,8 +57,16 @@ class MyRobot(wpilib.SampleRobot):
             # print(self.t4.getControlMode())
     
     def autonomous(self):
-        # define auto here
-        pass
+        if self.auto:
+            self.auto.run_autonomous()
+        while self.isAutonomous() and self.isEnabled():
+            tinit = time.time()
+            self.hid_sp.poll()
+            self.sp.poll()
+            self.safeSleep(tinit, .04)
+        if self.auto:
+            self.auto.stop_autonomous()
+        
     
     def operatorControl(self):
         while self.isOperatorControl() and self.isEnabled():

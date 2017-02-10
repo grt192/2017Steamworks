@@ -24,6 +24,7 @@ from grt.mechanism import ZeroTest, TalonTester
 from grt.sensors.switch import Switch
 from grt.mechanism.new_ackermancontroller import NewAckermanController
 
+from grt.macro.straight_swerve_macro import StraightSwerveMacro
 
 
 #DT Talons and Objects
@@ -193,6 +194,8 @@ mc = MechController(l_joystick, xbox_controller_2, shooter, intake, gear_mech, h
 
 # define DriverStation
 ds = DriverStation.getInstance()
+
+straight_swerve_macro = StraightSwerveMacro(swerve)
 
 
 
