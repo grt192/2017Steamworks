@@ -101,6 +101,7 @@ dt_r2 = CANTalon(11)
 
 
 shooter1_m1 = CANTalon(15)
+shooter_m1.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
 shooter1_m2 = CANTalon(8)
 # shooter2_m1 = CANTalon(20)
 # shooter2_m2 = CANTalon(20)

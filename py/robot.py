@@ -25,6 +25,7 @@ class MyRobot(wpilib.SampleRobot):
         self.t2 = config.turn_left
         self.t3 = config.turn_r2
         self.t4 = config.turn_l2
+        self.t5 = config.shooter_m1
 
         # NEXT LINES CAUSE LAG ON ROBOT; ALSO WILL PROBABLY NOT WORK FOR 2017
 
@@ -68,6 +69,7 @@ class MyRobot(wpilib.SampleRobot):
             # print(self.t3.getEncPosition())
             # print(self.t4.getEncPosition())
             # print(self.t4.getControlMode())
+            print(self.t5.getEncPosition())
 
 
             
