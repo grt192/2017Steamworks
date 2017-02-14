@@ -17,7 +17,7 @@ class MechController:
 
         self.talon_test = talon_test
 
-        self.power = .5
+        self.power = .7
 
         self.driver_joystick = driver_joystick
         self.xbox_controller = xbox_controller
@@ -29,10 +29,10 @@ class MechController:
         # if state_id == 'a_button':
         #     if datum:
         #         print("testing")
-        #         self.talon_test.go(True)
+        #         self.talon_test.go_motor(.5)
 
         #     else:
-        #         self.talon_test.go(False)
+        #         self.talon_test.go_motor(0)
 
 
         # if state_id == 'r_shoulder':
@@ -78,6 +78,14 @@ class MechController:
             if abs(datum) > .2:
                 print("climbing")
                 self.climber.climb()
+            else:
+                print("not climbing")
+                self.climber.stop()
+
+        elif state_id == 'l_y_axis': #needs review
+            if abs(datum) > .2:
+                print("climbing")
+                self.climber.down()
             else:
                 print("not climbing")
                 self.climber.stop()

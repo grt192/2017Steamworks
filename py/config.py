@@ -32,22 +32,21 @@ from grt.mechanism.new_ackermancontroller import NewAckermanController
 # TALON ASSIGNMENT:
 
 
-# 1:
-# 2: front right dt power
-# 3: back left dt power 
-# 4: back left dt turn
-# 5: back right dt turn
-# 6: 
-# 7: back left dt power NOT WORKING ATM!
-# 8: bottom front shooter motor
-# 9: front left dt turn
-# 10: front right dt turn
-# 11: back right dt power boop
-# 12: integration
-# 13: intake
-# 14: front left dt power
-# 15: top front shooter motor
-# 16:
+# 1: front right dt power
+# 2: back left dt power
+# 3: back right dt turn
+# 4: CLIMBER WOOOOHHOOOOOOOO!!!!!!!!!!!
+# 5: front left dt power
+# 6: front shooter (wrong direction)
+# 7: intake
+# 8: integration roller
+# 9: front right dt turn
+# 10: front left dt turn
+# 11: CLIMBER WOOOHHOOOOOOOO!!!!!!!!!!!!! part 2 lmao
+# 12: back left dt turn
+# 13: back shooter
+# 14: back right dt power
+
 
 #SOLENOID ASSIGNMENT:
 
@@ -60,26 +59,28 @@ from grt.mechanism.new_ackermancontroller import NewAckermanController
 
 test_solenoid = Solenoid(0)
 
-talon_test = TalonTester(test_solenoid)
+#test_motor = CANTalon(14)
+
+talon_test = TalonTester()
 
 
 #UNCOMMENT THE FOLLOWING LATER
-turn_l2 = CANTalon(4)
+turn_l2 = CANTalon(12)
 turn_l2.changeControlMode(CANTalon.ControlMode.Position)
 turn_l2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
 turn_l2.setPID(1.0, 0.0, 0.0)
 
-turn_r2 = CANTalon(5)
+turn_r2 = CANTalon(3)
 turn_r2.changeControlMode(CANTalon.ControlMode.Position)
 turn_r2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
 turn_r2.setPID(1.0, 0.0, 0.0)
 
-turn_left = CANTalon(9)
+turn_left = CANTalon(10)
 turn_left.changeControlMode(CANTalon.ControlMode.Position)
 turn_left.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
 turn_left.setPID(1.0, 0.0, 0.0)
 
-turn_right = CANTalon(10)#5
+turn_right = CANTalon(9)#5
 turn_right.changeControlMode(CANTalon.ControlMode.Position)
 turn_right.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
 turn_right.setPID(1.0, 0.0, 0.0)
@@ -93,15 +94,15 @@ turn_right.setPID(1.0, 0.0, 0.0)
 #back right 7 turning: 9
 #back left 4 turning: 8
 
-dt_right = CANTalon(2)
-dt_left = CANTalon(14)
+dt_right = CANTalon(1)
+dt_left = CANTalon(5)
 
-dt_l2 = CANTalon(3)
-dt_r2 = CANTalon(11)
+dt_l2 = CANTalon(2)
+dt_r2 = CANTalon(14)
 
 
-shooter1_m1 = CANTalon(15)
-shooter1_m2 = CANTalon(8)
+shooter1_m1 = CANTalon(6)
+shooter1_m2 = CANTalon(13)
 # shooter2_m1 = CANTalon(20)
 # shooter2_m2 = CANTalon(20)
 
@@ -117,25 +118,25 @@ shooter1_m2 = CANTalon(8)
 # shooter2_m2.changeControlMode(CANTalon.ControlMode.Speed)
 # shooter2_m2.setPID(.33, 0, 0, f=.17)
 
-load_m = CANTalon(12)
+load_m = CANTalon(8)
 
 angle_change = Solenoid(2)
 
 shooter = Shooter(shooter1_m1, shooter1_m2, load_m, angle_change)
 
-intake_motor = CANTalon(13)
+intake_motor = CANTalon(7)
 
 intake = Intake(intake_motor)
 
 
-#climber_motor = CANTalon(20)
+climber_motor = CANTalon(4)
 
-#c2 = CANTalon(20)
+c2 = CANTalon(11)
 
-# c2.changeControlMode(CANTalon.ControlMode.Follower)
-# c2.set(climber_motor.getDeviceID())
+c2.changeControlMode(CANTalon.ControlMode.Follower)
+c2.set(climber_motor.getDeviceID())
 
-# climber = Climber(climber_motor)
+climber = Climber(climber_motor)
 
 
 gear_pneumatic_1 = Solenoid(3)
@@ -189,7 +190,7 @@ sp = SensorPoller((limit_r1, limit_r2, limit_l1, limit_l2))
 new_ac = NewAckermanController(l_joystick, xbox_controller, swerve)
 
 # define MechController
-mc = MechController(l_joystick, xbox_controller_2, shooter, intake, gear_mech, hopper, talon_test=talon_test)
+mc = MechController(l_joystick, xbox_controller_2, shooter, intake, gear_mech, hopper, climber=climber, talon_test=talon_test)
 
 # define DriverStation
 ds = DriverStation.getInstance()

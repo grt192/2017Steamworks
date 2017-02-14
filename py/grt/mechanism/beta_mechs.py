@@ -12,10 +12,9 @@ class Shooter:
 		self.pneumatic = pneumatic
 
 	def ramp_up_speed(self, vel_1, vel_2):
-		self.shooter1_m1.set(vel_1)
+		self.shooter1_m1.set(-vel_1)
 		self.shooter1_m2.set(vel_2)
-		self.shooter2_m1.set(vel_1)
-		self.shooter2_m2.set(vel_2)
+		
 
 	def shoot(self):
 		self.load_m.set(1)
@@ -37,7 +36,7 @@ class Intake:
 
 	def intake(self):
 		print("intaking from intake")
-		self.motor.set(-.9)
+		self.motor.set(1)
 
 	def stop(self):
 		self.motor.set(0)
@@ -49,6 +48,9 @@ class Climber:
 		self.motor = motor
 
 	def climb(self):
+		self.motor.set(-1)
+
+	def down(self):
 		self.motor.set(1)
 
 	def stop(self):

@@ -36,7 +36,7 @@ class SwerveModule:
         #MAX ANGLE FOR INSIDE WHEEL
         self.theta_2 = math.pi - self.theta_1
 
-        self.TICKS_PER_REV = 4096*50/24 #I THINK SO!
+        self.TICKS_PER_REV = 4096*72/22 #I THINK SO! old:4096*50/24
 
         self.strafing = False
 
@@ -160,10 +160,10 @@ class SwerveModule:
 
                 #Adjustment factor is distance between the outer or inner angle (where you want to go) and
                 #the real (where you are right now).
-                adjustment_factors[0] = outer_angle - real[0]
-                adjustment_factors[1] = -outer_angle - real[1]
-                adjustment_factors[2] = inner_angle - real[2]
-                adjustment_factors[3] = -inner_angle - real[3]
+                adjustment_factors[1] = outer_angle - real[1]
+                adjustment_factors[0] = -outer_angle - real[0]
+                adjustment_factors[3] = inner_angle - real[3]
+                adjustment_factors[2] = -inner_angle - real[2]
 
 
                 #This list is what you will set all the turn motors to.
@@ -200,10 +200,10 @@ class SwerveModule:
 
                 adjustment_factors = [0,0,0,0]
 
-                adjustment_factors[0] = inner_angle - real[0]
-                adjustment_factors[1] = -inner_angle - real[1]
-                adjustment_factors[2] = outer_angle - real[2]
-                adjustment_factors[3] = -outer_angle - real[3]
+                adjustment_factors[1] = inner_angle - real[1]
+                adjustment_factors[0] = -inner_angle - real[0]
+                adjustment_factors[3] = outer_angle - real[3]
+                adjustment_factors[2] = -outer_angle - real[2]
 
                 positions = [0,0,0,0]
 
@@ -235,10 +235,10 @@ class SwerveModule:
 
                 adjustment_factors = [0,0,0,0]
 
-                adjustment_factors[0] = outer_angle - real[0]
-                adjustment_factors[1] = -outer_angle - real[1]
-                adjustment_factors[2] = inner_angle - real[2]
-                adjustment_factors[3] = -inner_angle - real[3]
+                adjustment_factors[1] = outer_angle - real[1]
+                adjustment_factors[0] = -outer_angle - real[0]
+                adjustment_factors[3] = inner_angle - real[3]
+                adjustment_factors[2] = -inner_angle - real[2]
 
                 positions = [0,0,0,0]
 
@@ -269,10 +269,10 @@ class SwerveModule:
 
                 adjustment_factors = [0,0,0,0]
 
-                adjustment_factors[0] = inner_angle - real[0]
-                adjustment_factors[1] = -inner_angle - real[1]
-                adjustment_factors[2] = outer_angle - real[2]
-                adjustment_factors[3] = -outer_angle - real[3]
+                adjustment_factors[1] = inner_angle - real[1]
+                adjustment_factors[0] = -inner_angle - real[0]
+                adjustment_factors[3] = outer_angle - real[3]
+                adjustment_factors[2] = -outer_angle - real[2]
 
                 positions = [0,0,0,0]
 

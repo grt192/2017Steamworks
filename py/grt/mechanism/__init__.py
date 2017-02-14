@@ -39,14 +39,18 @@ class ZeroTest:
 
 class TalonTester:
 
-    def __init__(self, pneumatic):
+    def __init__(self, motor=None, pneumatic=None):
 
         self.pneumatic = pneumatic
+        self.motor = motor
 
-    def go(self, bool):
+    def go_pneumatic(self, bool):
         print("going")
 
         self.pneumatic.set(bool)
+
+    def go_motor(self, power):
+        self.motor.set(power)
 
 
             
