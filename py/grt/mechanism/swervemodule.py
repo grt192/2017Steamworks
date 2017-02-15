@@ -429,7 +429,7 @@ class SwerveModule:
         self.turn_l1.changeControlMode(CANTalon.ControlMode.PercentVbus)
         self.turn_l2.changeControlMode(CANTalon.ControlMode.PercentVbus)
 
-        turning_power = .3
+        turning_power = .35
 
         self.turn_r1.set(turning_power)
         self.turn_r2.set(turning_power)
@@ -500,7 +500,7 @@ class SwerveModule:
                 print("r2 encoder position triggered")
                 print(self.turn_r2.getEncPosition())
 
-                self.turn_r2.setEncPosition(300) #-60
+                self.turn_r2.setEncPosition(1810) #-60
 
                 self.turn_r2.changeControlMode(CANTalon.ControlMode.Position)
                 self.turn_r2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
@@ -543,7 +543,7 @@ class SwerveModule:
                 print("l1 encoder position triggered")
                 print(self.turn_l1.getEncPosition())
 
-                self.turn_l1.setEncPosition(-4050) #-4197
+                self.turn_l1.setEncPosition(-4880) #-4197
 
                 self.turn_l1.changeControlMode(CANTalon.ControlMode.Position)
                 self.turn_l1.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
@@ -578,7 +578,7 @@ class SwerveModule:
                 print("l2 encoder position triggered")
                 print(self.turn_l2.getEncPosition())
 
-                self.turn_l2.setEncPosition(2500) #-2226
+                self.turn_l2.setEncPosition(4450) #-2226
 
                 self.turn_l2.changeControlMode(CANTalon.ControlMode.Position)
                 self.turn_l2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
