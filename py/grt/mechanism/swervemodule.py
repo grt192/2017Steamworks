@@ -292,6 +292,8 @@ class SwerveModule:
 
     def strafe(self, joy_angle, power, scale_down):
 
+        joy_angle = -joy_angle
+
         turn_motors = (self.turn_r1, self.turn_r2, self.turn_l1, self.turn_l2)
         power_motors = (self.power_r1, self.power_r2, self.power_l1, self.power_l2)
 
@@ -427,7 +429,7 @@ class SwerveModule:
         self.turn_l1.changeControlMode(CANTalon.ControlMode.PercentVbus)
         self.turn_l2.changeControlMode(CANTalon.ControlMode.PercentVbus)
 
-        turning_power = .2
+        turning_power = .3
 
         self.turn_r1.set(turning_power)
         self.turn_r2.set(turning_power)

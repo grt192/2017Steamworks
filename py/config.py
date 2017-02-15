@@ -150,10 +150,10 @@ hopper_pneumatic = Solenoid(1)
 
 hopper = Hopper(hopper_pneumatic)
 
-limit_r1 = Switch(1, reverse=True)
-limit_r2 = Switch(0, reverse=True)
-limit_l1 = Switch(3, reverse=True)
-limit_l2 = Switch(2, reverse=True)
+limit_r1 = Switch(9, reverse=True)
+limit_r2 = Switch(1, reverse=True)
+limit_l1 = Switch(0, reverse=True)
+limit_l2 = Switch(3, reverse=True)
 
 #zero_test = ZeroTest(turn_right, limit_switch)
 

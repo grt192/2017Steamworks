@@ -26,6 +26,11 @@ class MyRobot(wpilib.SampleRobot):
         self.t3 = config.turn_r2
         self.t4 = config.turn_l2
 
+        self.lr1 = config.limit_r1
+        self.lr2 = config.limit_r2
+        self.ll1 = config.limit_l1
+        self.ll2 = config.limit_l2
+
         # NEXT LINES CAUSE LAG ON ROBOT; ALSO WILL PROBABLY NOT WORK FOR 2017
 
         # self.camera = wpilib.USBCamera()
@@ -44,6 +49,16 @@ class MyRobot(wpilib.SampleRobot):
             self.sp.poll()
             self.safeSleep(tinit, .04)
 
+            print("FRONT RIGHT L")
+            print(self.lr1.pressed)
+            print("BACK RIGHT L")
+            print(self.lr2.pressed)
+            print("FRONT LEFT L")
+            print(self.ll1.pressed)
+            print("BACK LEFT L")
+            print(self.ll2.pressed)
+            
+
             # print("Encoder position:")
             # print(self.t4.getEncPosition())
             # print(self.t4.getControlMode())
@@ -61,13 +76,22 @@ class MyRobot(wpilib.SampleRobot):
             self.safeSleep(tinit, .04)
             # print("voltage")
             # print(self.t1.getOutputVoltage())
-            print("Encoder position:")
+            #print("Encoder position:")
             # print(self.turn_motor.getEncPosition())
-            print(self.t1.getEncPosition())
+            #print(self.t1.getEncPosition())
             # print(self.t2.getEncPosition())
             # print(self.t3.getEncPosition())
             # print(self.t4.getEncPosition())
             # print(self.t4.getControlMode())
+
+            print("FRONT RIGHT L")
+            print(self.lr1.pressed)
+            print("BACK RIGHT L")
+            print(self.lr2.pressed)
+            print("FRONT LEFT L")
+            print(self.ll1.pressed)
+            print("BACK LEFT L")
+            print(self.ll2.pressed)
 
 
             
