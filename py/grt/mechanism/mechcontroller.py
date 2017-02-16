@@ -17,7 +17,8 @@ class MechController:
 
         self.talon_test = talon_test
 
-        self.power = .7
+        self.front_power = 1000 #OLD: 2150
+        self.back_power = 3100 #OLD: 2150
 
         self.driver_joystick = driver_joystick
         self.xbox_controller = xbox_controller
@@ -29,19 +30,19 @@ class MechController:
         # if state_id == 'a_button':
         #     if datum:
         #         print("testing")
-        #         self.talon_test.go_motor(.5)
+        #         self.talon_test.go_pneumatic(True)
 
         #     else:
-        #         self.talon_test.go_motor(0)
+        #         self.talon_test.go_pneumatic(False)
 
 
-        # if state_id == 'r_shoulder':
-        #     if datum:
-        #         print("unjam hopper out")
-        #         self.hopper.unjam_out()
-        #     else:
-        #         print("unjam hopper in")
-        #         self.hopper.unjam_in()
+        if state_id == 'r_shoulder':
+            if datum:
+                print("unjam hopper out")
+                self.hopper.unjam_out()
+            else:
+                print("unjam hopper in")
+                self.hopper.unjam_in()
 
         if state_id == 'b_button':
             if datum:
@@ -93,7 +94,7 @@ class MechController:
         elif state_id == 'l_trigger':
             if datum:
                 print("ramp up shooter")
-                self.shooter.ramp_up_speed(self.power,self.power) #48
+                self.shooter.ramp_up_speed(self.front_power,self.back_power) #48
 
         elif state_id == 'l_shoulder':
             if datum:

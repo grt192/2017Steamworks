@@ -31,6 +31,9 @@ class MyRobot(wpilib.SampleRobot):
         self.ll1 = config.limit_l1
         self.ll2 = config.limit_l2
 
+        self.s1 = config.shooter1_m1
+        self.s2 = config.shooter1_m2
+
         # NEXT LINES CAUSE LAG ON ROBOT; ALSO WILL PROBABLY NOT WORK FOR 2017
 
         # self.camera = wpilib.USBCamera()
@@ -49,19 +52,24 @@ class MyRobot(wpilib.SampleRobot):
             self.sp.poll()
             self.safeSleep(tinit, .04)
 
-            print("FRONT RIGHT L")
-            print(self.lr1.pressed)
-            print("BACK RIGHT L")
-            print(self.lr2.pressed)
-            print("FRONT LEFT L")
-            print(self.ll1.pressed)
-            print("BACK LEFT L")
-            print(self.ll2.pressed)
+            # print("FRONT RIGHT L")
+            # print(self.lr1.pressed)
+            # print("BACK RIGHT L")
+            # print(self.lr2.pressed)
+            # print("FRONT LEFT L")
+            # print(self.ll1.pressed)
+            # print("BACK LEFT L")
+            # print(self.ll2.pressed)
             
 
             # print("Encoder position:")
             # print(self.t4.getEncPosition())
             # print(self.t4.getControlMode())
+
+            # print("SHOOTER 1")
+            # print(self.s1.getEncPosition())
+            # print("SHOOTER 2")
+            # print(self.s2.getEncPosition())
     
     def autonomous(self):
         # define auto here
@@ -84,14 +92,20 @@ class MyRobot(wpilib.SampleRobot):
             # print(self.t4.getEncPosition())
             # print(self.t4.getControlMode())
 
-            print("FRONT RIGHT L")
-            print(self.lr1.pressed)
-            print("BACK RIGHT L")
-            print(self.lr2.pressed)
-            print("FRONT LEFT L")
-            print(self.ll1.pressed)
-            print("BACK LEFT L")
-            print(self.ll2.pressed)
+            # print("FRONT RIGHT L")
+            # print(self.lr1.pressed)
+            # print("BACK RIGHT L")
+            # print(self.lr2.pressed)
+            # print("FRONT LEFT L")
+            # print(self.ll1.pressed)
+            # print("BACK LEFT L")
+            # print(self.ll2.pressed)
+
+            # print("SHOOTER 1")
+            # print(self.s1.getEncPosition())
+            # print("SHOOTER 2")
+            # print(self.s2.getEncPosition())
+
 
 
             

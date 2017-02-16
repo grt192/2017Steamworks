@@ -134,7 +134,7 @@ class SwerveModule:
         #The next piece of code acutally sets the motors to the appropriate values.
         #Again, it is split by quadrant.
 
-        if abs(joy_angle) < math.pi/2: #is in quadrant 1 or 2
+        if abs(joy_angle) <= math.pi/2: #is in quadrant 1 or 2
 
             if joy_angle <= 0: #is in quadrant 2
 

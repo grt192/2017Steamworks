@@ -57,11 +57,11 @@ from grt.mechanism.new_ackermancontroller import NewAckermanController
 # 4: gear indexer
 
 
-test_solenoid = Solenoid(0)
+test_solenoid = Solenoid(2)
 
 #test_motor = CANTalon(14)
 
-talon_test = TalonTester()
+talon_test = TalonTester(pneumatic=test_solenoid)
 
 
 #UNCOMMENT THE FOLLOWING LATER
@@ -106,11 +106,11 @@ shooter1_m2 = CANTalon(13)
 # shooter2_m1 = CANTalon(20)
 # shooter2_m2 = CANTalon(20)
 
-# shooter1_m1.changeControlMode(CANTalon.ControlMode.Speed)
-# shooter1_m1.setPID(.33, 0, 0, f=.17)
+shooter1_m1.changeControlMode(CANTalon.ControlMode.Speed)
+shooter1_m1.setPID(.33, 0, 0, f=.17)
 
-# shooter1_m2.changeControlMode(CANTalon.ControlMode.Speed)
-# shooter1_m2.setPID(.33, 0, 0, f=.17)
+shooter1_m2.changeControlMode(CANTalon.ControlMode.Speed)
+shooter1_m2.setPID(.33, 0, 0, f=.17)
 
 # shooter2_m1.changeControlMode(CANTalon.ControlMode.Speed)
 # shooter2_m1.setPID(.33, 0, 0, f=.17)
@@ -120,7 +120,7 @@ shooter1_m2 = CANTalon(13)
 
 load_m = CANTalon(8)
 
-angle_change = Solenoid(2)
+angle_change = Solenoid(0)
 
 shooter = Shooter(shooter1_m1, shooter1_m2, load_m, angle_change)
 
