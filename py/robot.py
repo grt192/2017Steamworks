@@ -7,6 +7,8 @@
 import wpilib
 import time
 
+
+
 #from config import sp
 
 class MyRobot(wpilib.SampleRobot):
@@ -33,6 +35,8 @@ class MyRobot(wpilib.SampleRobot):
 
         self.s1 = config.shooter1_m1
         self.s2 = config.shooter1_m2
+
+        wpilib.CameraServer.launch()
 
         # NEXT LINES CAUSE LAG ON ROBOT; ALSO WILL PROBABLY NOT WORK FOR 2017
 
@@ -66,10 +70,10 @@ class MyRobot(wpilib.SampleRobot):
             # print(self.t4.getEncPosition())
             # print(self.t4.getControlMode())
 
-            # print("SHOOTER 1")
-            # print(self.s1.getEncPosition())
-            # print("SHOOTER 2")
-            # print(self.s2.getEncPosition())
+            print("SHOOTER 1")
+            print(self.s1.get())
+            print("SHOOTER 2")
+            print(self.s2.get())
     
     def autonomous(self):
         # define auto here
@@ -100,11 +104,14 @@ class MyRobot(wpilib.SampleRobot):
             # print(self.ll1.pressed)
             # print("BACK LEFT L")
             # print(self.ll2.pressed)
-
-            # print("SHOOTER 1")
-            # print(self.s1.getEncPosition())
+            print("SHOOTER 1")
+            print(self.s1.get())
+            print(self.s1.getClosedLoopError())
+            print("SHOOTER 2")
+            print(self.s2.get())
+            print(self.s2.getClosedLoopError())
             # print("SHOOTER 2")
-            # print(self.s2.getEncPosition())
+            # print(self.s2.get())
 
 
 

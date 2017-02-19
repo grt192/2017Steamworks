@@ -17,8 +17,8 @@ class MechController:
 
         self.talon_test = talon_test
 
-        self.front_power = 1000 #OLD: 2150
-        self.back_power = 3100 #OLD: 2150
+        self.front_power = 800#1500#2175 #OLD: 2150, 1000
+        self.back_power = 1600#1500#4975 #OLD: 2150, 3100
 
         self.driver_joystick = driver_joystick
         self.xbox_controller = xbox_controller
@@ -36,7 +36,7 @@ class MechController:
         #         self.talon_test.go_pneumatic(False)
 
 
-        if state_id == 'r_shoulder':
+        if state_id == 'r_shoulder': #GEAR ATM
             if datum:
                 print("unjam hopper out")
                 self.hopper.unjam_out()
@@ -46,13 +46,16 @@ class MechController:
 
         if state_id == 'b_button':
             if datum:
-                self.power -= .01
-                print("POWER: ",self.power)
-            #     print("placing gear")
-            #     self.gear.place()
-            # else:
-            #     print("gear back")
-            #     self.gear.retract()
+                # self.power -= .01
+                # print("POWER: ",self.power)
+                print("placing gear")
+                self.gear.place()
+                
+            else:
+                print("gear back")
+                self.gear.retract()
+
+                
 
         elif state_id == 'x_button':
             if datum:
@@ -67,18 +70,19 @@ class MechController:
         elif state_id == 'a_button': #needs review
             if datum:
 
-                self.power += .01
-                print("POWER: ",self.power)
-                # print("unjam gear up")
-                # self.gear.unjam_up()
-            # else:
-            #     print("unjam gear down")
-            #     self.gear.unjam_down()
+                # self.power += .01
+                # print("POWER: ",self.power)
+                print("unjam gear down")
+                self.gear.unjam_down()
+            else:
+                print("unjam gear up")
+                self.gear.unjam_up()
+                
                 
         elif state_id == 'r_y_axis': #needs review
             if abs(datum) > .2:
                 print("climbing")
-                self.climber.climb()
+                self.climber.climb_adjustable(datum)
             else:
                 print("not climbing")
                 self.climber.stop()
@@ -99,7 +103,7 @@ class MechController:
         elif state_id == 'l_shoulder':
             if datum:
                 print("stop shooter")
-                self.shooter.ramp_up_speed(0,0)
+                self.shooter.ramp_down_to_zero()
 
         elif state_id == 'r_trigger':
             if datum:

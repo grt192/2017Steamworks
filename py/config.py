@@ -57,7 +57,7 @@ from grt.mechanism.new_ackermancontroller import NewAckermanController
 # 4: gear indexer
 
 
-test_solenoid = Solenoid(2)
+test_solenoid = Solenoid(4)
 
 #test_motor = CANTalon(14)
 
@@ -107,10 +107,15 @@ shooter1_m2 = CANTalon(13)
 # shooter2_m2 = CANTalon(20)
 
 shooter1_m1.changeControlMode(CANTalon.ControlMode.Speed)
-shooter1_m1.setPID(.33, 0, 0, f=.17)
+shooter1_m1.setPID(1.0,0.008,20, f=0.47383)
+#shooter1_m1.setPID(0.20, 0.001, 0)
+# shooter1_m1.setPID(.33, 0, 0, f=.17)
 
 shooter1_m2.changeControlMode(CANTalon.ControlMode.Speed)
-shooter1_m2.setPID(.33, 0, 0, f=.17)
+#shooter1_m2.setPID(0,0,0)
+shooter1_m2.setPID(1.0,0.008,20, f=0.478037)
+#shooter1_m2.setPID(0.20, 0.001, 0)
+# shooter1_m2.setPID(.33, 0, 0, f=.17)
 
 # shooter2_m1.changeControlMode(CANTalon.ControlMode.Speed)
 # shooter2_m1.setPID(.33, 0, 0, f=.17)
@@ -119,6 +124,10 @@ shooter1_m2.setPID(.33, 0, 0, f=.17)
 # shooter2_m2.setPID(.33, 0, 0, f=.17)
 
 load_m = CANTalon(8)
+
+disk_m = CANTalon(15)
+disk_m.changeControlMode(CANTalon.ControlMode.Follower)
+disk_m.set(load_m.getDeviceID())
 
 angle_change = Solenoid(0)
 
@@ -139,13 +148,13 @@ c2.set(climber_motor.getDeviceID())
 climber = Climber(climber_motor)
 
 
-gear_pneumatic_1 = Solenoid(3)
-gear_pneumatic_2 = Solenoid(4)
+gear_pneumatic_1 = Solenoid(1)
+gear_pneumatic_2 = Solenoid(2)
 
 gear_mech = Gear(gear_pneumatic_1, gear_pneumatic_2)
 
 
-hopper_pneumatic = Solenoid(1)
+hopper_pneumatic = Solenoid(3)
 
 
 hopper = Hopper(hopper_pneumatic)
