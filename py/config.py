@@ -24,6 +24,8 @@ from grt.mechanism import ZeroTest, TalonTester
 from grt.sensors.switch import Switch
 from grt.mechanism.new_ackermancontroller import NewAckermanController
 
+from grt.autonomous.basic_auto import BasicAuto
+
 
 
 #DT Talons and Objects
@@ -160,9 +162,9 @@ hopper_pneumatic = Solenoid(3)
 hopper = Hopper(hopper_pneumatic)
 
 limit_r1 = Switch(9, reverse=True)
-limit_r2 = Switch(1, reverse=True)
+limit_r2 = Switch(2, reverse=True)
 limit_l1 = Switch(0, reverse=True)
-limit_l2 = Switch(3, reverse=True)
+limit_l2 = Switch(1, reverse=True)
 
 #zero_test = ZeroTest(turn_right, limit_switch)
 
@@ -189,6 +191,8 @@ xbox_controller_2 = XboxJoystick(2)
 hid_sp = SensorPoller((l_joystick, xbox_controller, xbox_controller_2))  # human interface devices
 sp = SensorPoller((limit_r1, limit_r2, limit_l1, limit_l2))
 
+
+basic_auto = BasicAuto(swerve)
 
 # Mech Talons, objects, and controller
 

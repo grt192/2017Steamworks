@@ -414,7 +414,7 @@ class SwerveModule:
         self.turn_l1.set(pos)
         self.turn_l2.set(pos)
 
-    def zero(self):
+    def zero(self, power):
 
         #This list of booleans makes sure that the limit switch only completes the zeroing sequence
         #when you want it to.
@@ -429,12 +429,12 @@ class SwerveModule:
         self.turn_l1.changeControlMode(CANTalon.ControlMode.PercentVbus)
         self.turn_l2.changeControlMode(CANTalon.ControlMode.PercentVbus)
 
-        turning_power = .35
+        
 
-        self.turn_r1.set(turning_power)
-        self.turn_r2.set(turning_power)
-        self.turn_l1.set(turning_power)
-        self.turn_l2.set(turning_power)
+        self.turn_r1.set(power)
+        self.turn_r2.set(power)
+        self.turn_l1.set(power)
+        self.turn_l2.set(power)
 
     def set_power(self, power):
 

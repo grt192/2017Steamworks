@@ -20,6 +20,8 @@ class MechController:
         self.front_power = 800#1500#2175 #OLD: 2150, 1000
         self.back_power = 1600#1500#4975 #OLD: 2150, 3100
 
+        self.TIPPED = True
+
         self.driver_joystick = driver_joystick
         self.xbox_controller = xbox_controller
         driver_joystick.add_listener(self._driver_joystick_listener)
@@ -36,26 +38,33 @@ class MechController:
         #         self.talon_test.go_pneumatic(False)
 
 
-        if state_id == 'r_shoulder': #GEAR ATM
-            if datum:
-                print("unjam hopper out")
-                self.hopper.unjam_out()
-            else:
-                print("unjam hopper in")
-                self.hopper.unjam_in()
+        # if state_id == 'r_shoulder': #GEAR ATM
+        #     if datum:
+        #         print("unjam hopper out")
+        #         self.hopper.unjam_out()
+        #     else:
+        #         print("unjam hopper in")
+        #         self.hopper.unjam_in()
+
+        # if state_id == 'b_button':
+        #     if datum:
+        #         # self.power -= .01
+        #         # print("POWER: ",self.power)
+        #         print("placing gear")
+        #         self.gear.place()
+                
+        #     else:
+        #         print("gear back")
+        #         self.gear.retract()
 
         if state_id == 'b_button':
             if datum:
-                # self.power -= .01
-                # print("POWER: ",self.power)
-                print("placing gear")
-                self.gear.place()
-                
-            else:
-                print("gear back")
-                self.gear.retract()
-
-                
+                if self.TIPPED:
+                    self.gear.place()
+                    self.TIPPED = False
+                else:
+                    self.gear.retract()
+                    self.TIPPED = True
 
         elif state_id == 'x_button':
             if datum:

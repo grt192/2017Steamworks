@@ -7,9 +7,11 @@
 import wpilib
 import time
 
-
+from config import basic_auto
 
 #from config import sp
+
+auto = basic_auto
 
 class MyRobot(wpilib.SampleRobot):
     def __init__(self):
@@ -37,6 +39,8 @@ class MyRobot(wpilib.SampleRobot):
         self.s2 = config.shooter1_m2
 
         wpilib.CameraServer.launch()
+
+      
 
         # NEXT LINES CAUSE LAG ON ROBOT; ALSO WILL PROBABLY NOT WORK FOR 2017
 
@@ -77,7 +81,13 @@ class MyRobot(wpilib.SampleRobot):
     
     def autonomous(self):
         # define auto here
-        pass
+
+        auto.run_autonomous()
+        while self.IsAutonomous() and self.IsEnabled():
+            tinit = time.time()
+            sp.poll()
+            wpilib.Wait(0.04 - (time.time() - tinit))
+        auto.stop_autonomous()
     
     def operatorControl(self):
         while self.isOperatorControl() and self.isEnabled():
