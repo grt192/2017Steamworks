@@ -7,24 +7,24 @@ import time
 
 class StraightSwerveMacro(GRTMacro):
 
-    POWER = 1.0
+    POWER = 0.5
 
     def __init__(self, swerve, timeout=None):
         super().__init__()
         self.swerve = swerve
-        #self.set_forward()
-        self.enabled = False
+        #self.enabled = False
 
-        self.abort = False
+        #self.abort = False
 
 
     def abort(self):
         self.abort = True
 
-    def macro_initialize(self):
-        self.enable()
-        set_forward()
-        threading.Timer(6, self.disable).start()
+    def initialize(self):
+        #self.enable()
+        self.set_forward()
+        print("straight swerve enabled")
+        #threading.Timer(6, self.disable).start()
 
      # def enable(self):
      #    print("Running portcullis_macro")
@@ -46,20 +46,25 @@ class StraightSwerveMacro(GRTMacro):
      #    straight_macro_timer.start()
 
     def enable(self):
-        #self.enabled = True
-        print("RUNNING EASY AUTO")
-        self.abort = False
-        self.swerve.strafe(0,1,.5)
-        strafe_timer = threading.Timer(2, self.disable)
-        print("running timer")
-        strafe_timer.start()
-        self.swerve.strafe(0,0,0)
+        self.enabled = True
+        #print("RUNNING EASY AUTO")
+        #self.abort = False
+        #self.swerve.strafe(0,1,.5)
+        #strafe_timer = threading.Timer(2, self.disable)
+        #print("running timer")
+        #strafe_timer.start()
+        #self.swerve.strafe(0,0,0)
 
 
     def disable(self):
-        #self.enabled = False
-        self.abort = True
         self.swerve.ackerman_turn(0, 0)
+        print("straight swerve disabled")
+        #self.abort()
+        #self.enabled = False
+        
+    def die(self):
+        self.disable()
+        
 
     def set_forward(self):
         self.swerve.ackerman_turn(0, self.POWER)

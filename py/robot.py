@@ -54,6 +54,7 @@ class MyRobot(wpilib.SampleRobot):
 
 
     def disabled(self):
+        auto.stop_autonomous()
         while self.isDisabled():
             tinit = time.time()
             self.hid_sp.poll()
@@ -74,22 +75,32 @@ class MyRobot(wpilib.SampleRobot):
             # print(self.t4.getEncPosition())
             # print(self.t4.getControlMode())
 
-            print("SHOOTER 1")
-            print(self.s1.get())
-            print("SHOOTER 2")
-            print(self.s2.get())
+            # print("SHOOTER 1")
+            # print(self.s1.get())
+            # print("SHOOTER 2")
+            # print(self.s2.get())
     
     def autonomous(self):
         # define auto here
 
+        # pass
+        print("starting autonomous")
         auto.run_autonomous()
-        while self.IsAutonomous() and self.IsEnabled():
+
+        while self.isAutonomous() and self.isEnabled():
+            print("running autonomous")
             tinit = time.time()
-            sp.poll()
-            wpilib.Wait(0.04 - (time.time() - tinit))
+            self.hid_sp.poll()
+            self.sp.poll()
+            #wpilib.Wait(0.04 - (time.time() - tinit))
+            self.safeSleep(tinit, .04)
+
+        print("stopped autonomous")
         auto.stop_autonomous()
+
     
     def operatorControl(self):
+        auto.stop_autonomous
         while self.isOperatorControl() and self.isEnabled():
             tinit = time.time()
             
@@ -114,12 +125,12 @@ class MyRobot(wpilib.SampleRobot):
             # print(self.ll1.pressed)
             # print("BACK LEFT L")
             # print(self.ll2.pressed)
-            print("SHOOTER 1")
-            print(self.s1.get())
-            print(self.s1.getClosedLoopError())
-            print("SHOOTER 2")
-            print(self.s2.get())
-            print(self.s2.getClosedLoopError())
+            # print("SHOOTER 1")
+            # print(self.s1.get())
+            # print(self.s1.getClosedLoopError())
+            # print("SHOOTER 2")
+            # print(self.s2.get())
+            # print(self.s2.getClosedLoopError())
             # print("SHOOTER 2")
             # print(self.s2.get())
 
@@ -136,3 +147,4 @@ class MyRobot(wpilib.SampleRobot):
 
 if __name__ == "__main__":
     wpilib.run(MyRobot)
+

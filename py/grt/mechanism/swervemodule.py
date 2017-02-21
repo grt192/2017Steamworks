@@ -446,6 +446,8 @@ class SwerveModule:
 
     def _limit_listener(self, source, state_id, datum):
 
+        #INCREASING MAKES IT MORE CLOCKWISE
+
 
         #Limit switch is pressed and one of them is still being zeroed.
         if state_id == 'pressed' and datum and (self.zeroing[0] or self.zeroing[1] or self.zeroing[2] or self.zeroing[3]):
@@ -500,7 +502,7 @@ class SwerveModule:
                 print("r2 encoder position triggered")
                 print(self.turn_r2.getEncPosition())
 
-                self.turn_r2.setEncPosition(1810) #-60
+                self.turn_r2.setEncPosition(1845) #1810
 
                 self.turn_r2.changeControlMode(CANTalon.ControlMode.Position)
                 self.turn_r2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
@@ -578,7 +580,7 @@ class SwerveModule:
                 print("l2 encoder position triggered")
                 print(self.turn_l2.getEncPosition())
 
-                self.turn_l2.setEncPosition(4450) #-2226
+                self.turn_l2.setEncPosition(4685) #4450
 
                 self.turn_l2.changeControlMode(CANTalon.ControlMode.Position)
                 self.turn_l2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
