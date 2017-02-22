@@ -2,12 +2,13 @@ from ctre import CANTalon
 
 class Shooter:
 
-	def __init__(self, shooter1_m1, shooter1_m2, load_m, pneumatic, shooter2_m1=None, shooter2_m2=None):
+	def __init__(self, shooter1_m1, shooter1_m2, load_m, pneumatic, disk, shooter2_m1=None, shooter2_m2=None):
 
 		self.shooter1_m1 = shooter1_m1
 		self.shooter1_m2 = shooter1_m2
 		self.shooter2_m1 = shooter2_m1
 		self.shooter2_m2 = shooter2_m2
+		self.disk = disk
 
 		self.load_m = load_m
 
@@ -30,10 +31,12 @@ class Shooter:
 		
 
 	def shoot(self):
-		self.load_m.set(1)
+		self.load_m.set(-1)
+		self.disk.set(-1)
 
 	def stop(self):
 		self.load_m.set(0)
+		self.disk.set(0)
 
 	def angle_change_up(self):
 		self.pneumatic.set(.8)
@@ -46,13 +49,16 @@ class Intake:
 	def __init__(self, motor):
 
 		self.motor = motor
+		
 
 	def intake(self):
 		print("intaking from intake")
 		self.motor.set(1)
+		
 
 	def stop(self):
 		self.motor.set(0)
+		
 
 class Climber:
 

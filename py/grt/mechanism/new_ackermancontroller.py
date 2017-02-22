@@ -132,12 +132,12 @@ class NewAckermanController:
         if state_id == 'r_shoulder':
 
             if datum:
-                self.swerve_module.zero(.35)
+                self.swerve_module.zero(.25)
 
         if state_id == 'l_shoulder':
 
             if datum:
-                self.swerve_module.zero(.5)
+                self.swerve_module.zero(.4)
 
 
         #RIGHT JOYSTICK FOR STRAFING

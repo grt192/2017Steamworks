@@ -36,11 +36,15 @@ class SwerveModule:
         #MAX ANGLE FOR INSIDE WHEEL
         self.theta_2 = math.pi - self.theta_1
 
-        self.TICKS_PER_REV = 4096*72/22 #I THINK SO! old:4096*50/24
+        self.TICKS_PER_REV = 3*4096*72/22 #I THINK SO! old:4096*50/24
 
         self.strafing = False
 
         self.zeroing = [False, False, False, False]
+
+        
+
+        
 
     def ackerman_turn(self, joy_angle, power):
 
@@ -416,12 +420,22 @@ class SwerveModule:
 
     def zero(self, power):
 
+        self.already_zeroed= [self.limit_r1.pressed, self.limit_r2.pressed, self.limit_l1.pressed, self.limit_l2.pressed]
+
+        for i in range(4):
+
+
+
+            print(self.already_zeroed[i])
+
         #This list of booleans makes sure that the limit switch only completes the zeroing sequence
         #when you want it to.
         self.zeroing[0] = True
         self.zeroing[1] = True
         self.zeroing[2] = True
         self.zeroing[3] = True
+
+
 
 
         self.turn_r1.changeControlMode(CANTalon.ControlMode.PercentVbus)
@@ -457,23 +471,29 @@ class SwerveModule:
 
             if source == self.limit_r1 and self.zeroing[0]:
 
-                print("r1 encoder position triggered")
-                print(self.turn_r1.getEncPosition())
-                #print(self.turn_r1.getEncPosition())
+                if not self.already_zeroed[0]:
 
-                #This is the position at which the limit switch is triggered. Calculated empirically.
-                self.turn_r1.setEncPosition(-1800) #-2050 <--old val
+                    print("r1 encoder position triggered")
+                    print(self.turn_r1.getEncPosition())
+                    #print(self.turn_r1.getEncPosition())
+
+                    #This is the position at which the limit switch is triggered. Calculated empirically.
+                    self.turn_r1.setEncPosition(-6600) #-2050 <--old val
 
 
-                #Change back to position mode and go to zero.
-                self.turn_r1.changeControlMode(CANTalon.ControlMode.Position)
-                self.turn_r1.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
-                self.turn_r1.setPID(1.0, 0.0, 0.0)
+                    #Change back to position mode and go to zero.
+                    self.turn_r1.changeControlMode(CANTalon.ControlMode.Position)
+                    self.turn_r1.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+                    self.turn_r1.setPID(1.0, 0.0, 0.0)
 
-                self.turn_r1.set(0)
+                    self.turn_r1.set(0)
 
-                #Register that this wheel has been zeroed.
-                self.zeroing[0] = False
+                    #Register that this wheel has been zeroed.
+                    self.zeroing[0] = False
+
+                else:
+
+                    self.already_zeroed[0] = False
 
 
                 #cc: -1021, -1043, -1032, -1080, -935, -1006, -1034, -1057, -868, -990, -969, -910, -1006, -1070
@@ -499,18 +519,24 @@ class SwerveModule:
 
             if source == self.limit_r2 and self.zeroing[1]:
 
-                print("r2 encoder position triggered")
-                print(self.turn_r2.getEncPosition())
+                if not self.already_zeroed[1]:
 
-                self.turn_r2.setEncPosition(1845) #1810
+                    print("r2 encoder position triggered")
+                    print(self.turn_r2.getEncPosition())
 
-                self.turn_r2.changeControlMode(CANTalon.ControlMode.Position)
-                self.turn_r2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
-                self.turn_r2.setPID(1.0, 0.0, 0.0)
+                    self.turn_r2.setEncPosition(11500) #1810
 
-                self.turn_r2.set(0)
+                    self.turn_r2.changeControlMode(CANTalon.ControlMode.Position)
+                    self.turn_r2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+                    self.turn_r2.setPID(1.0, 0.0, 0.0)
 
-                self.zeroing[1] = False
+                    self.turn_r2.set(0)
+
+                    self.zeroing[1] = False
+
+                else:
+
+                    self.already_zeroed[1] = False
 
                 #cc: 1246, 1265, 1256, 1298, 1266, 1324, 1333, 1313, 1346, 1307
                     #AVG: 1295.4
@@ -540,20 +566,26 @@ class SwerveModule:
 
                 #     print("triggered w/o turning")
 
-            if source == self.limit_l1 and self.zeroing[2]:
+            if source == self.limit_l1 and self.zeroing[2] and not self.already_zeroed[2]:
 
-                print("l1 encoder position triggered")
-                print(self.turn_l1.getEncPosition())
+                if not self.already_zeroed[2]:
 
-                self.turn_l1.setEncPosition(-4880) #-4197
+                    print("l1 encoder position triggered")
+                    print(self.turn_l1.getEncPosition())
 
-                self.turn_l1.changeControlMode(CANTalon.ControlMode.Position)
-                self.turn_l1.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
-                self.turn_l1.setPID(1.0, 0.0, 0.0)
+                    self.turn_l1.setEncPosition(-15470) #omega2: -4880
 
-                self.turn_l1.set(0)
+                    self.turn_l1.changeControlMode(CANTalon.ControlMode.Position)
+                    self.turn_l1.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+                    self.turn_l1.setPID(1.0, 0.0, 0.0)
 
-                self.zeroing[2] = False
+                    self.turn_l1.set(0)
+
+                    self.zeroing[2] = False
+
+                else:
+
+                    self.already_zeroed[2] = False
 
                 # cc: -3111, -3061, -3059, -3059, -3064, -3080, -3074, -3088, -3061 -3100
                     #AVG: -3075.7
@@ -577,10 +609,14 @@ class SwerveModule:
 
             if source == self.limit_l2 and self.zeroing[3]:
 
+                # if not self.already_zeroed[3]:
+
+                print("HERE hm")
+
                 print("l2 encoder position triggered")
                 print(self.turn_l2.getEncPosition())
 
-                self.turn_l2.setEncPosition(4685) #4450
+                self.turn_l2.setEncPosition(8000) #4450
 
                 self.turn_l2.changeControlMode(CANTalon.ControlMode.Position)
                 self.turn_l2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
@@ -589,6 +625,12 @@ class SwerveModule:
                 self.turn_l2.set(0)
 
                 self.zeroing[3] = False
+
+                # else:
+
+                #     print("do the right thing")
+
+                #     self.already_zeroed[3] = False
 
                 #cc: 3370, 3390, 3400, 3362, 3356, 3371, 3370, 3353, 3379, 3379
                     #AVG: 3373.0

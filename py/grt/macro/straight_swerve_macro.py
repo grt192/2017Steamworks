@@ -21,10 +21,11 @@ class StraightSwerveMacro(GRTMacro):
         self.abort = True
 
     def initialize(self):
+        print("initialized")
         #self.enable()
-        self.set_forward()
+        self.rotate()
         print("straight swerve enabled")
-        #threading.Timer(6, self.disable).start()
+        threading.Timer(6, self.disable).start()
 
      # def enable(self):
      #    print("Running portcullis_macro")
@@ -57,7 +58,8 @@ class StraightSwerveMacro(GRTMacro):
 
 
     def disable(self):
-        self.swerve.ackerman_turn(0, 0)
+        #self.swerve.ackerman_turn(0, 0)
+        self.swerve.strafe(0, 0, 1)
         print("straight swerve disabled")
         #self.abort()
         #self.enabled = False
@@ -66,12 +68,17 @@ class StraightSwerveMacro(GRTMacro):
         self.disable()
         
 
+    def rotate(self):
+        print("rotating")
+        self.swerve.strafe(math.pi/2, self.POWER, 1)
+
     def set_forward(self):
         self.swerve.ackerman_turn(0, self.POWER)
 
     def set_backward(self):
         self.swerve.ackerman_turn(0, -self.POWER)
 
+    
 
 # class RockingChairMacro(GRTMacro):
 

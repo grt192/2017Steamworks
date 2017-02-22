@@ -61,6 +61,8 @@ class MyRobot(wpilib.SampleRobot):
             self.sp.poll()
             self.safeSleep(tinit, .04)
 
+            #print(self.ll2.pressed)
+
             # print("FRONT RIGHT L")
             # print(self.lr1.pressed)
             # print("BACK RIGHT L")
@@ -83,20 +85,20 @@ class MyRobot(wpilib.SampleRobot):
     def autonomous(self):
         # define auto here
 
-        # pass
-        print("starting autonomous")
-        auto.run_autonomous()
+        pass
+        # print("starting autonomous")
+        # auto.run_autonomous()
 
-        while self.isAutonomous() and self.isEnabled():
-            print("running autonomous")
-            tinit = time.time()
-            self.hid_sp.poll()
-            self.sp.poll()
-            #wpilib.Wait(0.04 - (time.time() - tinit))
-            self.safeSleep(tinit, .04)
+        # while self.isAutonomous() and self.isEnabled():
+        #     print("running autonomous")
+        #     tinit = time.time()
+        #     self.hid_sp.poll()
+        #     self.sp.poll()
+        #     #wpilib.Wait(0.04 - (time.time() - tinit))
+        #     self.safeSleep(tinit, .04)
 
-        print("stopped autonomous")
-        auto.stop_autonomous()
+        # print("stopped autonomous")
+        # auto.stop_autonomous()
 
     
     def operatorControl(self):
@@ -111,11 +113,14 @@ class MyRobot(wpilib.SampleRobot):
             # print(self.t1.getOutputVoltage())
             #print("Encoder position:")
             # print(self.turn_motor.getEncPosition())
-            #print(self.t1.getEncPosition())
+            # print(self.t1.getEncPosition())
             # print(self.t2.getEncPosition())
             # print(self.t3.getEncPosition())
             # print(self.t4.getEncPosition())
-            # print(self.t4.getControlMode())
+            #print(self.t4.getControlMode())
+
+            # print(self.ll2.pressed)
+            # print(self.t4.getEncPosition())
 
             # print("FRONT RIGHT L")
             # print(self.lr1.pressed)
