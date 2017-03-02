@@ -91,7 +91,7 @@ class MechController:
         elif state_id == 'r_y_axis': #needs review
             if abs(datum) > .2:
                 print("climbing")
-                self.climber.climb_adjustable(datum)
+                self.climber.climb_adjustable(-abs(datum))
             else:
                 print("not climbing")
                 self.climber.stop()
