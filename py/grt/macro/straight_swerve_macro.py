@@ -1,96 +1,108 @@
-
 __author__ = 'alex gao'
 
 import threading
 from grt.core import GRTMacro
 import time
+import wpilib
+import math
 
 class StraightSwerveMacro(GRTMacro):
 
-    POWER = 0.5
+    KP =  .03#.03
+    KI = 0
+    KD = 1
+    ABS_TOL = .05  #need to test
+    POWER = 0.3
 
-    def __init__(self, swerve, timeout=None):
+    def __init__(self, swerve, navx=None, timeout=None):
         super().__init__()
         self.swerve = swerve
-        #self.enabled = False
+        self.enabled = False
+        self.setpoint = None
 
-        #self.abort = False
+        self.navx = navx
 
+        self.pid_controller = wpilib.PIDController(self.KP, self.KI,
+                                                   self.KD, self.get_input,
+                                                   self.set_output)
 
-    def abort(self):
-        self.abort = True
+        # max tolerance for use with OnTarget
+        self.pid_controller.setAbsoluteTolerance(self.ABS_TOL) 
+        self.pid_controller.reset()
+
+        self.pid_controller.setInputRange(0.0,  360.0)
+        self.pid_controller.setContinuous(True)
+
+        self.pid_controller.setOutputRange(-math.pi, math.pi)
+    
+
+    # def abort(self):
+    #     self.abort = True
 
     def initialize(self):
-        #self.enable()
-        self.set_forward()
+
+        self.swerve.strafe(math.pi/2, 0, 1)
+
+        time.sleep(1)
         print("straight swerve enabled")
-        #threading.Timer(6, self.disable).start()
+        self.swerve.sideways_ackerman_turn(0.1, self.POWER)
+        #self.enable()
+        time.sleep(4.20)
+        
+        self.kill()
+        self.die()
 
-     # def enable(self):
-     #    print("Running portcullis_macro")
-     #    self.abort = False
-     #    self.pickup.go_to_pickup_position()
-     #    self._angle_change_with_abort()
-     #    angle_change_timer = threading.Timer(1, self.disable)
-     #    print("running achange timer")
-     #    angle_change_timer.start()
-     #    print("finished achange timer")
+        
 
-
-     #    while self.running_angle_change:
-     #        pass
-
-     #    self.straight_macro.set_forward()
-     #    self.straight_macro.enable()
-     #    straight_macro_timer = threading.Timer(2, self.straight_macro.disable)
-     #    straight_macro_timer.start()
+        #threading.Timer(1, self.disable).start()
 
     def enable(self):
+        
+
+        #self.swerve.ackerman_turn(0, self.POWER)
+        self.swerve.sideways_ackerman_turn(0,self.POWER)
+        #time.sleep(.5)
+        # self.swerve.sideways_ackerman_turn(.1,self.POWER)
+        # time.sleep(2)
+
+        #self.swerve.strafe(math.pi/2, self.POWER,  1)
+        self.setpoint = self.navx.fused_heading
+        self.pid_controller.setSetpoint(self.setpoint)
+        self.pid_controller.enable()
         self.enabled = True
-        #print("RUNNING EASY AUTO")
-        #self.abort = False
-        #self.swerve.strafe(0,1,.5)
-        #strafe_timer = threading.Timer(2, self.disable)
-        #print("running timer")
-        #strafe_timer.start()
-        #self.swerve.strafe(0,0,0)
 
 
     def disable(self):
-        self.swerve.ackerman_turn(0, 0)
+        self.swerve.set_power(0)
         print("straight swerve disabled")
-        #self.abort()
-        #self.enabled = False
+        self.pid_controller.disable()
+        self.setpoint = None
+        self.enabled = False
         
     def die(self):
         self.disable()
         
-
     def set_forward(self):
         self.swerve.ackerman_turn(0, self.POWER)
 
-    def set_backward(self):
-        self.swerve.ackerman_turn(0, -self.POWER)
+    # def set_backward(self):
+    #     self.swerve.ackerman_turn(0, -self.POWER)
+
+    def set_output(self, output):
+        if self.enabled:
+            if not self.pid_controller.onTarget():
+                # Need to test correction/output
+                #self.swerve.strafe(math.pi/2 + output, self.POWER, 1) <-- TRY THIS ONE TOO
+                #self.swerve.ackerman_turn(output, self.POWER)
+                self.swerve.sideways_ackerman_turn(output, self.POWER)
+            else:
+                #self.swerve.ackerman_turn(0, self.POWER)
+                self.swerve.sideways_ackerman_turn(0, self.POWER)
+
+            print("Position: ", self.navx.fused_heading)
+            print("Setpoint: ", self.pid_controller.getSetpoint())
+            print("Output: ", output)
 
 
-# class RockingChairMacro(GRTMacro):
-
-#     def __init__(self, rocking_chair, timeout=None):
-#         super().__init__(timeout=timeout)
-#         self.rocking_chair = rocking_chair
-#         self.enabled = False
-
-#     def macro_periodic(self):
-#         if self.enabled:
-#             self.rocking_chair.set_motor(.7)
-#             time.sleep(1)
-#             self.rocking_chair.set_motor(0)
-#             time.sleep(.1)
-#             self.rocking_chair.set_motor(-.7)
-#             time.sleep(1)
-#             self.rocking_chair.set_motor(0)
-#             time.sleep(.1)
-
-#     def macro_stop(self):
-#         self.rocking_chair.set_motor(0)
-#         self.enabled = False
+    def get_input(self):
+        return self.navx.fused_heading

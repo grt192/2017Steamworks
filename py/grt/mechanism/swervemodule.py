@@ -44,6 +44,8 @@ class SwerveModule:
 
     def ackerman_turn(self, joy_angle, power):
 
+        print("ackerman turning!!!")
+
         #real is a list of angles. These are the real angles of each of the 4 wheels.
 
         real = [0,0,0,0]
@@ -281,6 +283,268 @@ class SwerveModule:
                     positions[i] = turn_motors[i].getEncPosition() + adjustment_factors[i] * self.TICKS_PER_REV/(2*math.pi)
 
                     turn_motors[i].set(positions[i])
+
+                
+                self.power_r1.set(-inner_speed)
+                self.power_r2.set(-inner_speed)
+                self.power_l1.set(-outer_speed)
+                self.power_l2.set(-outer_speed)
+
+    def sideways_ackerman_turn(self, joy_angle, power):
+
+        print("sideways ackerman turning!!!")
+
+        sideways_HEIGHT = 16
+        sideways_WIDTH = 24
+
+        #MAX ANGLE FOR OUTSIDE WHEEL
+        sideways_theta_1 = math.atan2(sideways_HEIGHT, sideways_WIDTH)
+
+        #MAX ANGLE FOR INSIDE WHEEL
+        sideways_theta_2 = math.pi - sideways_theta_1
+
+        #real is a list of angles. These are the real angles of each of the 4 wheels.
+
+        real = [0,0,0,0]
+
+        turn_motors = (self.turn_r1, self.turn_r2, self.turn_l1, self.turn_l2)
+
+
+        #The following set of code determines the outer and inner angles that
+        #the wheels should turn to. Specific cases for each quadrant.
+
+        if joy_angle >= 0:
+
+            #QUADRANT 1
+
+            if joy_angle <= math.pi/2:
+
+                #CONVERTS FROM JOYSTICK ANGLE IN A 90 DEGREE RANGE TO THE RANGE OF THE TWO MAXES
+
+                outer_angle = sideways_theta_1 * joy_angle / (math.pi/2)
+                inner_angle = sideways_theta_2 * joy_angle / (math.pi/2)
+
+            elif joy_angle == math.pi:
+                outer_angle = 0
+                inner_angle = 0
+
+            #QUADRANT 4
+
+            else:
+                
+                #The goal here is to have the wheel go to an angle within -90 to +90 but go backwards. 
+                #We mod 90 in order to make the same conversion that we did in Q1.
+                #Then you subtract 90 to make it go to the opposite quadrant.
+
+                #EXAMPLE CASE:
+                # Our joystick reads 175. Mod 90 that's 85. Then subtract 90 and you get -5. 
+                # -5 and 175 are along the same line, so by going backwards from here we go the same direction
+                # as 175. 
+
+                outer_angle = sideways_theta_1 * (-(math.pi/2) + (joy_angle % (math.pi/2)))/(math.pi/2)
+                inner_angle = sideways_theta_2 * (-(math.pi/2) + (joy_angle % (math.pi/2)))/(math.pi/2)
+
+
+        else:
+
+            #QUADRANT 2
+
+            if joy_angle >= -math.pi/2:
+
+                #Same exact thing as Q1
+
+                outer_angle = sideways_theta_1 * joy_angle / (math.pi/2)
+                inner_angle = sideways_theta_2 * joy_angle / (math.pi/2)
+
+            elif joy_angle == -math.pi:
+                outer_angle = 0
+                inner_angle = 0
+
+            #QUADRANT 3
+
+            else:
+                
+                #Almost the same as Q4. You mod -90 since the angle will be negative. 
+                #You add 90 instead of subtracting for the same reason.
+
+                outer_angle = sideways_theta_1 * ((math.pi/2) + (joy_angle % (-math.pi/2)))/(math.pi/2)
+                inner_angle = sideways_theta_2 * ((math.pi/2) + (joy_angle % (-math.pi/2)))/(math.pi/2)
+
+
+
+        outer_speed = power
+
+        #avoids divison by 0
+        if inner_angle == 0:
+            inner_speed = power
+
+        #Decreases the inner speed by the appropriate amount.
+        else:
+            inner_speed = power * math.sin(outer_angle)/math.sin(inner_angle)
+
+
+        #Conversion from radians to encoder ticks
+        outer_pos = outer_angle*self.TICKS_PER_REV/(2*math.pi)
+        inner_pos = inner_angle*self.TICKS_PER_REV/(2*math.pi)
+
+        
+
+       
+        #The next piece of code acutally sets the motors to the appropriate values.
+        #Again, it is split by quadrant.
+
+        if abs(joy_angle) <= math.pi/2: #is in quadrant 1 or 2
+
+            if joy_angle <= 0: #is in quadrant 2
+
+                #In quadrant 2 you turn left, so right is outer and left is inner. 
+                #Back wheels are reversed for position for super tight turning.
+
+                for i in range(4):
+
+                    #Convert encoder position to a real-world angle by doing dimensional analysis
+                    #and modular arithmetic (mod 2pi).
+
+                    real[i] = (turn_motors[i].getEncPosition() * ((2*math.pi)/self.TICKS_PER_REV)) % (2*math.pi) 
+
+
+                    #Converts angles greater than pi to their equivalent negative angle.
+                    if real[i] > math.pi:
+
+                        real[i] -= 2*math.pi
+
+                #This is a list of adjustments that you will later add to the current position.
+                adjustment_factors = [0,0,0,0]
+
+
+                #Adjustment factor is distance between the outer or inner angle (where you want to go) and
+                #the real (where you are right now).
+                adjustment_factors[0] = outer_angle - real[1]
+                adjustment_factors[2] = -outer_angle - real[0]
+                adjustment_factors[1] = inner_angle - real[3]
+                adjustment_factors[3] = -inner_angle - real[2]
+
+                # 0 r1 --> l1 
+                # 1 r2 --> r1
+                # 2 l1 --> l2
+                # 3 l2 --> r2
+
+
+                #This list is what you will set all the turn motors to.
+                positions = [0,0,0,0]
+
+                for i in range(4):
+
+                    #Add the adjustment factor (after doing dimmensional analysis) to the current position.
+                    positions[i] = turn_motors[i].getEncPosition() + adjustment_factors[i] * self.TICKS_PER_REV/(2*math.pi)
+
+                    turn_motors[i].set(positions[i] - self.TICKS_PER_REV/4)
+
+                self.power_r1.set(outer_speed)
+                self.power_r2.set(outer_speed)
+                self.power_l1.set(inner_speed)
+                self.power_l2.set(inner_speed)
+
+            #The code that follows is for the rest of the 3 quadrants. Have not added comments for
+            #the modular arithmetic/adjustemnt factor logic because it is the same.
+
+            else: # is in quadrant 1
+
+                #Same as Q2 but turn right.
+
+                
+
+                for i in range(4):
+
+                    real[i] = (turn_motors[i].getEncPosition() * ((2*math.pi)/self.TICKS_PER_REV)) % (2*math.pi) 
+
+                    if real[i] > math.pi:
+
+                        real[i] -= 2*math.pi
+
+                adjustment_factors = [0,0,0,0]
+
+                adjustment_factors[0] = inner_angle - real[1]
+                adjustment_factors[2] = -inner_angle - real[0]
+                adjustment_factors[1] = outer_angle - real[3]
+                adjustment_factors[3] = -outer_angle - real[2]
+
+                positions = [0,0,0,0]
+
+                for i in range(4):
+
+                    positions[i] = turn_motors[i].getEncPosition() + adjustment_factors[i] * self.TICKS_PER_REV/(2*math.pi)
+
+                    turn_motors[i].set(positions[i] - self.TICKS_PER_REV/4)
+
+                self.power_l1.set(outer_speed)
+                self.power_l2.set(outer_speed)
+                self.power_r1.set(inner_speed)
+                self.power_r2.set(inner_speed)
+                
+
+        #same as above but goes backwards
+        else: # is in quadrant 3 or 4
+
+
+            if joy_angle >= 0: # is in quadrant 4
+
+                for i in range(4):
+
+                    real[i] = (turn_motors[i].getEncPosition() * ((2*math.pi)/self.TICKS_PER_REV)) % (2*math.pi) 
+
+                    if real[i] > math.pi:
+
+                        real[i] -= 2*math.pi
+
+                adjustment_factors = [0,0,0,0]
+
+                adjustment_factors[0] = outer_angle - real[1]
+                adjustment_factors[2] = -outer_angle - real[0]
+                adjustment_factors[1] = inner_angle - real[3]
+                adjustment_factors[3] = -inner_angle - real[2]
+
+                positions = [0,0,0,0]
+
+                for i in range(4):
+
+                    positions[i] = turn_motors[i].getEncPosition() + adjustment_factors[i] * self.TICKS_PER_REV/(2*math.pi)
+
+                    turn_motors[i].set(positions[i] - self.TICKS_PER_REV/4)
+
+
+                self.power_r1.set(-outer_speed)
+                self.power_r2.set(-outer_speed)
+                self.power_l1.set(-inner_speed)
+                self.power_l2.set(-inner_speed)
+                
+
+            else: # is in quadrant 3 
+
+                
+
+                for i in range(4):
+
+                    real[i] = (turn_motors[i].getEncPosition() * ((2*math.pi)/self.TICKS_PER_REV)) % (2*math.pi) 
+
+                    if real[i] > math.pi:
+
+                        real[i] -= 2*math.pi
+
+                adjustment_factors = [0,0,0,0]
+
+                adjustment_factors[0] = inner_angle - real[1]
+                adjustment_factors[2] = -inner_angle - real[0]
+                adjustment_factors[1] = outer_angle - real[3]
+                adjustment_factors[3] = -outer_angle - real[2]
+
+                positions = [0,0,0,0]
+
+                for i in range(4):
+
+                    positions[i] = turn_motors[i].getEncPosition() + adjustment_factors[i] * self.TICKS_PER_REV/(2*math.pi)
+
+                    turn_motors[i].set(positions[i] - self.TICKS_PER_REV/4)
 
                 
                 self.power_r1.set(-inner_speed)

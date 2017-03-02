@@ -14,11 +14,11 @@ class Shooter:
 		self.pneumatic = pneumatic
 
 	def ramp_up_speed(self, vel_1, vel_2):
-		self.shooter1_m1.changeControlMode(CANTalon.ControlMode.Speed)
-		self.shooter1_m1.setPID(1.0,0.008,40, f=0.47383)
+		# self.shooter1_m1.changeControlMode(CANTalon.ControlMode.Speed)
+		# self.shooter1_m1.setPID(1.0,0.008,40, f=0.47383)
 		self.shooter1_m1.set(-vel_1)
-		self.shooter1_m2.changeControlMode(CANTalon.ControlMode.Speed)
-		self.shooter1_m2.setPID(1.5,0.008,50, f=0.478037)
+		# self.shooter1_m2.changeControlMode(CANTalon.ControlMode.Speed)
+		# self.shooter1_m2.setPID(1.5,0.008,50, f=0.478037)
 		self.shooter1_m2.set(vel_2)
 
 	def ramp_down_to_zero(self):

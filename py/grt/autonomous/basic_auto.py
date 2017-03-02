@@ -8,9 +8,15 @@ class BasicAuto(MacroSequence):
     Basic autonomous mode. Drives and shoots. Pretty straightforward.
     """
 
-    def __init__(self, swerve):
+    def __init__(self, swerve, navx=None):
 
-        self.straight_swerve_macro = StraightSwerveMacro(swerve)
+        self.straight_swerve_macro = StraightSwerveMacro(swerve, navx=navx)
+
+        print("made the straight macro")
+        print("hey fam")
+        print("hey fam")
+        print("hey fam")
+        print("hey fam")
         # c = Constants()
         # self.drive_macro = DriveMacro(dt, c['1balldrivedist'], c['1balldmtimeout'])
         # self.extend_macro = ExtendMacro(intake, 1.5)

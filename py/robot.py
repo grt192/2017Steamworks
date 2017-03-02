@@ -14,6 +14,7 @@ from config import basic_auto
 auto = basic_auto
 
 class MyRobot(wpilib.SampleRobot):
+
     def __init__(self):
         super().__init__()
         import config
@@ -38,7 +39,9 @@ class MyRobot(wpilib.SampleRobot):
         self.s1 = config.shooter1_m1
         self.s2 = config.shooter1_m2
 
-        wpilib.CameraServer.launch()
+        #wpilib.CameraServer.launch()
+
+        #self.navx = config.navx
 
       
 
@@ -59,9 +62,17 @@ class MyRobot(wpilib.SampleRobot):
             tinit = time.time()
             self.hid_sp.poll()
             self.sp.poll()
+            #self.navx.poll()
             self.safeSleep(tinit, .04)
 
-            # print("FRONT RIGHT L")
+            #print("Pitch: " , self.navx.pitch, "Roll: ", self.navx.roll, "Yaw: ", self.navx.yaw, "Compass heading: ", self.navx.compass_heading, "Fused heading: ", self.navx.fused_heading)
+            # print("Pitch: " , self.navx.pitch)
+            # print("Roll: ", self.navx.roll)
+            # print("Yaw: ", self.navx.yaw)
+            # print("Compass heading: ", self.navx.compass_heading)
+            # print("Fused heading: ", self.navx.fused_heading)
+
+                    # print("FRONT RIGHT L")
             # print(self.lr1.pressed)
             # print("BACK RIGHT L")
             # print(self.lr2.pressed)
@@ -87,11 +98,15 @@ class MyRobot(wpilib.SampleRobot):
         print("starting autonomous")
         auto.run_autonomous()
 
+
         while self.isAutonomous() and self.isEnabled():
-            print("running autonomous")
+            #self.navx.poll()
+            #print("running autonomous")
+            #print("Pitch: " , self.navx.pitch, "Roll: ", self.navx.roll, "Yaw: ", self.navx.yaw, "Compass heading: ", self.navx.compass_heading, "Fused heading: ", self.navx.fused_heading)
             tinit = time.time()
             self.hid_sp.poll()
             self.sp.poll()
+            
             #wpilib.Wait(0.04 - (time.time() - tinit))
             self.safeSleep(tinit, .04)
 
@@ -100,12 +115,13 @@ class MyRobot(wpilib.SampleRobot):
 
     
     def operatorControl(self):
-        auto.stop_autonomous
+        auto.stop_autonomous()
         while self.isOperatorControl() and self.isEnabled():
             tinit = time.time()
             
             self.hid_sp.poll()
             self.sp.poll()
+
             self.safeSleep(tinit, .04)
             # print("voltage")
             # print(self.t1.getOutputVoltage())
@@ -143,6 +159,10 @@ class MyRobot(wpilib.SampleRobot):
             time.sleep(tdif)
         if tdif <= 0:
             print("Code running slowly!")
+            self.safeSleep(tinit, .04)
+    
+    
+    
 
 
 if __name__ == "__main__":

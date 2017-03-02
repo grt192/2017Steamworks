@@ -118,7 +118,7 @@ class NewAckermanController:
             if datum:
 
                 self.swerve_module.set_strafing(True)
-                print("SWITCHED TO STRAFING")
+                #print("SWITCHED TO STRAFING")
 
         #MANUAL SWITCH TO ACKERMAN
 
@@ -127,7 +127,7 @@ class NewAckermanController:
             if datum:
 
                 self.swerve_module.set_strafing(False)
-                print("SWITCHED TO ACKERMAN")
+                #print("SWITCHED TO ACKERMAN")
 
         if state_id == 'r_shoulder':
 
@@ -166,7 +166,7 @@ class NewAckermanController:
                 self.swerve_module.set_power(0)
 
                 self.swerve_module.set_strafing(False)
-                print("SWITCHED TO ACKERMAN")
+                #print("SWITCHED TO ACKERMAN")
 
         if state_id in ('l_y_axis', 'l_x_axis'):
 
@@ -176,8 +176,8 @@ class NewAckermanController:
             if (abs(x) > .2 or abs(y) > .2) and not self.swerve_module.get_strafing():
 
                 joy_angle = math.atan2(x, -y)
-                print("JOY ANGLE")
-                print(joy_angle)
+                # print("JOY ANGLE")
+                # print(joy_angle)
 
                 #DETERMINE POWER: size of vector based on joystick x and y
 

@@ -26,6 +26,10 @@ from grt.mechanism.new_ackermancontroller import NewAckermanController
 
 from grt.autonomous.basic_auto import BasicAuto
 
+from record_controller import RecordMacro, PlaybackMacro
+
+#from grt.sensors.navx import NavX
+
 
 
 #DT Talons and Objects
@@ -108,14 +112,14 @@ shooter1_m2 = CANTalon(13)
 # shooter2_m1 = CANTalon(20)
 # shooter2_m2 = CANTalon(20)
 
-shooter1_m1.changeControlMode(CANTalon.ControlMode.Speed)
-shooter1_m1.setPID(1.0,0.008,20, f=0.47383)
+# shooter1_m1.changeControlMode(CANTalon.ControlMode.Speed)
+# shooter1_m1.setPID(1.0,0.008,20, f=0.47383)
 #shooter1_m1.setPID(0.20, 0.001, 0)
 # shooter1_m1.setPID(.33, 0, 0, f=.17)
 
-shooter1_m2.changeControlMode(CANTalon.ControlMode.Speed)
+# shooter1_m2.changeControlMode(CANTalon.ControlMode.Speed)
 #shooter1_m2.setPID(0,0,0)
-shooter1_m2.setPID(1.0,0.008,20, f=0.478037)
+# shooter1_m2.setPID(1.0,0.008,20, f=0.478037)
 #shooter1_m2.setPID(0.20, 0.001, 0)
 # shooter1_m2.setPID(.33, 0, 0, f=.17)
 
@@ -168,6 +172,8 @@ limit_l2 = Switch(1, reverse=True)
 
 #zero_test = ZeroTest(turn_right, limit_switch)
 
+#navx = NavX()
+
 
 
 #needs to be changed for left and right
@@ -192,7 +198,9 @@ hid_sp = SensorPoller((l_joystick, xbox_controller, xbox_controller_2))  # human
 sp = SensorPoller((limit_r1, limit_r2, limit_l1, limit_l2))
 
 
-basic_auto = BasicAuto(swerve)
+
+
+basic_auto = BasicAuto(swerve, navx=None)
 
 # Mech Talons, objects, and controller
 

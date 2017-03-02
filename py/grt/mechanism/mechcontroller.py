@@ -17,8 +17,8 @@ class MechController:
 
         self.talon_test = talon_test
 
-        self.front_power = 800#1500#2175 #OLD: 2150, 1000
-        self.back_power = 1600#1500#4975 #OLD: 2150, 3100
+        self.front_power = 0 #800#1500#2175 #OLD: 2150, 1000
+        self.back_power = -.585 #1600#1500#4975 #OLD: 2150, 3100
 
         self.TIPPED = True
 
