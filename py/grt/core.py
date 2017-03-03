@@ -189,6 +189,7 @@ class GRTMacro(object):
         self.timeout = timeout
         self.poll_time = poll_time
         self.daemon = daemon
+        self.no_initialize = False
         self._disabled_flag = threading.Event()
 
     def run(self):
@@ -198,6 +199,20 @@ class GRTMacro(object):
         """
         self.thread = threading.Thread(target=self.execute)
         self.thread.start()
+
+    def run_threaded(self, no_initialize=False):
+        """
+        Start macro in new thread
+        See execute() for more details on macro execution
+        """
+        self.no_initialize = no_initialize
+        self.process = threading.Thread(target=self.run_linear)
+        self.process.start()
+        print("RUNNING THREADED")
+        print("RUNNING THREADED")
+        print("RUNNING THREADED")
+        print("RUNNING THREADED")
+
 
     def _wait(self, duration):
         """
@@ -244,6 +259,49 @@ class GRTMacro(object):
                 timeout_timer.cancel()
             self.die()
 
+    def run_linear(self):
+        """
+        Starts macro in current thread.
+        First calls initialize(), then calls perform()
+        periodically until timeout or completion.
+        After completion, calls die().
+        """
+
+        print("RUNNING LINEAR")
+        print("RUNNING LINEAR")
+        print("RUNNING LINEAR")
+        #if not self.started:
+        self.started = True
+        self.running = True
+
+        def _timeout():
+            self.timed_out = True
+            self.terminate()
+
+        if self.timeout:
+            timeout_timer = threading.Timer(self.timeout, _timeout)
+            timeout_timer.start()
+        else:
+            timeout_timer = None
+
+        try:
+            if not self.no_initialize:
+                self.macro_initialize()
+            
+            while self.running:
+                self.macro_periodic()
+                time.sleep(self.poll_time)
+        except StopIteration:
+            pass
+
+        self.running = False
+        if timeout_timer:
+            timeout_timer.cancel()
+        self.macro_stop()
+        print("Thread ending")
+        print("Running threads: ", threading.active_count())
+
+
     def reset(self):
         """
         Resets a macro, allowing it to be started again
@@ -274,3 +332,27 @@ class GRTMacro(object):
         """
         if self.running:
             self.running = False
+
+    def terminate(self):
+        """
+        Stop macro execution
+        """
+        if self.running:
+            self.running = False
+
+        self.macro_stop
+
+    def macro_stop(self):
+        pass
+
+    def macro_initialize(self):
+        pass
+
+    def macro_periodic(self):
+        pass
+
+    def emergency_stop(self):
+        self.terminate()
+        self.process.terminate
+
+    

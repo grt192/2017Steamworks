@@ -23,6 +23,8 @@ class StraightSwerveMacro(GRTMacro):
     def initialize(self):
         print("initialized")
         #self.enable()
+        self.strafe(math.pi/2, 0, 1)
+        time.sleep()
         self.rotate()
         print("straight swerve enabled")
         threading.Timer(6, self.disable).start()

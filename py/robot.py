@@ -7,11 +7,12 @@
 import wpilib
 import time
 
-from config import basic_auto
+from config import middle_gear
 
 #from config import sp
 
-auto = basic_auto
+auto = middle_gear
+auto_exists = True
 
 class MyRobot(wpilib.SampleRobot):
     def __init__(self):
@@ -38,7 +39,9 @@ class MyRobot(wpilib.SampleRobot):
         self.s1 = config.shooter1_m1
         self.s2 = config.shooter1_m2
 
-        wpilib.CameraServer.launch()
+        
+
+        #wpilib.CameraServer.launch()
 
       
 
@@ -85,7 +88,25 @@ class MyRobot(wpilib.SampleRobot):
     def autonomous(self):
         # define auto here
 
-        pass
+        #pass
+
+        print("IN THE AUTO FUNCTION")
+        print("IN THE AUTO FUNCTION")
+        print("IN THE AUTO FUNCTION")
+        print("IN THE AUTO FUNCTION")
+        if auto_exists:
+            print("doing autonomous")
+
+            auto.run_autonomous()
+            while self.isAutonomous() and self.isEnabled():
+                tinit = time.time()
+                self.hid_sp.poll()
+                self.sp.poll()
+                self.safeSleep(tinit, .04)
+            auto.stop_autonomous()
+        else:
+            pass
+
         # print("starting autonomous")
         # auto.run_autonomous()
 

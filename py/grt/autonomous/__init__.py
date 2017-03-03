@@ -59,11 +59,32 @@ class AutonomousMode(object):
             raise StopIteration()
         self.running_macros.add(macro)
         macro.reset()
-        macro.execute()
+        macro.run_linear()
         if macro in self.running_macros:
             self.running_macros.remove(macro)
         if not self.running:
             raise StopIteration()
+
+    # def exec_macro(self, macro):
+    #     """
+    #     Executes a macro in the current thread.
+    #     Adds macro to self.running_macros when started,
+    #     removes it when finished.
+
+    #     If autonomous is stopped,
+    #     a StopIteration exception is raised in order to halt
+    #     exec_autonomous.
+    #     """
+    #     if not self.running:
+    #         raise StopIteration()
+    #     self.running_macros.add(macro)
+    #     macro.reset()
+    #     macro.execute()
+    #     if macro in self.running_macros:
+    #         self.running_macros.remove(macro)
+    #     if not self.running:
+    #         raise StopIteration()
+
 
     def run_macro(self, macro):
         """

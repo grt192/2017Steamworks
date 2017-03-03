@@ -46,13 +46,15 @@ class SwerveModule:
 
         
 
-    def ackerman_turn(self, joy_angle, power):
+    def ackerman_turn(self, joy_angle, power, scale_down):
 
         #real is a list of angles. These are the real angles of each of the 4 wheels.
 
         real = [0,0,0,0]
 
         turn_motors = (self.turn_r1, self.turn_r2, self.turn_l1, self.turn_l2)
+
+
 
 
         #The following set of code determines the outer and inner angles that
@@ -115,7 +117,13 @@ class SwerveModule:
                 outer_angle = self.theta_1 * ((math.pi/2) + (joy_angle % (-math.pi/2)))/(math.pi/2)
                 inner_angle = self.theta_2 * ((math.pi/2) + (joy_angle % (-math.pi/2)))/(math.pi/2)
 
+        
+        
+        power *= scale_down
 
+
+        print("POWER: ", power)
+        
 
         outer_speed = power
 
@@ -126,6 +134,8 @@ class SwerveModule:
         #Decreases the inner speed by the appropriate amount.
         else:
             inner_speed = power * math.sin(outer_angle)/math.sin(inner_angle)
+
+
 
 
         #Conversion from radians to encoder ticks
@@ -478,7 +488,7 @@ class SwerveModule:
                     #print(self.turn_r1.getEncPosition())
 
                     #This is the position at which the limit switch is triggered. Calculated empirically.
-                    self.turn_r1.setEncPosition(-6600) #-2050 <--old val
+                    self.turn_r1.setEncPosition(-6800) #-6600 #-2050 <--old val
 
 
                     #Change back to position mode and go to zero.
@@ -524,7 +534,7 @@ class SwerveModule:
                     print("r2 encoder position triggered")
                     print(self.turn_r2.getEncPosition())
 
-                    self.turn_r2.setEncPosition(11500) #1810
+                    self.turn_r2.setEncPosition(10800) #11500 #1810
 
                     self.turn_r2.changeControlMode(CANTalon.ControlMode.Position)
                     self.turn_r2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
@@ -573,7 +583,7 @@ class SwerveModule:
                     print("l1 encoder position triggered")
                     print(self.turn_l1.getEncPosition())
 
-                    self.turn_l1.setEncPosition(-15470) #omega2: -4880
+                    self.turn_l1.setEncPosition(-15270) #-15470 #omega2: -4880
 
                     self.turn_l1.changeControlMode(CANTalon.ControlMode.Position)
                     self.turn_l1.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
@@ -616,7 +626,7 @@ class SwerveModule:
                 print("l2 encoder position triggered")
                 print(self.turn_l2.getEncPosition())
 
-                self.turn_l2.setEncPosition(8000) #4450
+                self.turn_l2.setEncPosition(7850) #8100 #4450
 
                 self.turn_l2.changeControlMode(CANTalon.ControlMode.Position)
                 self.turn_l2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
