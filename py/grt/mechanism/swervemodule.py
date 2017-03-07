@@ -42,6 +42,10 @@ class SwerveModule:
 
         self.zeroing = [False, False, False, False]
 
+        self.going_back = [False, False, False, False]
+
+        self.final_zero = [False, False, False, False]
+
     def ackerman_turn(self, joy_angle, power):
 
         print("ackerman turning!!!")
@@ -710,6 +714,162 @@ class SwerveModule:
 
     def _limit_listener(self, source, state_id, datum):
 
+        if state_id == 'pressed':
+
+            if datum:
+
+                if source == self.limit_r1:
+
+                    if self.zeroing[0]:
+
+                        #GO BACK UNTIL UNCLICKED
+
+                        self.turn_r1.set(-.3)
+
+                        self.going_back[0] = True
+
+                        self.zeroing[0] = False
+
+                        
+
+                    elif self.final_zero[0]:
+
+                        #This is the position at which the limit switch is triggered. Calculated empirically.
+                        self.turn_r1.setEncPosition(-1800) #-6600 #-2050 <--old val
+
+
+                        #Change back to position mode and go to zero.
+                        self.turn_r1.changeControlMode(CANTalon.ControlMode.Position)
+                        self.turn_r1.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+                        self.turn_r1.setPID(1.0, 0.0, 0.0)
+
+                        self.turn_r1.set(0)
+
+                        self.zeroing[0] = False
+                        self.going_back[0] = False
+                        self.final_zero[0] = False
+
+                if source == self.limit_r2:
+
+                    if self.zeroing[1]:
+
+                        self.turn_r2.set(-.3)
+
+                        self.going_back[1] = True
+
+                        self.zeroing[1] = False
+
+                    elif self.final_zero[1]:
+
+                        self.turn_r2.setEncPosition(1845) #11500 #1810
+
+                        self.turn_r2.changeControlMode(CANTalon.ControlMode.Position)
+                        self.turn_r2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+                        self.turn_r2.setPID(1.0, 0.0, 0.0)
+
+                        self.turn_r2.set(0)
+
+                        self.zeroing[1] = False
+                        self.going_back[1] = False
+                        self.final_zero[1] = False
+
+
+                if source == self.limit_l1:
+
+                    if self.zeroing[2]:
+
+                        self.turn_l1.set(-.3)
+
+                        self.going_back[2] = True
+
+                        self.zeroing[2] = False
+
+                    elif self.final_zero[2]:
+
+                        self.turn_l1.setEncPosition(-4880) #11500 #1810
+
+                        self.turn_l1.changeControlMode(CANTalon.ControlMode.Position)
+                        self.turn_l1.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+                        self.turn_l1.setPID(1.0, 0.0, 0.0)
+
+                        self.turn_l1.set(0)
+
+                        self.zeroing[2] = False
+                        self.going_back[2] = False
+                        self.final_zero[2] = False
+
+                if source == self.limit_l2:
+
+                    if self.zeroing[3]:
+
+                        self.turn_l2.set(-.3)
+
+                        self.going_back[3] = True
+
+                        self.zeroing[3] = False
+
+                    elif self.final_zero[3]:
+
+                        self.turn_l2.setEncPosition(4685) #11500 #1810
+
+                        self.turn_l2.changeControlMode(CANTalon.ControlMode.Position)
+                        self.turn_l2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+                        self.turn_l2.setPID(1.0, 0.0, 0.0)
+
+                        self.turn_l2.set(0)
+
+                        self.zeroing[3] = False
+                        self.going_back[3] = False
+                        self.final_zero[3] = False
+
+            else:
+
+                if source == self.limit_r1:
+
+                    if self.going_back[0]:
+
+                        self.turn_r1.set(.25)
+
+                        self.final_zero[0] = True
+
+                        self.going_back[0] = False
+
+                        #reverse and go slow
+
+                if source == self.limit_r2:
+
+                    if self.going_back[1]:
+
+                        self.turn_r1.set(.25)
+
+                        self.final_zero[1] = True
+
+                        self.going_back[1] = False
+
+                if source == self.limit_l1:
+
+                    if self.going_back[2]:
+
+                        self.turn_r1.set(.25)
+
+                        self.final_zero[2] = True
+
+                        self.going_back[2] = False
+
+                if source == self.limit_l2:
+
+                    if self.going_back[3]:
+
+                        self.turn_r1.set(.25)
+
+                        self.final_zero[3] = True
+
+                        self.going_back[3] = False
+
+"""
+
+    def _limit_listener(self, source, state_id, datum):
+
         #INCREASING MAKES IT MORE CLOCKWISE
 
 
@@ -877,3 +1037,5 @@ class SwerveModule:
                 #     #self.turn_l2.setEncPosition(3357)
 
     #         #         #2048*50/24 = 4266
+
+    """

@@ -137,7 +137,7 @@ class NewAckermanController:
         if state_id == 'l_shoulder':
 
             if datum:
-                self.swerve_module.zero(.5)
+                self.swerve_module.zero(.8) #.5
 
 
         #RIGHT JOYSTICK FOR STRAFING
