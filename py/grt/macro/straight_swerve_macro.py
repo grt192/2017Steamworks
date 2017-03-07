@@ -4,10 +4,11 @@ __author__ = 'alex gao'
 import threading
 from grt.core import GRTMacro
 import time
+import math
 
 class StraightSwerveMacro(GRTMacro):
 
-    POWER = 0.5
+    POWER = 0.3
 
     def __init__(self, swerve, timeout=None):
         super().__init__()
@@ -21,13 +22,27 @@ class StraightSwerveMacro(GRTMacro):
         self.abort = True
 
     def initialize(self):
+
+
         print("initialized")
         #self.enable()
-        self.strafe(math.pi/2, 0, 1)
-        time.sleep()
-        self.rotate()
-        print("straight swerve enabled")
-        threading.Timer(6, self.disable).start()
+        self.swerve.strafe(math.pi/2, 0, 1)
+        time.sleep(1)
+        print("READY TO GO")
+        print("READY TO GO")
+        print("READY TO GO")
+        self.swerve.strafe(math.pi/2,1,self.POWER)
+        time.sleep(2.5)
+        print("READY TO GO")
+        print("READY TO GO")
+        print("READY TO GO")
+        print("READY TO GO")
+        print("READY TO GO")
+        self.kill()
+        self.die()
+        # self.rotate()
+        # print("straight swerve enabled")
+        # threading.Timer(6, self.disable).start()
 
      # def enable(self):
      #    print("Running portcullis_macro")
@@ -61,7 +76,8 @@ class StraightSwerveMacro(GRTMacro):
 
     def disable(self):
         #self.swerve.ackerman_turn(0, 0)
-        self.swerve.strafe(0, 0, 1)
+        #self.swerve.strafe(0, 0, 1)
+        self.swerve.set_power(0)
         print("straight swerve disabled")
         #self.abort()
         #self.enabled = False

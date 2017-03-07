@@ -8,10 +8,12 @@ import wpilib
 import time
 
 from config import middle_gear
+from config import basic_auto
 
 #from config import sp
 
-auto = middle_gear
+#auto = middle_gear
+auto = basic_auto
 auto_exists = True
 
 class MyRobot(wpilib.SampleRobot):
