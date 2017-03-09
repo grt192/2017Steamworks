@@ -1,5 +1,6 @@
 from ctre import CANTalon
 import math
+import time
 
 class SwerveModule:
 	
@@ -684,6 +685,8 @@ class SwerveModule:
 
     def zero(self, power):
 
+        turn_motors = (self.turn_r1, self.turn_r2, self.turn_l1, self.turn_l2)
+
         #This list of booleans makes sure that the limit switch only completes the zeroing sequence
         #when you want it to.
         self.zeroing[0] = True
@@ -697,12 +700,30 @@ class SwerveModule:
         self.turn_l1.changeControlMode(CANTalon.ControlMode.PercentVbus)
         self.turn_l2.changeControlMode(CANTalon.ControlMode.PercentVbus)
 
+        self.already_zeroed= [self.limit_r1.pressed, self.limit_r2.pressed, self.limit_l1.pressed, self.limit_l2.pressed]
+
+        for i in range(4):
+
+            if self.already_zeroed[i]:
+
+                self.zeroing[i] = False
+                self.going_back[i] = True
+                turn_motors[i].set(-.3)
+
+            else:
+
+                turn_motors[i].set(power)
+
+
+
+            print(self.already_zeroed[i])
+
         
 
-        self.turn_r1.set(power)
-        self.turn_r2.set(power)
-        self.turn_l1.set(power)
-        self.turn_l2.set(power)
+        # self.turn_r1.set(power)
+        # self.turn_r2.set(power)
+        # self.turn_l1.set(power)
+        # self.turn_l2.set(power)
 
     def set_power(self, power):
 
@@ -724,7 +745,10 @@ class SwerveModule:
 
                         #GO BACK UNTIL UNCLICKED
 
+                        print("TURN R1 INITIAL CLICK")
+
                         self.turn_r1.set(-.3)
+                        
 
                         self.going_back[0] = True
 
@@ -733,6 +757,8 @@ class SwerveModule:
                         
 
                     elif self.final_zero[0]:
+
+                        print("TURN R1 FINAL ZERO")
 
                         #This is the position at which the limit switch is triggered. Calculated empirically.
                         self.turn_r1.setEncPosition(-1800) #-6600 #-2050 <--old val
@@ -749,17 +775,22 @@ class SwerveModule:
                         self.going_back[0] = False
                         self.final_zero[0] = False
 
-                if source == self.limit_r2:
+                elif source == self.limit_r2:
 
                     if self.zeroing[1]:
 
+                        print("TURN R2 INITIAL CLICK")
+
                         self.turn_r2.set(-.3)
+                        
 
                         self.going_back[1] = True
 
                         self.zeroing[1] = False
 
                     elif self.final_zero[1]:
+
+                        print("TURN R2 FINAL ZERO")
 
                         self.turn_r2.setEncPosition(1845) #11500 #1810
 
@@ -774,17 +805,22 @@ class SwerveModule:
                         self.final_zero[1] = False
 
 
-                if source == self.limit_l1:
+                elif source == self.limit_l1:
 
                     if self.zeroing[2]:
 
+                        print("TURN L1 INITIAL CLICK")
+
                         self.turn_l1.set(-.3)
+                        
 
                         self.going_back[2] = True
 
                         self.zeroing[2] = False
 
                     elif self.final_zero[2]:
+
+                        print("TURN L1 FINAL ZERO")
 
                         self.turn_l1.setEncPosition(-4880) #11500 #1810
 
@@ -798,17 +834,22 @@ class SwerveModule:
                         self.going_back[2] = False
                         self.final_zero[2] = False
 
-                if source == self.limit_l2:
+                elif source == self.limit_l2:
 
                     if self.zeroing[3]:
 
+                        print("TURN L2 INITIAL CLICK")
+
                         self.turn_l2.set(-.3)
+
 
                         self.going_back[3] = True
 
                         self.zeroing[3] = False
 
                     elif self.final_zero[3]:
+
+                        print("TURN L2 FINAL ZERO")
 
                         self.turn_l2.setEncPosition(4685) #11500 #1810
 
@@ -828,7 +869,9 @@ class SwerveModule:
 
                     if self.going_back[0]:
 
-                        self.turn_r1.set(.25)
+                        print("TURN R1 GO BACK")
+
+                        self.turn_r1.set(.3)
 
                         self.final_zero[0] = True
 
@@ -836,31 +879,37 @@ class SwerveModule:
 
                         #reverse and go slow
 
-                if source == self.limit_r2:
+                elif source == self.limit_r2:
 
                     if self.going_back[1]:
 
-                        self.turn_r1.set(.25)
+                        print("TURN R2 GO BACK")
+
+                        self.turn_r2.set(.3)
 
                         self.final_zero[1] = True
 
                         self.going_back[1] = False
 
-                if source == self.limit_l1:
+                elif source == self.limit_l1:
 
                     if self.going_back[2]:
 
-                        self.turn_r1.set(.25)
+                        print("TURN L1 GO BACK")
+
+                        self.turn_l1.set(.3)
 
                         self.final_zero[2] = True
 
                         self.going_back[2] = False
 
-                if source == self.limit_l2:
+                elif source == self.limit_l2:
 
                     if self.going_back[3]:
 
-                        self.turn_r1.set(.25)
+                        print("TURN L2 GO BACK")
+
+                        self.turn_l2.set(.5)
 
                         self.final_zero[3] = True
 

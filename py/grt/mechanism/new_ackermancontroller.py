@@ -159,7 +159,7 @@ class NewAckermanController:
 
                 power = math.sqrt(x ** 2 + y ** 2)
 
-                self.swerve_module.strafe(angle, power, .4)
+                self.swerve_module.strafe(angle, power, 1)
 
             else:
 
