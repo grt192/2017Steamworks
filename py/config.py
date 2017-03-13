@@ -29,8 +29,10 @@ from grt.autonomous.basic_auto import BasicAuto
 from record_controller import RecordMacro, PlaybackMacro
 
 from grt.autonomous.one_gear_auto import MiddleGear
+from grt.autonomous.blue_shoot_auto import BlueShootAuto
+from grt.autonomous.red_shoot_auto import RedShootAuto
 
-recording_enabled = True
+recording_enabled = False
 
 #DT Talons and Objects
 
@@ -248,11 +250,17 @@ if recording_enabled:
 	playback_controller = PlaybackMacro(instructions, talon_arr, revert_controller=None)
 	#teleop_controller = TeleopController(sp, hid_sp, driver_stick, ac, record_controller, playback_controller)
 else:
-	pass
+	record_controller = None
+	playback_controller = None
 	#teleop_controller = TeleopController(sp, hid_sp)
 
 
 basic_auto = BasicAuto(swerve)
+
+blue_shoot_auto = BlueShootAuto(swerve, shooter, intake)
+red_shoot_auto = RedShootAuto(swerve, shooter, intake)
+
+
 
 # Mech Talons, objects, and controller
 

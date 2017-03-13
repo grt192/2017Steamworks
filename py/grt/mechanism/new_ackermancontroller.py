@@ -2,6 +2,8 @@ import math
 from ctre import CANTalon
 from collections import OrderedDict
 
+from grt.macro.rotate_macro import RotateMacro
+
 class NewAckermanController:
 
 	def __init__(self, joystick, xbox_controller, swerve_module, record_macro=None, playback_macro=None):
@@ -14,10 +16,17 @@ class NewAckermanController:
 		self.record_macro = record_macro
 		self.playback_macro = playback_macro
 
+		self.ackerman_power = .7
+		self.strafe_power = 1
+
+		self.rotate_macro_forward = RotateMacro(self.swerve_module, self.ackerman_power)
+		self.rotate_macro_forward.run_threaded()
+		self.rotate_macro_backward = RotateMacro(self.swerve_module, (-1)*self.ackerman_power)
+		self.rotate_macro_backward.run_threaded()
+
 		self.instructions = OrderedDict([("1, <class 'wpilib.cantalon.CANTalon'>", [-0.01857282502443793, -0.01857282502443793, -0.01857282502443793, 0.01857282502443793, 0.05571847507331378, 0.01857282502443793, -0.04398826979472141, -0.011730205278592375, 0.06842619745845552, 0.11241446725317693, 0.1935483870967742, 0.1935483870967742, 0.21212121212121213, 0.22482893450635386, 0.22482893450635386, 0.22482893450635386, 0.22482893450635386, 0.1436950146627566, -0.03714565004887586, 0.011730205278592375]), ("7, <class 'wpilib.cantalon.CANTalon'>", [-0.03128054740957967, -0.03128054740957967, -0.03128054740957967, 0.01857282502443793, -0.030303030303030304, 0.01857282502443793, -0.04398826979472141, 0.011730205278592375, -0.06842619745845552, -0.15640273704789834, -0.1935483870967742, -0.1935483870967742, -0.22482893450635386, -0.22482893450635386, -0.22482893450635386, -0.22482893450635386, -0.22482893450635386, -0.18084066471163246, -0.04985337243401759, 0.0]), ("100, <class 'grt.macro.assistance_macros.ElevatorMacro'>", [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), ("5, <class 'wpilib.cantalon.CANTalon'>", [0.0, 0.0, 0.0, -0.4995112414467253, -0.4995112414467253, -0.4995112414467253, -0.4995112414467253, -0.4995112414467253, -0.4995112414467253, -0.4995112414467253, -0.4995112414467253, -0.4995112414467253, -0.4995112414467253, -0.4995112414467253, -0.4995112414467253, -0.4995112414467253, -0.4995112414467253, 0.0, 0.0, 0.0])])
 
-		self.ackerman_power = .6
-		self.strafe_power = 1
+		
 
 		self.joystick.add_listener(self._joylistener)
 		self.xbox_controller.add_listener(self._xbox_controller_listener)
@@ -137,64 +146,74 @@ class NewAckermanController:
 		#         self.swerve_module.set_strafing(False)
 		#         print("SWITCHED TO ACKERMAN")
 
-		if state_id == 'r_shoulder':
+		if state_id == 'a_button':
 
 			if datum:
 				self.swerve_module.zero(.25)
 
-		if state_id == 'l_shoulder':
+		if state_id == 'b_button':
 
 			if datum:
 				self.swerve_module.zero(.4)
 
-		if state_id == "a_button":
-			if datum:
-				print("Recording started")
-				self.record_macro.start_record()
-		if state_id == "b_button":
-			if datum:
-				print("Recording stopped")
-				self.record_macro.stop_record()
+		# if state_id == "a_button":
+		# 	if datum:
+		# 		print("Recording started")
+		# 		self.record_macro.start_record()
+		# if state_id == "b_button":
+		# 	if datum:
+		# 		print("Recording stopped")
+		# 		self.record_macro.stop_record()
 				#self.record_macro.instructions = self.instructions
-		if state_id == "x_button":
-			if datum:
-				self.playback_macro.load("/home/lvuser/py/instructions.py")
-				self.playback_macro.start_playback()#self.instructions)
-		if state_id == "y_button":
-			if datum:
-				self.playback_macro.stop_playback()
+		# if state_id == "x_button":
+		# 	if datum:
+		# 		self.playback_macro.load("/home/lvuser/py/instructions.py")
+		# 		self.playback_macro.start_playback()#self.instructions)
+		# if state_id == "y_button":
+		# 	if datum:
+		# 		self.playback_macro.stop_playback()
 
 		if state_id == 'start_button':
 			if datum:
 				if self.strafe_power == 1:
-					print("switching strafe to slow")
+					#print("switching strafe to slow")
 					self.strafe_power = .4
 				elif self.strafe_power == .4:
-					print("swithing strafe to fast")
+					#print("swithing strafe to fast")
 					self.strafe_power = 1
 
 		if state_id == 'back_button':
 			if datum:
-				if self.ackerman_power == .6:
-					print("switching ackerman to fast")
+				if self.ackerman_power == .7:
+					#print("switching ackerman to fast")
 					self.ackerman_power = 1
 				elif self.ackerman_power == 1:
-					print("switching ackerman to slow")
-					self.ackerman_power = .6
+					#print("switching ackerman to slow")
+					self.ackerman_power = .7
 
-		if state_id == 'r_trigger':
+		if state_id == 'r_shoulder': 
 			if datum:
+				#print("GOING")
 				self.swerve_module.ackerman_turn(math.pi/2, 1, 0)
-				self.swerve_module.ackerman_turn(math.pi/2, 1, self.ackerman_power)
+				self.rotate_macro_forward.enabled = True
+				#self.swerve_module.ackerman_turn(math.pi/2, 1, self.ackerman_power)
 			else:
-				self.swerve_module.set_power(0)
+				#print("STOPPING SWERVE")
+				self.rotate_macro_forward.macro_stop()
+				self.rotate_macro_forward.enabled = False
+				#self.swerve_module.set_power(0)
 
-		if state_id == 'l_trigger':
+		if state_id == 'l_shoulder':
 			if datum:
+				#print("GOING")
 				self.swerve_module.ackerman_turn(math.pi/2, 1, 0)
-				self.swerve_module.ackerman_turn(math.pi/2, 1, -self.ackerman_power)
+				self.rotate_macro_backward.enabled = True
+				#self.swerve_module.ackerman_turn(math.pi/2, 1, -self.ackerman_power)
 			else:
-				self.swerve_module.set_power(0)
+				#print("STOPPING SWERVE")
+				self.rotate_macro_backward.macro_stop()
+				self.rotate_macro_backward.enabled = False
+				#self.swerve_module.set_power(0)
 
 
 		#RIGHT JOYSTICK FOR STRAFING
@@ -229,8 +248,8 @@ class NewAckermanController:
 
 			x = self.xbox_controller.l_x_axis
 			y = self.xbox_controller.l_y_axis
-			print("x: ",x)
-			print("y: ",y)
+			# print("x: ",x)
+			# print("y: ",y)
 
 			if (abs(x) > .2 or abs(y) > .2) and not self.swerve_module.get_strafing():
 

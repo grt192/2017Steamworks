@@ -17,10 +17,12 @@ class MechController:
 
         self.talon_test = talon_test
 
-        self.front_power = 800#1500#2175 #OLD: 2150, 1000
+        self.front_power = 2550#1500#2175 #OLD: 2150, 1000
         self.back_power = 1600#1500#4975 #OLD: 2150, 3100
 
         self.TIPPED = True
+
+        self.PUSHER = True
 
         self.driver_joystick = driver_joystick
         self.xbox_controller = xbox_controller
@@ -75,17 +77,26 @@ class MechController:
             if datum:
                 print("stopping intake")
                 self.intake.stop()
-                
-        elif state_id == 'a_button': #needs review
-            if datum:
 
-                # self.power += .01
-                # print("POWER: ",self.power)
-                print("unjam gear down")
-                self.gear.unjam_down()
-            else:
-                print("unjam gear up")
-                self.gear.unjam_up()
+        elif state_id == 'a_button':
+            if datum:
+                if self.PUSHER:
+                    self.gear.unjam_up()
+                    self.PUSHER = False
+                else:
+                    self.gear.unjam_down()
+                    self.PUSHER = True
+                
+        # elif state_id == 'a_button': #needs review
+        #     if datum:
+
+        #         # self.power += .01
+        #         # print("POWER: ",self.power)
+        #         print("unjam gear down")
+        #         self.gear.unjam_down()
+        #     else:
+        #         print("unjam gear up")
+        #         self.gear.unjam_up()
                 
                 
         elif state_id == 'r_y_axis': #needs review

@@ -39,7 +39,7 @@ class Shooter:
 		self.disk.set(0)
 
 	def angle_change_up(self):
-		self.pneumatic.set(.8)
+		self.pneumatic.set(1)#.8
 
 	def angle_change_down(self):
 		self.pneumatic.set(0)

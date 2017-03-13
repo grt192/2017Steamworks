@@ -9,11 +9,13 @@ import time
 
 from config import middle_gear
 from config import basic_auto
+from config import blue_shoot_auto
+from config import red_shoot_auto
 
 #from config import sp
 
 #auto = middle_gear
-auto = basic_auto
+auto = red_shoot_auto
 auto_exists = True
 
 class MyRobot(wpilib.SampleRobot):
@@ -92,12 +94,12 @@ class MyRobot(wpilib.SampleRobot):
 
         #pass
 
-        print("IN THE AUTO FUNCTION")
-        print("IN THE AUTO FUNCTION")
-        print("IN THE AUTO FUNCTION")
-        print("IN THE AUTO FUNCTION")
+        # print("IN THE AUTO FUNCTION")
+        # print("IN THE AUTO FUNCTION")
+        # print("IN THE AUTO FUNCTION")
+        # print("IN THE AUTO FUNCTION")
         if auto_exists:
-            print("doing autonomous")
+            #print("doing autonomous")
 
             auto.run_autonomous()
             while self.isAutonomous() and self.isEnabled():
@@ -132,6 +134,10 @@ class MyRobot(wpilib.SampleRobot):
             self.hid_sp.poll()
             self.sp.poll()
             self.safeSleep(tinit, .04)
+
+            # print("shooter speed:")
+            # print(self.s1.get())
+            #print(self.s2.get())
             # print("voltage")
             # print(self.t1.getOutputVoltage())
             #print("Encoder position:")
