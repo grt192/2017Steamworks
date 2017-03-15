@@ -107,22 +107,22 @@ talons = omega_2_talons
 
 
 #UNCOMMENT THE FOLLOWING LATER
-turn_l2 = CANTalon(10) 
+turn_l2 = CANTalon(12) 
 turn_l2.changeControlMode(CANTalon.ControlMode.Position)
 turn_l2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
 turn_l2.setPID(1.0, 0.0, 0.0)
 
-turn_r2 = CANTalon(15)
+turn_r2 = CANTalon(3)
 turn_r2.changeControlMode(CANTalon.ControlMode.Position)
 turn_r2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
 turn_r2.setPID(1.0, 0.0, 0.0)
 
-turn_left = CANTalon(7)
+turn_left = CANTalon(10)
 turn_left.changeControlMode(CANTalon.ControlMode.Position)
 turn_left.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
 turn_left.setPID(1.0, 0.0, 0.0)
 
-turn_right = CANTalon(3)#5
+turn_right = CANTalon(9)#5
 turn_right.changeControlMode(CANTalon.ControlMode.Position)
 turn_right.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
 turn_right.setPID(1.0, 0.0, 0.0)
@@ -137,14 +137,14 @@ turn_right.setPID(1.0, 0.0, 0.0)
 #back left 4 turning: 8
 
 dt_right = CANTalon(1)
-dt_left = CANTalon(13)
+dt_left = CANTalon(5)
 
-dt_l2 = CANTalon(6)
+dt_l2 = CANTalon(2)
 dt_r2 = CANTalon(14)
 
 
-shooter1_m1 = CANTalon(11)
-shooter1_m2 = CANTalon(9)
+shooter1_m1 = CANTalon(6)
+shooter1_m2 = CANTalon(13)
 # shooter2_m1 = CANTalon(20)
 # shooter2_m2 = CANTalon(20)
 
@@ -168,7 +168,7 @@ shooter1_m2.setPID(1.0,0.008,20, f=0.478037)
 load_m = CANTalon(8)
 # load_m.reverseOutput(True)
 
-disk_m = CANTalon(12)
+disk_m = CANTalon(15)
 # disk_m.changeControlMode(CANTalon.ControlMode.Follower)
 # disk_m.set(load_m.getDeviceID())
 
@@ -176,16 +176,16 @@ angle_change = Solenoid(0)
 
 shooter = Shooter(shooter1_m1, shooter1_m2, load_m, angle_change, disk_m)
 
-intake_motor = CANTalon(4)
+intake_motor = CANTalon(7)
 
 intake = Intake(intake_motor)
 
 
 
 
-climber_motor = CANTalon(2)
+climber_motor = CANTalon(4)
 
-c2 = CANTalon(5)
+c2 = CANTalon(11)
 
 c2.changeControlMode(CANTalon.ControlMode.Follower)
 c2.set(climber_motor.getDeviceID())
@@ -193,8 +193,8 @@ c2.set(climber_motor.getDeviceID())
 climber = Climber(climber_motor)
 
 
-gear_pneumatic_1 = Solenoid(2)
-gear_pneumatic_2 = Solenoid(1)
+gear_pneumatic_1 = Solenoid(1)
+gear_pneumatic_2 = Solenoid(2)
 
 gear_mech = Gear(gear_pneumatic_1, gear_pneumatic_2)
 
@@ -206,10 +206,10 @@ hopper = Hopper(hopper_pneumatic)
 
 #omega 2: 9,2,0,1
 
-limit_r1 = Switch(1) #I messed up the wiring
+limit_r1 = Switch(9) #I messed up the wiring
 limit_r2 = Switch(2, reverse=True)
-limit_l1 = Switch(3, reverse=True)
-limit_l2 = Switch(4)
+limit_l1 = Switch(0, reverse=True)
+limit_l2 = Switch(1)
 
 #zero_test = ZeroTest(turn_right, limit_switch)
 

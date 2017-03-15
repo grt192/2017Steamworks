@@ -36,7 +36,7 @@ class SwerveModule:
         #MAX ANGLE FOR INSIDE WHEEL
         self.theta_2 = math.pi - self.theta_1
 
-        self.TICKS_PER_REV = 3*4096*72/22 #I THINK SO! old:4096*50/24
+        self.TICKS_PER_REV = 4096*72/22 #I THINK SO! old:4096*50/24
 
         self.strafing = False
 
