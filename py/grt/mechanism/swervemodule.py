@@ -644,7 +644,7 @@ class SwerveModule:
                     #print(self.turn_r1.getEncPosition())
 
                     #This is the position at which the limit switch is triggered. Calculated empirically.
-                    self.turn_r1.setEncPosition(-6800) #-6600 #-2050 <--old val
+                    self.turn_r1.setEncPosition(-1800) #-6600 #-2050 <--old val
 
 
                     #Change back to position mode and go to zero.
@@ -690,7 +690,7 @@ class SwerveModule:
                     # print("r2 encoder position triggered")
                     # print(self.turn_r2.getEncPosition())
 
-                    self.turn_r2.setEncPosition(10800) #11500 #1810
+                    self.turn_r2.setEncPosition(1845) #11500 #1810
 
                     self.turn_r2.changeControlMode(CANTalon.ControlMode.Position)
                     self.turn_r2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
@@ -739,7 +739,7 @@ class SwerveModule:
                     # print("l1 encoder position triggered")
                     # print(self.turn_l1.getEncPosition())
 
-                    self.turn_l1.setEncPosition(-15270) #-15470 #omega2: -4880
+                    self.turn_l1.setEncPosition(-4880) #-15470 #omega2: -4880
 
                     self.turn_l1.changeControlMode(CANTalon.ControlMode.Position)
                     self.turn_l1.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
@@ -782,7 +782,7 @@ class SwerveModule:
                 # print("l2 encoder position triggered")
                 # print(self.turn_l2.getEncPosition())
 
-                self.turn_l2.setEncPosition(7850) #8100 #4450
+                self.turn_l2.setEncPosition(4685) #8100 #4450
 
                 self.turn_l2.changeControlMode(CANTalon.ControlMode.Position)
                 self.turn_l2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
