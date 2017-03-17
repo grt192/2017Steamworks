@@ -27,6 +27,7 @@ class MyRobot(wpilib.SampleRobot):
         self.sp = config.sp
         self.ds = config.ds
         
+        wpilib.CameraServer.launch('vision.py:main')
 
         #self.turn_motor = config.turn_motor
 
