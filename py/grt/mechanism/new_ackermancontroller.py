@@ -150,6 +150,8 @@ class NewAckermanController:
 
 			if datum:
 				self.swerve_module.zero(.25)
+				#self.swerve_module.double_rotation_zero(1, .25, 10)
+				#self.swerve_module.quick_zero(1, .25, 45)
 
 		if state_id == 'b_button':
 

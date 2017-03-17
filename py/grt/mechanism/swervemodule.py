@@ -27,8 +27,25 @@ class SwerveModule:
         limit_l1.add_listener(self._limit_listener)
         limit_l2.add_listener(self._limit_listener)
 
+        #only use this for double_rotation_zero
+        #limit_r1.add_listener(self._limit_listener2)
+        #limit_r2.add_listener(self._limit_listener2)
+        #limit_l1.add_listener(self._limit_listener2)
+        #limit_l2.add_listener(self._limit_listener2)
+
+        #Use this by itself for constand zeroing
+        #limit_r1.add_listener(self._constant_zero_limit_listener)
+        #limit_r2.add_listener(self._constant_zero_limit_listener)
+        #limit_l1.add_listener(self._constant_zero_limit_listener)
+        #limit_l2.add_listener(self._constant_zero_limit_listener)
+
         self.HEIGHT = 24
         self.WIDTH = 16
+
+        self.count_r1 = 0
+        self.count_r2 = 0
+        self.count_l1 = 0
+        self.count_l2 = 0
 
         #MAX ANGLE FOR OUTSIDE WHEEL
         self.theta_1 = math.atan2(self.HEIGHT, self.WIDTH)
@@ -471,6 +488,8 @@ class SwerveModule:
         self.power_l1.set(power)
         self.power_l2.set(power)
 
+
+
     # def _limit_listener(self, source, state_id, datum):
 
     #     if state_id == 'pressed':
@@ -622,6 +641,199 @@ class SwerveModule:
     #                     self.final_zero[3] = True
 
     #                     self.going_back[3] = False
+
+
+    def quick_zero(self, power1, power2, angle):
+        #This works by having the module turn quickly to a certain angle away from the supposed limit switch position
+        #then it slowly runs until it triggers the limit switch
+
+        self.already_zeroed= [self.limit_r1.pressed, self.limit_r2.pressed, self.limit_l1.pressed, self.limit_l2.pressed]
+
+        #This list of booleans makes sure that the limit switch only completes the zeroing sequence
+        #when you want it to.
+        self.zeroing[0] = True
+        self.zeroing[1] = True
+        self.zeroing[2] = True
+        self.zeroing[3] = True
+
+        self.turn_r1.changeControlMode(CANTalon.ControlMode.PercentVbus)
+        self.turn_r2.changeControlMode(CANTalon.ControlMode.PercentVbus)
+        self.turn_l1.changeControlMode(CANTalon.ControlMode.PercentVbus)
+        self.turn_l2.changeControlMode(CANTalon.ControlMode.PercentVbus)
+
+        self.turn_r1.set(power1)
+        self.turn_r2.set(power1)
+        self.turn_l1.set(power1)
+        self.turn_l2.set(power1)
+
+
+        if self.turn_r1.getEncPosition() < (-6800 - (angle*111)):
+            self.turn_r1.set(power2)
+
+        if self.turn_r2.getEncPosition() < (10800 - (angle*111)):
+            self.turn_r2.set(power2)
+
+        if self.turn_l1.getEncPosition() < (-15270 - (angle*111)):
+            self.turn_l1.set(power2)
+
+        if self.turn_l2.getEncPosition() < (7850 - (angle*111)):
+            self.turn_l2.set(power2)
+
+    def double_rotation_zero(self, power1, power2, angle):
+        #This works by going around once quickly and then going again slowly with the suppsed limit switch value
+
+        self.already_zeroed= [self.limit_r1.pressed, self.limit_r2.pressed, self.limit_l1.pressed, self.limit_l2.pressed]
+
+        #This list of booleans makes sure that the limit switch only completes the zeroing sequence
+        #when you want it to.
+        self.zeroing[0] = True
+        self.zeroing[1] = True
+        self.zeroing[2] = True
+        self.zeroing[3] = True
+
+        self.count_r1 = 0
+        self.count_r2 = 0
+        self.count_l1 = 0
+        self.count_l2 = 0
+
+        self.turn_r1.changeControlMode(CANTalon.ControlMode.PercentVbus)
+        self.turn_r2.changeControlMode(CANTalon.ControlMode.PercentVbus)
+        self.turn_l1.changeControlMode(CANTalon.ControlMode.PercentVbus)
+        self.turn_l2.changeControlMode(CANTalon.ControlMode.PercentVbus)
+
+        if self.count_r1 == 0:
+            self.turn_r1.set(power1)
+        elif self.count_r1 == 1:
+            if self.turn_r1.getEncPosition() < (-6800 - (angle*111)):
+                self.turn_r1.set(power2)
+
+        if self.count_r2 == 0:
+            self.turn_r2.set(power1)
+        elif self.count_r2 == 1:
+            if self.turn_r2.getEncPosition() < (10800 - (angle*111)):
+                self.turn_r2.set(power2)
+
+        if self.count_l1 == 0:
+            self.turn_l1.set(power1)
+        elif self.count_l1 == 1:
+            if self.turn_l1.getEncPosition() < (-15270 - (angle*111)):
+                self.turn_l1.set(power2)
+
+
+        if self.count_l2 == 0:
+            self.turn_l2.set(power1)
+        elif self.count_l2 == 1:
+            if self.turn_l2.getEncPosition() < (7850 - (angle*111)):
+                self.turn_l2.set(power2)
+
+    def _constant_zero_limit_listener(self, source, state_id, datum):
+        #This constantly zeros while the robot is turning --> PROBLEM: zeros may vary depending on 
+
+        if state_id == 'pressed' and datum:
+            if source == self.limit_r1:
+                self.turn_r1.setEncPosition(-6800)
+            if source == self.limit_r2:
+                self.turn_r2.setEncPosition(10800) 
+            if source == self.limit_l1:
+                self.turn_l1.setEncPosition(-15270) 
+            if source == self.limit_l2:
+                self.turn_l2.setEncPosition(7850)
+    
+
+    def _limit_listener2(self, source, state_id, datum):
+    #This is the listener needed for double_rotation_zero
+    #It contains a counter
+
+        #Limit switch is pressed and one of them is still being zeroed.
+        if state_id == 'pressed' and datum and (self.zeroing[0] or self.zeroing[1] or self.zeroing[2] or self.zeroing[3]):
+
+            #Positive: clockwise
+            #Negative; counterclockwise
+
+            if source == self.limit_r1 and self.zeroing[0]:
+
+                if not self.already_zeroed[0]:
+
+                    #This is the position at which the limit switch is triggered. Calculated empirically.
+                    self.turn_r1.setEncPosition(-6800) #-6600 #-2050 <--old val
+                    self.count_r1++
+
+                    if self.count_r1 == 2:
+
+                        #Change back to position mode and go to zero.
+                        self.turn_r1.setEncPosition(-6800)
+                        self.turn_r1.changeControlMode(CANTalon.ControlMode.Position)
+                        self.turn_r1.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+                        self.turn_r1.setPID(1.0, 0.0, 0.0)
+
+                        self.turn_r1.set(0)
+
+                        #Register that this wheel has been zeroed.
+                        self.zeroing[0] = False
+
+                else:
+
+                    self.already_zeroed[0] = False
+
+
+            if source == self.limit_r2 and self.zeroing[1]:
+
+                if not self.already_zeroed[1]:
+
+                    self.turn_r2.setEncPosition(10800)
+                     #11500 #1810
+                     self.count_r2++
+
+                     if self.count_r2 == 2:
+                        self.turn_r2.setEncPosition(10800)
+                        self.turn_r2.changeControlMode(CANTalon.ControlMode.Position)
+                        self.turn_r2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+                        self.turn_r2.setPID(1.0, 0.0, 0.0)
+
+                        self.turn_r2.set(0)
+
+                        self.zeroing[1] = False
+
+                else:
+
+                    self.already_zeroed[1] = False
+
+
+            if source == self.limit_l1 and self.zeroing[2] and not self.already_zeroed[2]:
+
+                if not self.already_zeroed[2]:
+
+                    self.turn_l1.setEncPosition(-15270) #-15470 #omega2: -4880
+                    self.count_l1++
+
+                    if self.count_l1 == 2:
+                        self.turn_l1.setEncPosition(-15270)
+                        self.turn_l1.changeControlMode(CANTalon.ControlMode.Position)
+                        self.turn_l1.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+                        self.turn_l1.setPID(1.0, 0.0, 0.0)
+
+                        self.turn_l1.set(0)
+
+                        self.zeroing[2] = False
+
+                else:
+
+                    self.already_zeroed[2] = False
+
+            if source == self.limit_l2 and self.zeroing[3]:
+
+                self.turn_l2.setEncPosition(7850) #8100 #4450
+                self.count_l2++
+
+                if self.count_l2 == 2:
+                    self.turn_l2.setEncPosition(7850)
+                    self.turn_l2.changeControlMode(CANTalon.ControlMode.Position)
+                    self.turn_l2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+                    self.turn_l2.setPID(1.0, 0.0, 0.0)
+
+                    self.turn_l2.set(0)
+
+                    self.zeroing[3] = False
 
 
     def _limit_listener(self, source, state_id, datum):
