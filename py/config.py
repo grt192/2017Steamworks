@@ -13,6 +13,7 @@ from grt.mechanism.swervemodule import SwerveModule
 from grt.mechanism.drivetrain import DriveTrain
 from grt.mechanism.drivecontroller import ArcadeDriveController
 from grt.mechanism.motorset import Motorset
+from grt.vision.robot_vision import Vision
 from grt.sensors.ticker import Ticker
 from grt.sensors.encoder import Encoder
 #from grt.sensors.talon import Talon
@@ -33,6 +34,14 @@ from grt.autonomous.blue_shoot_auto import BlueShootAuto
 from grt.autonomous.red_shoot_auto import RedShootAuto
 
 recording_enabled = False
+
+using_vision_server = True
+
+robot_vision = Vision()
+if using_vision_server:
+	import grt.vision.vision_server
+	grt.vision.vision_server.prepare_module(robot_vision)
+
 
 #DT Talons and Objects
 
