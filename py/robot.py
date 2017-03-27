@@ -7,15 +7,15 @@
 import wpilib
 import time
 
-from config import middle_gear
-from config import basic_auto
-from config import blue_shoot_auto
-from config import red_shoot_auto
+# from config import middle_gear
+# from config import basic_auto
+# from config import blue_shoot_auto
+# from config import red_shoot_auto
 
 #from config import sp
 
 #auto = middle_gear
-auto = red_shoot_auto
+#auto = None
 auto_exists = True
 
 class MyRobot(wpilib.SampleRobot):
@@ -42,6 +42,9 @@ class MyRobot(wpilib.SampleRobot):
 
         self.s1 = config.shooter1_m1
         self.s2 = config.shooter1_m2
+
+        #global auto 
+        auto = config.red_shoot_auto
 
         
 

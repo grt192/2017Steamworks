@@ -39,10 +39,10 @@ class Shooter:
 		self.disk.set(0)
 
 	def angle_change_up(self):
-		self.pneumatic.set(1)#.8
+		self.pneumatic.set(True)#.8
 
 	def angle_change_down(self):
-		self.pneumatic.set(0)
+		self.pneumatic.set(False)
 
 class Intake:
 
@@ -86,16 +86,16 @@ class Gear:
 		self.pneumatic_2 = pneumatic_2
 
 	def place(self):
-		self.pneumatic_1.set(1)
+		self.pneumatic_1.set(True)
 
 	def retract(self):
-		self.pneumatic_1.set(0)
+		self.pneumatic_1.set(False)
 
 	def unjam_up(self):
-		self.pneumatic_2.set(1)
+		self.pneumatic_2.set(True)
 
 	def unjam_down(self):
-		self.pneumatic_2.set(0)
+		self.pneumatic_2.set(False)
 
 class Hopper:
 
@@ -104,8 +104,8 @@ class Hopper:
 		self.pneumatic = pneumatic
 
 	def unjam_out(self):
-		self.pneumatic.set(1)
+		self.pneumatic.set(True)
 
 	def unjam_in(self):
-		self.pneumatic.set(0)
+		self.pneumatic.set(False)
 

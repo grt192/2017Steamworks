@@ -1,6 +1,7 @@
 from ctre import CANTalon
 import math
-
+import time
+import threading
 class SwerveModule:
 	
   	#8-motor drivetrain with 4 swerve modules
@@ -22,10 +23,20 @@ class SwerveModule:
         self.limit_l1 = limit_l1
         self.limit_l2 = limit_l2
 
-        limit_r1.add_listener(self._limit_listener)
-        limit_r2.add_listener(self._limit_listener)
-        limit_l1.add_listener(self._limit_listener)
-        limit_l2.add_listener(self._limit_listener)
+        limit_r1.add_listener(self._limit_listener1)
+        limit_r2.add_listener(self._limit_listener2)
+        limit_l1.add_listener(self._limit_listener3)
+        limit_l2.add_listener(self._limit_listener4)
+
+        #t1 = threading.Thread(target=self._limit_listener1)
+        #t2 = threading.Thread(target=self._limit_listener2)
+        #t3 = threading.Thread(target=self._limit_listener3)
+        #t4 = threading.Thread(target=self._limit_listener4)
+
+        #t1.start()
+        #t2.start()
+        #t3.start()
+        #t4.start()
 
         self.HEIGHT = 24
         self.WIDTH = 16
@@ -623,43 +634,238 @@ class SwerveModule:
 
     #                     self.going_back[3] = False
 
+    def quick_zero(self, power1, power2, angle):
+        #This works by having the module turn quickly to a certain angle away from the supposed limit switch position
+        #then it slowly runs until it triggers the limit switch
 
-    def _limit_listener(self, source, state_id, datum):
+        self.already_zeroed= [self.limit_r1.pressed, self.limit_r2.pressed, self.limit_l1.pressed, self.limit_l2.pressed]
 
-        #INCREASING MAKES IT MORE CLOCKWISE
+        #This list of booleans makes sure that the limit switch only completes the zeroing sequence
+        #when you want it to.
+        self.zeroing[0] = True
+        self.zeroing[1] = True
+        self.zeroing[2] = True
+        self.zeroing[3] = True
+
+        self.turn_r1.changeControlMode(CANTalon.ControlMode.PercentVbus)
+        self.turn_r2.changeControlMode(CANTalon.ControlMode.PercentVbus)
+        self.turn_l1.changeControlMode(CANTalon.ControlMode.PercentVbus)
+        self.turn_l2.changeControlMode(CANTalon.ControlMode.PercentVbus)
+
+        self.turn_r1.set(power1)
+        self.turn_r2.set(power1)
+        self.turn_l1.set(power1)
+        self.turn_l2.set(power1)
 
 
-        #Limit switch is pressed and one of them is still being zeroed.
-        if state_id == 'pressed' and datum and (self.zeroing[0] or self.zeroing[1] or self.zeroing[2] or self.zeroing[3]):
+        if self.turn_r1.getEncPosition() < (-1800 - (angle*(self.TICKS_PER_REV/360))):
+            self.turn_r1.set(power2)
 
-            #Positive: clockwise
-            #Negative; counterclockwise
+        if self.turn_r2.getEncPosition() < (1845 - (angle*(self.TICKS_PER_REV))):
+            self.turn_r2.set(power2)
+
+        if self.turn_l1.getEncPosition() < (-4800 - (angle*111)):
+            self.turn_l1.set(power2)
+
+        if self.turn_l2.getEncPosition() < (4685 - (angle*111)):
+            self.turn_l2.set(power2)
+
+    def double_rotation_zero(self, power1, power2, power3, power4):
+        self.already_zeroed= [self.limit_r1.pressed, self.limit_r2.pressed, self.limit_l1.pressed, self.limit_l2.pressed]
+
+        #This list of booleans makes sure that the limit switch only completes the zeroing sequence
+        #when you want it to.
+        self.zeroing[0] = True
+        self.zeroing[1] = True
+        self.zeroing[2] = True
+        self.zeroing[3] = True
+
+        self.count_r1 = 0
+        self.count_r2 = 0
+        self.count_l1 = 0
+        self.count_l2 = 0
+
+        self.turn_r1.changeControlMode(CANTalon.ControlMode.PercentVbus)
+        self.turn_r2.changeControlMode(CANTalon.ControlMode.PercentVbus)
+        self.turn_l1.changeControlMode(CANTalon.ControlMode.PercentVbus)
+        self.turn_l2.changeControlMode(CANTalon.ControlMode.PercentVbus)
+
+        self.turn_r1.set(power1)
+        self.turn_r2.set(power2)
+        self.turn_l1.set(power3)
+        self.turn_l2.set(power4)
+
+    def _limit_listener1(self, source, state_id, datum):
+        if state_id == 'pressed' and datum and (self.zeroing[0]):
 
             if source == self.limit_r1 and self.zeroing[0]:
 
-                if not self.already_zeroed[0]:
+                #print("count_r1: " , self.count_r1)
 
-                    # print("r1 encoder position triggered")
-                    # print(self.turn_r1.getEncPosition())
-                    #print(self.turn_r1.getEncPosition())
-
-                    #This is the position at which the limit switch is triggered. Calculated empirically.
-                    self.turn_r1.setEncPosition(-1800) #-6600 #-2050 <--old val
-
-
-                    #Change back to position mode and go to zero.
+                if self.count_r1 == 0:
+                    self.count_r1 = 1
+                    self.turn_r1.setEncPosition(-1800)
+                    #print("encposition set: ", self.turn_r1.getEncPosition())
                     self.turn_r1.changeControlMode(CANTalon.ControlMode.Position)
                     self.turn_r1.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
                     self.turn_r1.setPID(1.0, 0.0, 0.0)
+                    self.turn_r1.set(-1800 - self.TICKS_PER_REV/8)
+                    t1 = threading.Timer(.3, self.zero1)
+                    t1.start() 
+                    print("thread starting 1")
 
-                    self.turn_r1.set(0)
+                    #if (1845 - self.TICKS_PER_REV/12) <= self.turn_r2.getEncPosition() <= (1845 - self.TICKS_PER_REV/8):
+                     #   print("LOOP")
+                      #  self.turn_r2.changeControlMode(CANTalon.ControlMode.PercentVbus)
+                       # self.turn_r2.set(.05)
+                        #print("enc position: " , self.turn_r2.getEncPosition())
+                    #else:
+                     #   print("ELSE")
+                      #  self.turn_r2.set(1845 - self.TICKS_PER_REV/10)
+                
+                if self.count_r1 == 2:
+                    print("count 1")
+                    self.turn_r1.setEncPosition(-1800)
+                    #print("enc set 2nd time")
 
                     #Register that this wheel has been zeroed.
+                    self.turn_r1.changeControlMode(CANTalon.ControlMode.Position)
+                    self.turn_r1.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+                    self.turn_r1.setPID(1.0, 0.0, 0.0)
+                    #print("zeroing")
+                    self.turn_r1.set(0)
                     self.zeroing[0] = False
+                    #print("zeroed")
 
-                else:
+    def zero1(self):
+        self.count_r1 = 2
+        self.turn_r1.changeControlMode(CANTalon.ControlMode.PercentVbus)
+        self.turn_r1.set(.3)
+        print("zero 1")
 
-                    self.already_zeroed[0] = False
+
+    def _limit_listener2(self, source, state_id, datum):
+        if state_id == 'pressed' and datum and (self.zeroing[1]):
+            #print("hi")
+
+            if source == self.limit_r2 and self.zeroing[1]:
+
+
+                if self.count_r2 == 0:
+                    self.count_r2 = 1
+                    self.turn_r2.setEncPosition(1845)
+                    #print("encposition set: ", self.turn_r2.getEncPosition())
+                    self.turn_r2.changeControlMode(CANTalon.ControlMode.Position)
+                    self.turn_r2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+                    self.turn_r2.setPID(1.0, 0.0, 0.0)
+                    self.turn_r2.set(1845 - self.TICKS_PER_REV/6)
+                    t2 = threading.Timer(.3, self.zero2)
+                    t2.start()
+                    print("thead starting 2")
+                    #print("enc position: " , self.turn_r2.getEncPosition())
+                
+                if self.count_r2 == 2:
+                    print("count 2")
+                    self.turn_r2.setEncPosition(1845)
+                    #print("enc set 2nd time")
+
+                    #Register that this wheel has been zeroed.
+                    self.turn_r2.changeControlMode(CANTalon.ControlMode.Position)
+                    self.turn_r2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+                    self.turn_r2.setPID(1.0, 0.0, 0.0)
+                    #print("zeroing")
+                    self.turn_r2.set(0)
+                    self.zeroing[1] = False
+                    #print("zeroed")
+
+    def zero2(self):
+        print("zero 2")
+        self.count_r2 = 2
+        self.turn_r2.changeControlMode(CANTalon.ControlMode.PercentVbus)
+        self.turn_r2.set(.3)
+
+    def _limit_listener3(self, source, state_id, datum):
+        if state_id == 'pressed' and datum and (self.zeroing[2]):
+            if source == self.limit_l1 and self.zeroing[2]:
+                i = 0
+                print(i)
+                #print("count_l1: " , self.count_l1)
+                
+                if self.count_l1 == 0:
+                    self.count_l1 = 1
+                    self.turn_l1.setEncPosition(-4800)
+                    #print("l2 encposition set: ", self.turn_r2.getEncPosition())
+                    self.turn_l1.changeControlMode(CANTalon.ControlMode.Position)
+                    self.turn_l1.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+                    self.turn_l1.setPID(1.0, 0.0, 0.0)
+                    self.turn_l1.set(-4800 - self.TICKS_PER_REV/6)
+                    t3 = threading.Timer(.3, self.zero3)
+                    t3.start()
+                    print("thead starting 3")
+                    #print("l2 enc position: " , self.turn_r2.getEncPosition())
+                
+                if self.count_l1 == 2:
+                    print("count 3")
+                    self.turn_l1.setEncPosition(-4800)
+                    #print("enc set 2nd time")
+
+                    #Register that this wheel has been zeroed.
+                    self.turn_l1.changeControlMode(CANTalon.ControlMode.Position)
+                    self.turn_l1.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+                    self.turn_l1.setPID(1.0, 0.0, 0.0)
+                    #print("zeroing")
+                    self.turn_l1.set(0)
+                    self.zeroing[2] = False
+                    #print("zeroed")
+
+    def zero3(self):
+        self.count_l1 = 2
+        print("zero 3")
+        self.turn_l1.changeControlMode(CANTalon.ControlMode.PercentVbus)
+        self.turn_l1.set(.3)
+
+
+    def _limit_listener4(self, source, state_id, datum):
+        if state_id == 'pressed' and datum and (self.zeroing[3]):
+                
+
+            if source == self.limit_l2 and self.zeroing[3]:
+
+                #print("count_l2: " , self.count_l2)
+
+                if self.count_l2 == 0:
+                    self.count_l2 = 1
+                    self.turn_l2.setEncPosition(4685)
+                    #print("encposition set: ", self.turn_r2.getEncPosition())
+                    self.turn_l2.changeControlMode(CANTalon.ControlMode.Position)
+                    self.turn_l2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+                    self.turn_l2.setPID(1.0, 0.0, 0.0)
+                    self.turn_l2.set(4685 - self.TICKS_PER_REV/6)
+                    t4 = threading.Timer(.3, self.zero4)
+                    t4.start()
+                    print("thread starting 4")
+                
+                if self.count_l2 == 2:
+                    print("count 4")
+                    self.turn_l2.setEncPosition(4685)
+                    #print("enc set 2nd time")
+
+                    #Register that this wheel has been zeroed.
+                    self.turn_l2.changeControlMode(CANTalon.ControlMode.Position)
+                    self.turn_l2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
+                    self.turn_l2.setPID(1.0, 0.0, 0.0)
+                    #print("zeroing")
+                    self.turn_l2.set(0)
+                    self.zeroing[3] = False
+                    #print("zeroed")
+
+    def zero4(self):
+        print("zero 4")
+        self.count_l2 = 2
+        self.turn_l2.changeControlMode(CANTalon.ControlMode.PercentVbus)
+        self.turn_l2.set(.3)
+
+                
 
 
                 #cc: -1021, -1043, -1032, -1080, -935, -1006, -1034, -1057, -868, -990, -969, -910, -1006, -1070
@@ -681,7 +887,7 @@ class SwerveModule:
                 #     print("R1 ENCODER POSITION NEGATIVE:")
                 #     print(self.turn_r1.getEncPosition())
                 #     #self.turn_r1.setEncPosition(7561 - 4096*50/24)
-
+'''
 
             if source == self.limit_r2 and self.zeroing[1]:
 
@@ -821,5 +1027,5 @@ class SwerveModule:
                 #     #self.turn_l2.setEncPosition(3357)
 
     #         #         #2048*50/24 = 4266
-
+'''
     
