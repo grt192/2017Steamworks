@@ -26,7 +26,10 @@ class MechController:
 
         self.driver_joystick = driver_joystick
         self.xbox_controller = xbox_controller
-        driver_joystick.add_listener(self._driver_joystick_listener)
+        try:
+            driver_joystick.add_listener(self._driver_joystick_listener)
+        except AttributeError:
+            pass
         xbox_controller.add_listener(self._xbox_controller_listener)
 
     def _xbox_controller_listener(self, sensor, state_id, datum):

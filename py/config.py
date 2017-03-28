@@ -231,13 +231,13 @@ middle_gear = MiddleGear(talon_arr)
 
 
 # Drive Controllers
-l_joystick = Attack3Joystick(0)
+l_joystick = None
 
 #r_joystick = Attack3Joystick(3)
 xbox_controller = XboxJoystick(1)
 xbox_controller_2 = XboxJoystick(2)
 #ac = ArcadeDriveController(tank_dt, l_joystick)
-hid_sp = SensorPoller((l_joystick, xbox_controller, xbox_controller_2))  # human interface devices
+hid_sp = SensorPoller((xbox_controller, xbox_controller_2))  # human interface devices
 sp = SensorPoller((limit_r1, limit_r2, limit_l1, limit_l2))
 
 if recording_enabled:

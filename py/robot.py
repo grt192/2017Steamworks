@@ -7,15 +7,15 @@
 import wpilib
 import time
 
-from config import middle_gear
-from config import basic_auto
-from config import blue_shoot_auto
-from config import red_shoot_auto
+# from config import middle_gear
+# from config import basic_auto
+# from config import blue_shoot_auto
+# from config import red_shoot_auto
 
 #from config import sp
 
 #auto = middle_gear
-auto = red_shoot_auto
+auto = None
 auto_exists = True
 
 class MyRobot(wpilib.SampleRobot):
@@ -26,22 +26,31 @@ class MyRobot(wpilib.SampleRobot):
         self.hid_sp = config.hid_sp
         self.sp = config.sp
         self.ds = config.ds
+
+        self.middle_gear = config.middle_gear
+        self.basic_auto = config.basic_auto
+        self.blue_shoot_auto = config.blue_shoot_auto
+        self.red_shoot_auto = config.red_shoot_auto
+
+        global auto
+
+        auto = self.red_shoot_auto
         
 
         #self.turn_motor = config.turn_motor
 
-        self.t1 = config.turn_right
-        self.t2 = config.turn_left
-        self.t3 = config.turn_r2
-        self.t4 = config.turn_l2
+        # self.t1 = config.turn_right
+        # self.t2 = config.turn_left
+        # self.t3 = config.turn_r2
+        # self.t4 = config.turn_l2
 
-        self.lr1 = config.limit_r1
-        self.lr2 = config.limit_r2
-        self.ll1 = config.limit_l1
-        self.ll2 = config.limit_l2
+        # self.lr1 = config.limit_r1
+        # self.lr2 = config.limit_r2
+        # self.ll1 = config.limit_l1
+        # self.ll2 = config.limit_l2
 
-        self.s1 = config.shooter1_m1
-        self.s2 = config.shooter1_m2
+        # self.s1 = config.shooter1_m1
+        # self.s2 = config.shooter1_m2
 
         
 
@@ -108,6 +117,7 @@ class MyRobot(wpilib.SampleRobot):
                 self.sp.poll()
                 self.safeSleep(tinit, .04)
             auto.stop_autonomous()
+            print("done")
         else:
             pass
 
