@@ -18,7 +18,7 @@ class MiddleGear(MacroSequence):
 
     def __init__(self, swerve,robot_vision, gear, timeout=None):
 
-        self.gear_vision_macro = GearVisionMacro(swerve, shooter, intake)
+        self.gear_vision_macro = GearVisionMacro(swerve,robot_vision, gear)
 
         self.macros = [self.gear_vision_macro]
         super().__init__(macros=self.macros)

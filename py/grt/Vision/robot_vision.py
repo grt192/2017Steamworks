@@ -12,7 +12,7 @@ class Vision:
     def __init__(self, swerve, gear):
 
         self.swerve = swerve
-        self.gear = gears
+        self.gear = gear
         
     
     def find_centers(self):
@@ -127,7 +127,7 @@ class Vision:
                     #print(camera.get(3))
 
 
-                    if (camera.get(3))/2 = realcenter:
+                    if (camera.get(3))/2 == realcenter:
                         self.swerve.strafe(0,0,1)
                         self.gear.place()
                         self.gear.retract()

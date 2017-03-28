@@ -13,8 +13,7 @@ class GearVisionMacro(GRTMacro):
     def __init__(self, swerve,robot_vision, gear, timeout=None):
         super().__init__()
         self.swerve = swerve
-        self.shooter = shooter
-        self.intake = intake
+        self.gear = gear
         self.robot_vision = robot_vision
         #self.enabled = False
 

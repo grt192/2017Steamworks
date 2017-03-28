@@ -13,7 +13,6 @@ from grt.mechanism.swervemodule import SwerveModule
 from grt.mechanism.drivetrain import DriveTrain
 from grt.mechanism.drivecontroller import ArcadeDriveController
 from grt.mechanism.motorset import Motorset
-from grt.vision.robot_vision import Vision
 from grt.sensors.ticker import Ticker
 from grt.sensors.encoder import Encoder
 #from grt.sensors.talon import Talon
@@ -24,6 +23,7 @@ from grt.mechanism.beta_mechs import Shooter, Intake, Gear, Climber, Hopper
 from grt.mechanism import ZeroTest, TalonTester
 from grt.sensors.switch import Switch
 from grt.mechanism.new_ackermancontroller import NewAckermanController
+
 
 from grt.autonomous.basic_auto import BasicAuto
 
@@ -37,10 +37,7 @@ recording_enabled = False
 
 using_vision_server = True
 
-robot_vision = Vision()
-if using_vision_server:
-	import grt.vision.vision_server
-	grt.vision.vision_server.prepare_module(robot_vision)
+
 
 
 #DT Talons and Objects
@@ -235,7 +232,18 @@ swerve = SwerveModule(turn_right, turn_r2, turn_left, turn_l2, dt_right, dt_r2, 
 
 talon_arr = [turn_right, turn_r2, turn_left, turn_l2, dt_right, dt_r2, dt_left, dt_l2]
 
-middle_gear = MiddleGear(talon_arr)
+
+from grt.Vision.robot_vision import Vision
+gear = Gear(gear_pneumatic_1, gear_pneumatic_2)
+
+robot_vision = Vision(swerve, gear)
+
+
+if using_vision_server:
+	import grt.Vision.vision_server
+	grt.Vision.vision_server.prepare_module(robot_vision)
+
+middle_gear = MiddleGear(talon_arr, robot_vision, gear)
 
 
 
