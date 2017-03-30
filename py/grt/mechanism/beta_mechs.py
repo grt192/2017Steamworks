@@ -32,7 +32,7 @@ class Shooter:
 
 	def shoot(self):
 		self.load_m.set(-1)
-		self.disk.set(-1)
+		self.disk.set(1)
 
 	def stop(self):
 		self.load_m.set(0)
