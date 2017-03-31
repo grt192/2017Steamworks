@@ -484,6 +484,10 @@ class SwerveModule:
                     #Register that this wheel has been zeroed.
                     self.zeroing[0] = False
 
+                    if not self.zeroing[1] and not self.zeroing[2] and not self.zeroing[3]:
+
+                        print("FINISHED ZEROING")
+
                 else:
 
                     self.already_zeroed[0] = False
@@ -504,6 +508,10 @@ class SwerveModule:
                     self.turn_r2.set(0)
 
                     self.zeroing[1] = False
+
+                    if not self.zeroing[0] and not self.zeroing[2] and not self.zeroing[3]:
+
+                        print("FINISHED ZEROING")
 
                 else:
 
@@ -526,6 +534,10 @@ class SwerveModule:
 
                     self.zeroing[2] = False
 
+                    if not self.zeroing[0] and not self.zeroing[1] and not self.zeroing[3]:
+
+                        print("FINISHED ZEROING")
+
                 else:
 
                     self.already_zeroed[2] = False
@@ -545,5 +557,9 @@ class SwerveModule:
                 self.turn_l2.set(0)
 
                 self.zeroing[3] = False
+
+                if not self.zeroing[0] and not self.zeroing[1] and not self.zeroing[2]:
+
+                        print("FINISHED ZEROING")
 
                

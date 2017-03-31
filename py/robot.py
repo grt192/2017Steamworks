@@ -7,6 +7,8 @@
 import wpilib
 import time
 
+from wpilib import SendableChooser, SmartDashboard
+
 # from config import middle_gear
 # from config import basic_auto
 # from config import blue_shoot_auto
@@ -15,8 +17,8 @@ import time
 #from config import sp
 
 #auto = middle_gear
-auto = None
-auto_exists = True
+# auto = None
+# auto_exists = True
 
 class MyRobot(wpilib.SampleRobot):
     def __init__(self):
@@ -32,10 +34,29 @@ class MyRobot(wpilib.SampleRobot):
         self.blue_shoot_auto = config.blue_shoot_auto
         self.red_shoot_auto = config.red_shoot_auto
 
-        global auto
+        # global auto
+        # global auto_exists
 
-        auto = self.red_shoot_auto
-        
+
+
+        #auto = self.red_shoot_auto
+
+        self.autoChooser = SendableChooser()
+        self.autoChooser.addObject("No Autonomous", None)
+        self.autoChooser.addObject("Red Shoot Auto", self.red_shoot_auto)
+        #self.autoChooser.addObject("Cross And Shoot Auto", self.cross_and_shoot_auto)
+        #self.autoChooser.addObject("Basic Auto", self.basic_auto)
+        self.autoChooser.addDefault("Basic Auto", self.basic_auto)
+        self.autoChooser.addObject("Blue Shoot Auto" , self.blue_shoot_auto)
+        SmartDashboard.putData("Autonomous Mode", self.autoChooser)
+        self.auto = self.autoChooser.getSelected()
+
+
+        if self.auto == None:
+            self.auto_exists = False
+        else:
+            self.auto_exists = True
+
 
         #self.turn_motor = config.turn_motor
 
@@ -70,7 +91,8 @@ class MyRobot(wpilib.SampleRobot):
 
 
     def disabled(self):
-        auto.stop_autonomous()
+        if self.auto_exists:
+            self.auto.stop_autonomous()
         while self.isDisabled():
             tinit = time.time()
             self.hid_sp.poll()
@@ -99,6 +121,15 @@ class MyRobot(wpilib.SampleRobot):
             # print(self.s2.get())
     
     def autonomous(self):
+        self.auto = self.autoChooser.getSelected()
+
+        if self.auto == None:
+            print("disabling auto")
+            self.auto_exists = False
+
+        else:
+            self.auto_exists = True
+
         # define auto here
 
         #pass
@@ -107,16 +138,16 @@ class MyRobot(wpilib.SampleRobot):
         # print("IN THE AUTO FUNCTION")
         # print("IN THE AUTO FUNCTION")
         # print("IN THE AUTO FUNCTION")
-        if auto_exists:
+        if self.auto_exists:
             #print("doing autonomous")
 
-            auto.run_autonomous()
+            self.auto.run_autonomous()
             while self.isAutonomous() and self.isEnabled():
                 tinit = time.time()
                 self.hid_sp.poll()
                 self.sp.poll()
                 self.safeSleep(tinit, .04)
-            auto.stop_autonomous()
+            self.auto.stop_autonomous()
             print("done")
         else:
             pass
@@ -137,7 +168,8 @@ class MyRobot(wpilib.SampleRobot):
 
     
     def operatorControl(self):
-        auto.stop_autonomous
+        if self.auto_exists:
+            self.auto.stop_autonomous
         while self.isOperatorControl() and self.isEnabled():
             tinit = time.time()
             
