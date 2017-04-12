@@ -46,6 +46,8 @@ class MyRobot(wpilib.SampleRobot):
         #global auto 
         auto = config.red_shoot_auto
 
+        wpilib.CameraServer.launch('vision.py:main')
+
         
 
         #wpilib.CameraServer.launch()
