@@ -15,8 +15,8 @@ import time
 #from config import sp
 
 #auto = middle_gear
-#auto = None
-auto_exists = True
+auto = None
+#auto_exists = True
 
 class MyRobot(wpilib.SampleRobot):
     def __init__(self):
