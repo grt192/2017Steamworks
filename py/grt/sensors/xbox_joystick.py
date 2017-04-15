@@ -31,7 +31,7 @@ class XboxJoystick(Sensor):
 
     def poll(self):
         for i, state_id in enumerate(BUTTON_TABLE, 1):
-            self.update_state(state_id,
+            self.update_state_debounce(state_id,
                               self.j.getRawButton(i))
             # button index is offset by 1 due to wpilib 1-indexing
 

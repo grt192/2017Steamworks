@@ -42,6 +42,6 @@ class ButtonBoard(Sensor):
     def poll(self):
         diostate = IOBOARD.getDigitals()  # bit-packed button states
         for name, pin in BUTTON_TABLE:
-            self.update_state(name, ((diostate >> (pin - 1)) & 1) == 0)
+            self.update_state_debounce(name, ((diostate >> (pin - 1)) & 1) == 0)
 
     # TODO LEDs

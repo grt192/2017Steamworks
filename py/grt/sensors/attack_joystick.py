@@ -32,7 +32,7 @@ class Attack3Joystick(Sensor):
 
     def poll(self):
         for i, state_id in enumerate(BUTTON_TABLE, 1):
-            self.update_state(state_id,
+            self.update_state_debounce(state_id,
                               self.j.getRawButton(i))
 
         self.x_axis = self.j.getX()

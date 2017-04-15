@@ -51,6 +51,14 @@ class MyRobot(wpilib.SampleRobot):
         SmartDashboard.putData("Autonomous Mode", self.autoChooser)
         self.auto = self.autoChooser.getSelected()
 
+        #wpilib.CameraServer.launch()
+        wpilib.CameraServer.launch('vision.py:main')
+        #ßßßwpilib.CameraServer.launch()
+        #a = True
+        #while a:
+            #print("HIII")
+
+
 
         if self.auto == None:
             self.auto_exists = False
@@ -94,6 +102,7 @@ class MyRobot(wpilib.SampleRobot):
         if self.auto_exists:
             self.auto.stop_autonomous()
         while self.isDisabled():
+            #print("DISABLED")
             tinit = time.time()
             self.hid_sp.poll()
             self.sp.poll()
@@ -172,6 +181,7 @@ class MyRobot(wpilib.SampleRobot):
             self.auto.stop_autonomous
         while self.isOperatorControl() and self.isEnabled():
             tinit = time.time()
+            #print("ENABLEEED")
             
             self.hid_sp.poll()
             self.sp.poll()

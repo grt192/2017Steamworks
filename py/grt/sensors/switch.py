@@ -25,6 +25,10 @@ class Switch(Sensor):
         super().__init__()
         self.s = DigitalInput(channel)
         self.reverse = reverse
+        self.time = time.time()
 
     def poll(self):
-        self.pressed = not self.s.get() ^ self.reverse
+        button_pressed_at_this_moment = not self.s.get() ^ self.reverse
+        if button_pressed_at_this_moment != self.pressed and (time.time() - self.time) >= 0.350:
+            self.pressed = not self.s.get() ^ self.reverse
+            self.time = time.time()
