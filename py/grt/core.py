@@ -12,7 +12,7 @@ class Sensor(object):
     """
     def __init__(self):
         self.listeners = set()  # set of listeners
-        self.times = dictionary()
+        self.times = dict()
 
     def get(self, name):
         """
@@ -46,14 +46,12 @@ class Sensor(object):
         """
         if state_id not in self.__dict__:
             self.__dict__[state_id] = datum
-            for l in self.listeners:
-                l(self, state_id, datum)
         elif self.__dict__[state_id] != datum:
             self.__dict__[state_id] = datum
             for l in self.listeners:
                 l(self, state_id, datum)
 
-    def update_state_debouce(self, state_id, datum):
+    def update_state_debounce(self, state_id, datum):
         """
         Updates the state of this sensor.
 
@@ -63,9 +61,7 @@ class Sensor(object):
         if state_id not in self.__dict__:
             self.__dict__[state_id] = datum
             self.times[state_id] = time.time()
-            for l in self.listeners:
-                l(self, state_id, datum)
-        elif self.__dict__[state_id] != datum and (time.time() - self.times[state_id]) >=  0.350:
+        elif self.__dict__[state_id] != datum and (time.time() - self.times[state_id]) >=  0.100:
             self.times[state_id] = time.time()
             self.__dict__[state_id] = datum
             for l in self.listeners:

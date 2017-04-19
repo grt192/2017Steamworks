@@ -1,5 +1,6 @@
 __author__ = "Calvin Huang"
 
+import time
 try:
     from wpilib import DigitalInput
 except ImportError:
@@ -15,8 +16,6 @@ class Switch(Sensor):
     Has boolean attribute pressed.
     """
 
-    pressed = False
-
     def __init__(self, channel, module=1, reverse=False):
         """
         Initializes the switch on some digital channel and module.
@@ -25,10 +24,14 @@ class Switch(Sensor):
         super().__init__()
         self.s = DigitalInput(channel)
         self.reverse = reverse
-        self.time = time.time()
-
+        self.time = 0.0
+        self.pressed = False
+        
+    def isPressed(self):
+        return self.pressed
+    
     def poll(self):
         button_pressed_at_this_moment = not self.s.get() ^ self.reverse
-        if button_pressed_at_this_moment != self.pressed and (time.time() - self.time) >= 0.350:
-            self.pressed = not self.s.get() ^ self.reverse
+        if button_pressed_at_this_moment != self.pressed and (time.time() - self.time) >= 0.100:
+            self.pressed = button_pressed_at_this_moment
             self.time = time.time()

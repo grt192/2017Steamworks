@@ -2,8 +2,8 @@ from ctre import CANTalon
 import math
 
 class SwerveModule:
-	
-  	#8-motor drivetrain with 4 swerve modules
+    
+    #8-motor drivetrain with 4 swerve modules
 
     def __init__(self, turn_r1, turn_r2, turn_l1, turn_l2, power_r1, power_r2, power_l1, power_l2, limit_r1=None, limit_r2=None, limit_l1=None, limit_l2=None):
         
@@ -421,7 +421,7 @@ class SwerveModule:
 
     def zero(self, power):
 
-        self.already_zeroed= [self.limit_r1.pressed, self.limit_r2.pressed, self.limit_l1.pressed, self.limit_l2.pressed]
+        self.already_zeroed= [self.limit_r1.isPressed(), self.limit_r2.isPressed(), self.limit_l1.isPressed(), self.limit_l2.isPressed()]
 
         #This list of booleans makes sure that the limit switch only completes the zeroing sequence
         #when you want it to.
@@ -459,6 +459,8 @@ class SwerveModule:
 
         #INCREASING MAKES IT MORE CLOCKWISE
 
+        if datum != True:
+            return
 
         #Limit switch is pressed and one of them is still being zeroed.
         if state_id == 'pressed' and datum and (self.zeroing[0] or self.zeroing[1] or self.zeroing[2] or self.zeroing[3]):
@@ -519,7 +521,7 @@ class SwerveModule:
 
                 
 
-            if source == self.limit_l1 and self.zeroing[2] and not self.already_zeroed[2]:
+            if source == self.limit_l1 and self.zeroing[2]: # and not self.already_zeroed[2]:
 
                 if not self.already_zeroed[2]:
 
