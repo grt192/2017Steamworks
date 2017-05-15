@@ -87,7 +87,7 @@ class MechController:
                 print("unjam gear up")
                 self.gear.unjam_up()
                 
-                
+        #chela likes potatoes                
         elif state_id == 'r_y_axis': #needs review
             if abs(datum) > .2:
                 print("climbing")
