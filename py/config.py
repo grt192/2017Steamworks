@@ -13,6 +13,7 @@ from grt.mechanism.swervemodule import SwerveModule
 from grt.mechanism.drivetrain import DriveTrain
 from grt.mechanism.drivecontroller import ArcadeDriveController
 from grt.mechanism.motorset import Motorset
+from grt.mechanism.move import Move
 from grt.sensors.ticker import Ticker
 from grt.sensors.encoder import Encoder
 #from grt.sensors.talon import Talon
@@ -177,6 +178,9 @@ shooter = Shooter(shooter1_m1, shooter1_m2, load_m, angle_change, disk_m)
 intake_motor = CANTalon(4)
 
 intake = Intake(intake_motor)
+
+motor = CANTalon(0)
+move = Move(motor)
 
 
 

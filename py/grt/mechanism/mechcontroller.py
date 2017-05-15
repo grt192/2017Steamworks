@@ -81,8 +81,9 @@ class MechController:
 
                 # self.power += .01
                 # print("POWER: ",self.power)
-                print("unjam gear down")
-                self.gear.unjam_down()
+                #print("unjam gear down")
+                #self.gear.unjam_down()
+                self.motor.increment()
             else:
                 print("unjam gear up")
                 self.gear.unjam_up()
