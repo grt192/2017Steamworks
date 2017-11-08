@@ -704,7 +704,8 @@ class SwerveModule:
 
                 if self.count_r1 == 0:
                     self.count_r1 = 1
-                    self.turn_r1.setEncPosition(-1800)
+                    # self.turn_r1.setEncPosition(-1800)
+                    self.turn_r1.setEncPosition(-6600)
                     #print("encposition set: ", self.turn_r1.getEncPosition())
                     self.turn_r1.changeControlMode(CANTalon.ControlMode.Position)
                     self.turn_r1.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
@@ -725,7 +726,7 @@ class SwerveModule:
                 
                 if self.count_r1 == 2:
                     print("count 1")
-                    self.turn_r1.setEncPosition(-1800)
+                    self.turn_r1.setEncPosition(-6600)
                     #print("enc set 2nd time")
 
                     #Register that this wheel has been zeroed.
@@ -753,7 +754,8 @@ class SwerveModule:
 
                 if self.count_r2 == 0:
                     self.count_r2 = 1
-                    self.turn_r2.setEncPosition(1845)
+                    # self.turn_r2.setEncPosition(1845)
+                    self.turn_r2.setEncPosition(1810)
                     #print("encposition set: ", self.turn_r2.getEncPosition())
                     self.turn_r2.changeControlMode(CANTalon.ControlMode.Position)
                     self.turn_r2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
@@ -766,7 +768,7 @@ class SwerveModule:
                 
                 if self.count_r2 == 2:
                     print("count 2")
-                    self.turn_r2.setEncPosition(1845)
+                    self.turn_r2.setEncPosition(1810)
                     #print("enc set 2nd time")
 
                     #Register that this wheel has been zeroed.
@@ -793,7 +795,8 @@ class SwerveModule:
                 
                 if self.count_l1 == 0:
                     self.count_l1 = 1
-                    self.turn_l1.setEncPosition(-4800)
+                    # self.turn_l1.setEncPosition(-4800)
+                    self.turn_l1.setEncPosition(-4880)
                     #print("l2 encposition set: ", self.turn_r2.getEncPosition())
                     self.turn_l1.changeControlMode(CANTalon.ControlMode.Position)
                     self.turn_l1.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
@@ -806,7 +809,7 @@ class SwerveModule:
                 
                 if self.count_l1 == 2:
                     print("count 3")
-                    self.turn_l1.setEncPosition(-4800)
+                    self.turn_l1.setEncPosition(-4880)
                     #print("enc set 2nd time")
 
                     #Register that this wheel has been zeroed.
@@ -835,7 +838,8 @@ class SwerveModule:
 
                 if self.count_l2 == 0:
                     self.count_l2 = 1
-                    self.turn_l2.setEncPosition(4685)
+                    # self.turn_l2.setEncPosition(4685)
+                    self.turn_l2.setEncPosition(4450)
                     #print("encposition set: ", self.turn_r2.getEncPosition())
                     self.turn_l2.changeControlMode(CANTalon.ControlMode.Position)
                     self.turn_l2.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder)
@@ -847,7 +851,7 @@ class SwerveModule:
                 
                 if self.count_l2 == 2:
                     print("count 4")
-                    self.turn_l2.setEncPosition(4685)
+                    self.turn_l2.setEncPosition(4450)
                     #print("enc set 2nd time")
 
                     #Register that this wheel has been zeroed.
